@@ -1,0 +1,9 @@
+/**
+ * INICIO
+ *
+ */
+
+
+$(function () {
+    setActiveMenu("/");
+});

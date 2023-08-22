@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title><?= isset($title) ? $title : "ADMIN" ?> - LawLink</title>
+    <title><?= isset($title) ? $title : "ADMIN" ?> - Intake</title>
     <meta name="description" content="<?= isset($description) ? $description : ""  ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -52,31 +52,49 @@
                         <span>Inicio</span>
                     </a>
                     <a href="<?= base_url("/usuarios") ?>" class="menu-link" data-menu="usuarios">
-                        <i class="fa-duotone fa-users fa-fade"></i>
+                        <div class="icon-container">
+                            <i class="fa-duotone fa-users fa-fade"></i>
+                        </div>
+
                         <span>Usuarios</span>
                     </a>
                     <a href="<?= base_url("/abogados") ?>" class="menu-link" data-menu="abogados">
-                        <i class="fa-solid fa-gavel"></i>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-gavel"></i>
+                        </div>
+
                         <span>Abogados</span>
                     </a>
                     <a href="<?= base_url("/sucursales") ?>" class="menu-link" data-menu="sucursales">
-                        <i class="fa-duotone fa-file-chart-column"></i>
+                        <div class="icon-container">
+                            <i class="fa-duotone fa-file-chart-column"></i>
+                        </div>
+
                         <span>Sucursales</span>
                     </a>
                     <a href="<?= base_url("/reportes") ?>" class="menu-link" data-menu="reportes">
-                        <i class="fa-duotone fa-file-chart-column"></i>
+                        <div class="icon-container">
+                            <i class="fa-duotone fa-file-chart-column"></i>
+                        </div>
+
                         <span>Reportes</span>
                     </a>
                 </div>
                 <div class="menu-footer">
                     <a href="#" class="menu-link">
-                        <i class="fa-duotone fa-user-gear"></i>
+                        <div class="icon-container">
+                            <i class="fa-duotone fa-user-gear"></i>
+                        </div>
                         <span>Cuenta</span>
                     </a>
-                    <a href="#" class="menu-link">
-                        <i class="fa-duotone fa-arrow-right-from-bracket"></i>
-                        <span>Salir</span>
-                    </a>
+                    <form action="salir" method="post">
+                        <button class="menu-link">
+                            <div class="icon-container">
+                                <i class="fa-duotone fa-arrow-right-from-bracket"></i>
+                            </div>
+                            <span>Salir</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

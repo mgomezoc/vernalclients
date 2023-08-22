@@ -68,6 +68,13 @@ textarea {
 /* ==========================================================================
    Cesar Gomez
    ========================================================================== */
+:root {
+  --azul: #064a76;
+  --verde: #3dae2b;
+  --naranja: #f26a3f;
+  --gris: #d8d3cb;
+  --negro: #2d2926;
+}
 :where(*) {
   border-width: 0px;
   border-style: solid;
@@ -89,6 +96,10 @@ body {
   height: 100vh;
   overflow-y: auto;
 }
+.layout-col.main {
+  overflow: auto;
+  height: 100vh;
+}
 .menu {
   display: flex;
   flex-direction: column;
@@ -109,26 +120,30 @@ body {
   margin: 0 0 2.5875rem 0;
 }
 .menu-link {
-  flex: 1;
-  display: flex;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.2rem;
-  gap: 1rem;
   align-items: center;
-  padding: 15px;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  display: flex;
+  width: 100%;
+  flex: 1;
+  font-size: 1.2rem;
   font-weight: 600;
+  gap: 1rem;
+  padding: 15px;
+  text-decoration: none;
   transition: all 0.1s linear;
+  animation: fadeIn 0.8s linear;
 }
 .menu-link:hover,
 .menu-link.active {
-  color: #ffc107;
   background: #000;
   border-radius: 10px;
+  text-decoration: none;
 }
 .menu-link:hover svg,
 .menu-link.active svg {
-  color: #ffc107;
+  color: var(--naranja);
 }
 .menu-link svg {
   display: block;
@@ -136,6 +151,15 @@ body {
   --fa-animation-duration: 3s;
   --fa-animation-iteration-count: 1;
   --fa-animation-timing: ease-in-out;
+  width: 24px;
+  height: 24px;
+  animation: fadeInLeft 1.8s ease-in-out;
+}
+.icon-container {
+  width: 34px;
+}
+.detail-icon {
+  color: var(--azul);
 }
 .section-header {
   display: flex;
@@ -150,8 +174,9 @@ body {
   border-radius: 12px;
 }
 .modal-header {
-  background: #cbc7c1;
+  background: var(--gris);
   color: #000;
+  text-transform: uppercase;
 }
 .modal-body {
   background: #d8d3cb;
@@ -168,7 +193,7 @@ body {
   border: #b5b0aa 1px solid;
 }
 .table-linklaw thead {
-  background: linear-gradient(to bottom, #f26a3f, #f7765f);
+  background: linear-gradient(to bottom, var(--azul), #0068a9);
 }
 .table-linklaw thead tr {
   border: 0;
@@ -176,6 +201,14 @@ body {
 .table-linklaw thead tr th {
   background: transparent;
   color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+}
+label.error {
+  color: #c10d00;
+  display: inline-block;
+  font-size: 14px;
+  padding: 0.3rem;
 }
 /* ==========================================================================
    Helper classes
