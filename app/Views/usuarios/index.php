@@ -14,9 +14,9 @@
             <th data-field="nombre" data-sortable="true">Nombre</th>
             <th data-field="apellido_paterno">Apellido</th>
             <th data-field="correo_electronico">Correo</th>
-            <th data-field="perfil" data-sortable="true">Perfil</th>
+            <th data-field="perfil" data-sortable="true" data-formatter="formatoPerfiles">Perfil</th>
             <th data-field="fecha_creacion" data-sortable="true">Creado</th>
-            <th data-field="id" data-formatter="accionesTablaUsuarios">Acciones</th>
+            <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
           </tr>
         </thead>
       </table>
@@ -31,7 +31,7 @@
 </template>
 
 <template id="tplEditarUsuario">
-  <div class="p-5">
+  <div class="card card-body p-5">
     <form method="post" class="frmEditarUsuario row g-3">
       <input type="hidden" name="id" value="{{id}}">
       <div class="col-md-4">
@@ -95,12 +95,14 @@
             </div>
             <div class="col-md-4">
               <label for="profile" class="form-label">Perfil</label>
-              <select name="perfil" id="profile" class="form-select" required>
-                <option value="">Selecciona una opción</option>
-                <option value="1">Administrador</option>
-                <option value="2">Abogado</option>
-                <option value="3">Recepción</option>
-              </select>
+              <div class="d-flex flex-column-reverse">
+                <select name="perfil" id="profile" class="select2 form-select" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="1">Administrador</option>
+                  <option value="2">Abogado</option>
+                  <option value="3">Recepción</option>
+                </select>
+              </div>
             </div>
             <div class="col-12">
               <div class="row g-5">

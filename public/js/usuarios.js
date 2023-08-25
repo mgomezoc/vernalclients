@@ -20,13 +20,19 @@ $(function () {
     tplEditarUsuario = $("#tplEditarUsuario").html();
     $modalAgregarUsuario = $("#modalAgregarUsuario");
 
+    $modalAgregarUsuario.find(".select2").select2({
+        placeholder: "Seleccione una opción",
+        dropdownParent: $("#modalAgregarUsuario"),
+        theme: 'bootstrap-5'
+    });
+
     $tablaUsuarios = $("#tablaUsuarios").bootstrapTable({
         url: urls.obtenerUsuarios,
         method: "GET",
         search: true,
         pagination: true,
         detailView: true,
-        iconsPrefix: 'fas',
+        iconsPrefix: 'fa-duotone',
         icons: {
             paginationSwitchDown: 'fa-caret-square-down',
             paginationSwitchUp: 'fa-caret-square-up',
@@ -34,8 +40,8 @@ $(function () {
             toggleOff: 'fa-toggle-off',
             toggleOn: 'fa-toggle-on',
             columns: 'fa-th-list',
-            detailOpen: 'fa-plus',
-            detailClose: 'fa-minus'
+            detailOpen: 'fa-circle-plus',
+            detailClose: 'fa-circle-minus'
         },
         onExpandRow: function (index, row, $detail) {
             $detail.html("...cargando");
@@ -45,6 +51,10 @@ $(function () {
             $detail.html(renderData);
             const $comboPerfiles = $detail.find(".cbPerfiles");
             $comboPerfiles.find(`option[value=${row.perfil}]`).prop("selected", true);
+            $comboPerfiles.select2({
+                placeholder: "Seleccione una opción",
+                theme: 'bootstrap-5'
+            });
             $detail.find(".frmEditarUsuario").validate();
         }
     });
@@ -87,6 +97,7 @@ $(function () {
                         $tablaUsuarios.bootstrapTable("refresh");
                         $modalAgregarUsuario.modal("hide");
                         form.reset();
+                        $frm.find("select").trigger("change");
                     }
                 })
                 .catch(function (error) {
@@ -127,6 +138,10 @@ function accionesTablaUsuarios(value, row, index, field) {
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
 
     return renderData;
+}
+
+function formatoPerfiles(value, row, index, field) {
+    return value == 1 ? "Administrador" : value == 2 ? "Abogado" : "Recepcion";
 }
 
 function agregarUsuario(data) {

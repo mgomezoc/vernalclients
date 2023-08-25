@@ -58,19 +58,19 @@
 
                         <span>Usuarios</span>
                     </a>
-                    <a href="<?= base_url("/abogados") ?>" class="menu-link" data-menu="abogados">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-gavel"></i>
-                        </div>
-
-                        <span>Abogados</span>
-                    </a>
                     <a href="<?= base_url("/sucursales") ?>" class="menu-link" data-menu="sucursales">
                         <div class="icon-container">
                             <i class="fa-duotone fa-file-chart-column"></i>
                         </div>
 
                         <span>Sucursales</span>
+                    </a>
+                    <a href="<?= base_url("/abogados") ?>" class="menu-link" data-menu="abogados">
+                        <div class="icon-container">
+                            <i class="fa-solid fa-gavel"></i>
+                        </div>
+
+                        <span>Abogados</span>
                     </a>
                     <a href="<?= base_url("/reportes") ?>" class="menu-link" data-menu="reportes">
                         <div class="icon-container">

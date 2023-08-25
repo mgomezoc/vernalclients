@@ -184,14 +184,6 @@ body {
 .modal-footer {
   background: #d8d3cb;
 }
-.modal .form-control {
-  background: #c3beb7;
-  border: #b5b0aa 1px solid;
-}
-.modal .form-select {
-  background: #c3beb7;
-  border: #b5b0aa 1px solid;
-}
 .table-linklaw thead {
   background: linear-gradient(to bottom, var(--azul), #0068a9);
 }

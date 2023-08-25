@@ -31,6 +31,12 @@ class UsuarioModel extends Model
         return $this->insert($data);
     }
 
+    public function getUsuariosPerfil2()
+    {
+        return $this->select('id, nombre, apellido_paterno, apellido_materno, correo_electronico')
+            ->where('perfil', 2)
+            ->findAll();
+    }
 
     public function editarUsuario($id, $data)
     {

@@ -26,13 +26,15 @@ class Usuarios extends Controller
         ];
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
-        $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
 
+        $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js'></script>";
         $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
-
         $data['scripts'] .= "<script src='" . base_url("js/usuarios.js") . "'></script>";
 
         return view('shared/layout', $data);
@@ -43,6 +45,23 @@ class Usuarios extends Controller
         $usuarios = $this->usuarioModel->findAll();
 
         return $this->response->setJSON($usuarios);
+    }
+
+    public function obtenerUsuarioPorId($id)
+    {
+        $usuario = $this->usuarioModel->find($id);
+
+        if ($usuario) {
+            // Excluir la contraseña y la fecha de creación del usuario
+            unset($usuario['contrasena']);
+            unset($usuario['fecha_creacion']);
+
+            return $this->response->setJSON($usuario);
+        } else {
+            $data["success"] = false;
+            $data["message"] = "Usuario no encontrado.";
+            return $this->response->setJSON($data);
+        }
     }
 
     public function agregarUsuario()
@@ -99,12 +118,18 @@ class Usuarios extends Controller
 
         $data = [];
 
-        // Verificar si ya existe un usuario con el mismo correo electrónico
-        $existingUser = $this->usuarioModel->where('correo_electronico', $correoElectronico)->first();
-        if ($existingUser) {
-            $data["success"] = false;
-            $data["message"] = "Ya existe un usuario con el mismo correo electrónico.";
-            return $this->response->setJSON($data);
+        // Obtén el usuario actual de la base de datos
+        $usuarioActual = $this->usuarioModel->find($usuarioId);
+
+        // Si el correo electrónico ha cambiado
+        if ($usuarioActual['correo_electronico'] !== $correoElectronico) {
+            // Verificar si ya existe un usuario con el nuevo correo electrónico
+            $existingUser = $this->usuarioModel->where('correo_electronico', $correoElectronico)->first();
+            if ($existingUser) {
+                $data["success"] = false;
+                $data["message"] = "Ya existe un usuario con el mismo correo electrónico.";
+                return $this->response->setJSON($data);
+            }
         }
 
         if ($usuarioId && !empty($nombre) && !empty($apellidoPaterno)) {
@@ -132,6 +157,7 @@ class Usuarios extends Controller
 
         return $this->response->setJSON($data);
     }
+
 
 
     public function borrarUsuario()
