@@ -6,7 +6,8 @@ class Home extends BaseController
 {
     function  index()
     {
-        $data['renderBody'] = "";
+        $data["title"] = "Inicio";
+        $data['renderBody'] = $this->render("home/index", []);
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
@@ -17,6 +18,6 @@ class Home extends BaseController
         $data['scripts'] .= "<script src='" . base_url("js/inicio.js") . "'></script>";
 
 
-        echo view('shared/layout', $data);
+        return $this->render('shared/layout', $data);
     }
 }

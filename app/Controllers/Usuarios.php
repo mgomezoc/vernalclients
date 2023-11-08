@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
-class Usuarios extends Controller
+class Usuarios extends BaseController
 {
     protected $usuarioModel;
 
@@ -22,7 +22,7 @@ class Usuarios extends Controller
         $data = [
             "usuarios" => $usuarios,
             "title" => "Usuarios",
-            "renderBody" => view('usuarios/index', ["usuarios" => $usuarios])
+            "renderBody" => $this->render('usuarios/index', ["usuarios" => $usuarios])
         ];
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
@@ -37,7 +37,7 @@ class Usuarios extends Controller
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/usuarios.js") . "'></script>";
 
-        return view('shared/layout', $data);
+        return $this->render('shared/layout', $data);
     }
 
     public function obtenerUsuarios()

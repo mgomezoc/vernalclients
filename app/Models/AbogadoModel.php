@@ -34,4 +34,14 @@ class AbogadoModel extends Model
     {
         return $this->delete($id);
     }
+
+    public function obtenerAbogadosPorSucursal($idSucursal)
+    {
+        return $this->db->table('abogados a')
+            ->select('a.id AS abogado_id, u.id AS usuario_id, u.nombre AS usuario_nombre, u.apellido_paterno AS usuario_apellido_paterno')
+            ->join('usuarios u', 'a.id_usuario = u.id')
+            ->where('a.id_sucursal', $idSucursal)
+            ->get()
+            ->getResultArray();
+    }
 }

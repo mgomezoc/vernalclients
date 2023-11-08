@@ -1,30 +1,33 @@
-<div class="card card-body">
+<section class="section">
     <div class="section-header">
-        <h1 class="section-title">Abogados</h1>
+        <h1 class="section-title"><i class="fa-solid fa-gavel"></i> Abogados</h1>
         <div>
             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoAbogado">Añadir
                 nuevo</button>
         </div>
     </div>
 
-    <div class="section-table">
-        <div class="table-responsive">
-            <table id="tablaAbogados" class="table table-striped table-sm table-linklaw">
-                <thead>
-                    <tr>
-                        <th data-field="usuario_nombre" data-sortable="true">Nombre</th>
-                        <th data-field="usuario_apellido_paterno">Apellido</th>
-                        <th data-field="correo_electronico">Correo</th>
-                        <th data-field="sucursal_nombre" data-sortable="true">Sucursal</th>
-                        <th data-field="telefono" data-sortable="true">Teléfono</th>
-                        <th data-field="id">Casos</th>
-                        <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
-                    </tr>
-                </thead>
-            </table>
+    <div class="card card-body">
+        <div class="section-table">
+            <div class="table-responsive">
+                <table id="tablaAbogados" class="table table-striped table-sm table-linklaw">
+                    <thead>
+                        <tr>
+                            <th data-field="usuario_nombre" data-sortable="true">Nombre</th>
+                            <th data-field="usuario_apellido_paterno">Apellido</th>
+                            <th data-field="correo_electronico">Correo</th>
+                            <th data-field="sucursal_nombre" data-sortable="true">Sucursal</th>
+                            <th data-field="telefono" data-sortable="true">Teléfono</th>
+                            <th data-field="id">Casos</th>
+                            <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
 <!-- ACCIONES TABLA -->
 <template id="tplAccionesTabla">
     <button class="btnEliminarAbogado btn btn-sm btn-danger" data-id="{{abogado_id}}" title="Eliminar a {{usuario_nombre}} {{usuario_apellido_paterno}} {{apellido_materno}}">

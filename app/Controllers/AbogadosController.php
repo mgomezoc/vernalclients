@@ -7,7 +7,7 @@ use App\Models\AbogadoModel;
 use App\Models\SucursalModel;
 use App\Models\UsuarioModel;
 
-class AbogadosController extends Controller
+class AbogadosController extends BaseController
 {
     public function index()
     {
@@ -31,7 +31,7 @@ class AbogadosController extends Controller
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/abogados.js") . "'></script>";
 
-        echo view('shared/layout', $data);
+        echo $this->render('shared/layout', $data);
     }
 
     public function obtenerAbogados()

@@ -1,27 +1,30 @@
-<div class="card card-body">
+<section class="section">
     <div class="section-header">
-        <h1 class="section-title">Sucursales</h1>
+        <h1 class="section-title"><i class="fa-duotone fa-building me-2"></i> Sucursales</h1>
         <div>
             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaSucursal">Añadir
                 nueva</button>
         </div>
     </div>
-    <div class="section-table">
-        <div class="table-responsive">
-            <table id="tablaSucursales" class="table table-striped table-sm table-linklaw">
-                <thead>
-                    <tr>
-                        <th data-field="nombre">Sucursal</th>
-                        <th data-field="direccion">Dirección</th>
-                        <th data-field="telefono">Teléfono</th>
-                        <th data-field="url_google_maps" data-formatter="formatoUbicacion" data-align="center">Ubicación</th>
-                        <th data-field="id" data-formatter="accionesTabla" data-align="center">Acciones</th>
-                    </tr>
-                </thead>
-            </table>
+
+    <div class="card card-body">
+        <div class="section-table">
+            <div class="table-responsive">
+                <table id="tablaSucursales" class="table table-striped table-sm table-linklaw">
+                    <thead>
+                        <tr>
+                            <th data-field="nombre">Sucursal</th>
+                            <th data-field="direccion">Dirección</th>
+                            <th data-field="telefono">Teléfono</th>
+                            <th data-field="url_google_maps" data-formatter="formatoUbicacion" data-align="center">Ubicación</th>
+                            <th data-field="id" data-formatter="accionesTabla" data-align="center">Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <template id="tplAccionesTabla">
     <button class="btnEliminarSucursal btn btn-sm btn-danger" data-id="{{id}}" title="Eliminar {{nombre}}">

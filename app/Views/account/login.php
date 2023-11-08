@@ -34,7 +34,7 @@
             <div class="login-wrapper">
                 <div class="login-content">
                     <img src="<?= base_url("img/logo-vernal-black.svg") ?>" alt="logo" class="login-logo">
-                    <h1>Log in</h1>
+
                     <form id="frmLogin" action="login" method="post" class="w-100">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>

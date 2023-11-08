@@ -1,25 +1,27 @@
-<div class="card card-body">
+<div class="section">
   <div class="section-header">
-    <h1 class="section-title">Usuarios</h1>
+    <h1 class="section-title"><i class="fa-duotone fa-users me-2"></i> Usuarios</h1>
     <div>
       <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">Añadir
         nuevo</button>
     </div>
   </div>
-  <div class="section-table">
-    <div class="table-responsive">
-      <table id="tablaUsuarios" class="table table-striped table-sm table-linklaw">
-        <thead>
-          <tr>
-            <th data-field="nombre" data-sortable="true">Nombre</th>
-            <th data-field="apellido_paterno">Apellido</th>
-            <th data-field="correo_electronico">Correo</th>
-            <th data-field="perfil" data-sortable="true" data-formatter="formatoPerfiles">Perfil</th>
-            <th data-field="fecha_creacion" data-sortable="true">Creado</th>
-            <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
-          </tr>
-        </thead>
-      </table>
+  <div class="card card-body">
+    <div class="section-table">
+      <div class="table-responsive">
+        <table id="tablaUsuarios" class="table table-striped table-sm table-linklaw">
+          <thead>
+            <tr>
+              <th data-field="nombre" data-sortable="true">Nombre</th>
+              <th data-field="apellido_paterno">Apellido</th>
+              <th data-field="correo_electronico">Correo</th>
+              <th data-field="perfil" data-sortable="true" data-formatter="formatoPerfiles">Perfil</th>
+              <th data-field="fecha_creacion" data-sortable="true">Creado</th>
+              <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
     </div>
   </div>
 </div>

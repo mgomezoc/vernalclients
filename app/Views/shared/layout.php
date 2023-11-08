@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script>
         const baseUrl = "<?= base_url() ?>";
+        const usuario = <?= json_encode($usuario) ?>;
     </script>
 </head>
 
@@ -43,6 +44,10 @@
                     <a href="#" class="menu-logo">
                         <img src="<?= base_url("img/logo.svg") ?>" alt="VERNAL" class="menu-logo-img">
                     </a>
+                    <div class="menu-top-info">
+                        <div><?= $usuario["nombre"] ?> <?= $usuario["apellido_paterno"] ?></div>
+                        <div><?= $usuario["correo_electronico"] ?></div>
+                    </div>
                 </div>
                 <div class="menu-options">
                     <a href="<?= base_url("/") ?>" class="menu-link" data-menu="/">
@@ -51,34 +56,56 @@
                         </div>
                         <span>Inicio</span>
                     </a>
-                    <a href="<?= base_url("/usuarios") ?>" class="menu-link" data-menu="usuarios">
-                        <div class="icon-container">
-                            <i class="fa-duotone fa-users fa-fade"></i>
-                        </div>
+                    <?php if ($usuario["perfil"] == 1) : ?>
+                        <a href="<?= base_url("usuarios") ?>" class="menu-link" data-menu="usuarios">
+                            <div class="icon-container">
+                                <i class="fa-duotone fa-users fa-fade"></i>
+                            </div>
 
-                        <span>Usuarios</span>
-                    </a>
-                    <a href="<?= base_url("/sucursales") ?>" class="menu-link" data-menu="sucursales">
-                        <div class="icon-container">
-                            <i class="fa-duotone fa-file-chart-column"></i>
-                        </div>
+                            <span>Usuarios</span>
+                        </a>
+                        <a href="<?= base_url("sucursales") ?>" class="menu-link" data-menu="sucursales">
+                            <div class="icon-container">
+                                <i class="fa-duotone fa-building fa-fade"></i>
+                            </div>
 
-                        <span>Sucursales</span>
-                    </a>
-                    <a href="<?= base_url("/abogados") ?>" class="menu-link" data-menu="abogados">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-gavel"></i>
-                        </div>
+                            <span>Sucursales</span>
+                        </a>
+                        <a href="<?= base_url("abogados") ?>" class="menu-link" data-menu="abogados">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-gavel"></i>
+                            </div>
 
-                        <span>Abogados</span>
-                    </a>
-                    <a href="<?= base_url("/reportes") ?>" class="menu-link" data-menu="reportes">
-                        <div class="icon-container">
-                            <i class="fa-duotone fa-file-chart-column"></i>
-                        </div>
+                            <span>Abogados</span>
+                        </a>
+                        <a href="<?= base_url("clientes") ?>" class="menu-link" data-menu="clientes">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-people-simple"></i>
+                            </div>
+                            <span>Clientes</span>
+                        </a>
+                        <a href="<?= base_url("reportes") ?>" class="menu-link" data-menu="reportes">
+                            <div class="icon-container">
+                                <i class="fa-duotone fa-file-chart-column"></i>
+                            </div>
+                            <span>Reportes</span>
+                        </a>
+                    <?php elseif ($usuario["perfil"] == 2) : ?>
+                        <a href="<?= base_url("clientes/abogado") ?>" class="menu-link" data-menu="clientes">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-people-simple"></i>
+                            </div>
+                            <span>Clientes</span>
+                        </a>
+                    <?php elseif ($usuario["perfil"] == 3) : ?>
+                        <a href="<?= base_url("clientes/recepcion") ?>" class="menu-link" data-menu="clientes">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-people-simple"></i>
+                            </div>
+                            <span>Clientes</span>
+                        </a>
+                    <?php endif; ?>
 
-                        <span>Reportes</span>
-                    </a>
                 </div>
                 <div class="menu-footer">
                     <a href="#" class="menu-link">
@@ -87,7 +114,7 @@
                         </div>
                         <span>Cuenta</span>
                     </a>
-                    <form action="salir" method="post">
+                    <form action="<?= base_url("salir") ?>" method="post">
                         <button class="menu-link">
                             <div class="icon-container">
                                 <i class="fa-duotone fa-arrow-right-from-bracket"></i>

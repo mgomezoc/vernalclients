@@ -21,6 +21,13 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
+    protected function render($view, $data)
+    {
+        $usuario = session('usuario');
+        $data['usuario'] = $usuario;
+
+        return view($view, $data);
+    }
     /**
      * Instance of the main Request object.
      *

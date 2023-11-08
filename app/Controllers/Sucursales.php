@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\SucursalModel;
 use CodeIgniter\Controller;
 
-class Sucursales extends Controller
+class Sucursales extends BaseController
 {
     protected $sucursalModel;
 
@@ -34,7 +34,7 @@ class Sucursales extends Controller
 
         $data['scripts'] .= "<script src='" . base_url("js/sucursales.js") . "'></script>";
 
-        return view('shared/layout', $data);
+        return $this->render('shared/layout', $data);
     }
 
     public function obtenerSucursales()
