@@ -61,7 +61,7 @@ $(function () {
                     if (!resultado.success) {
                         swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
                     } else {
-                        swal.fire("Listo", resultado.message, "success");
+                        swal.fire("¡Listo!", resultado.message, "success");
                         $tablaSucursales.bootstrapTable("refresh");
                         $modalNuevaSucursal.modal("hide");
                         form.reset();
@@ -86,7 +86,7 @@ $(function () {
                     swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
 
                 } else {
-                    swal.fire("Listo", resultado.message, "success");
+                    swal.fire("¡Listo!", resultado.message, "success");
                     $tablaSucursales.bootstrapTable("refresh");
                 }
             });
@@ -140,7 +140,7 @@ function EliminarSucursal(id) {
         data: { id: id },
         dataType: "json"
     }).then(function (resultado) {
-        swal.fire("Listo", resultado.message, "success");
+        swal.fire("¡Listo!", resultado.message, "success");
         $tablaSucursales.bootstrapTable("refresh");
     });
 }

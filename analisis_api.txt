@@ -1,0 +1,30 @@
+PAGO PRIMERA CONSULTA(Intake) VFMLaw 28793
+
+1. - Crear un caso
+    Seleccionar Cliente
+    Area de practica: US Inmigration
+Departamento
+    Process Consulation / Cita
+Role: Beneficiaria
+
+2. - Billing
+Expense / Charges
+        Add Expense
+            Se selecciona la consulta
+
+3. - Invoice 
+    Seleccionan el metodo de pago
+
+
+{
+    "typeID": 4,
+        "name": "Consultation / Cita"
+},
+
+formTemplateID: 6000
+
+PAGO CASO
+
+    Lista de Process de la API
+
+

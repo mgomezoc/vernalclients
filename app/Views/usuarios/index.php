@@ -1,4 +1,4 @@
-<div class="section">
+<section class="section">
   <div class="section-header">
     <h1 class="section-title"><i class="fa-duotone fa-users me-2"></i> Usuarios</h1>
     <div>
@@ -24,7 +24,7 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <template id="tplAccionesTabla">
   <button class="btnEliminarUsuario btn btn-sm btn-danger" data-id="{{id}}" title="Eliminar a {{nombre}} {{apellido_paterno}} {{apellido_materno}}">
@@ -37,7 +37,7 @@
     <form method="post" class="frmEditarUsuario row g-3">
       <input type="hidden" name="id" value="{{id}}">
       <div class="col-md-4">
-        <label for="name" class="form-label">Nombre</label>
+        <label for="name" class="form-label">Nombre(s)</label>
         <input type="text" id="name" name="nombre" value="{{nombre}}" class="form-control" placeholder="Su nombre" required>
       </div>
       <div class="col-md-4">
@@ -80,7 +80,7 @@
         <div class="container-fluid">
           <form id="frmAgregarUsuario" action="#" method="post" class="row g-5">
             <div class="col-md-4">
-              <label for="name" class="form-label">Nombre</label>
+              <label for="name" class="form-label">Nombre(s)</label>
               <input type="text" id="name" name="nombre" class="form-control" placeholder="Su nombre" required>
             </div>
             <div class="col-md-4">

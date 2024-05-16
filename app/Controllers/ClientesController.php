@@ -4,11 +4,12 @@ namespace App\Controllers;
 
 use App\Models\AbogadoModel;
 use App\Models\CasoModel;
+use App\Models\CasosTiposModel;
 use App\Models\ClienteAbogadoModel;
+use App\Models\ClienteEstatusModel;
 use App\Models\ClienteModel;
 use App\Models\FormularioAdmisionModel;
 use App\Models\SucursalModel;
-use CodeIgniter\Controller;
 
 class ClientesController extends BaseController
 {
@@ -16,7 +17,12 @@ class ClientesController extends BaseController
     {
         $data["title"] = "Clientes";
         $sucursalModel = new SucursalModel();
+        $estatusModel = new ClienteEstatusModel();
+
+        $estatus = $estatusModel->obtenerTodosEstatus();
+
         $data['sucursales'] = $sucursalModel->obtenerTodas();
+        $data['estatus'] = $estatus;
 
 
         $data['renderBody'] = $this->render("clientes/index", $data);
@@ -71,7 +77,10 @@ class ClientesController extends BaseController
     public function obtenerClientesRecepcion()
     {
         $clienteModel = new ClienteModel();
-        $clientes = $clienteModel->obtenerTodosClientesConEstatus(2);
+        $clientesIntake = $clienteModel->obtenerTodosClientesConEstatus(2);
+        $clientesViable = $clienteModel->obtenerTodosClientesConEstatus(4);
+
+        $clientes = array_merge($clientesIntake, $clientesViable);
 
         return $this->response->setJSON($clientes);
     }
@@ -171,7 +180,9 @@ class ClientesController extends BaseController
     {
         $data["title"] = "Clientes";
         $abogadoModel = new AbogadoModel();
+        $tiposCasosModel = new CasosTiposModel();
         $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
+        $data['tiposCasos'] = $tiposCasosModel->obtenerTodos();
 
 
         $data['renderBody'] = $this->render("clientes/abogado", $data);
@@ -179,10 +190,12 @@ class ClientesController extends BaseController
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
 
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
         $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_abogado.js") . "'></script>";
@@ -191,27 +204,95 @@ class ClientesController extends BaseController
         return $this->render('shared/layout', $data);
     }
 
+    public function nuevoCaso()
+    {
+        $id_cliente = $this->request->getPost('id_cliente');
+        $id_usuario = $this->request->getPost('id_usuario');
+        $comentarios = $this->request->getPost('comentarios');
+        $costo = $this->request->getPost('costo');
+        $procesos_adicionales = $this->request->getPost('procesos_adicionales');
+        $estatus = $this->request->getPost('estatus');
+        $id_tipo_caso = $this->request->getPost('id_tipo_caso');
+        $proceso = $this->request->getPost('proceso');
+        $fecha_corte = $this->request->getPost('fecha_corte');
+
+
+
+        if ($estatus == "4") {
+            $casoModel = new CasoModel();
+
+            $data = [
+                'id_cliente' => $id_cliente,
+                'id_usuario' => $id_usuario,
+                'id_tipo_caso' => $id_tipo_caso,
+                'proceso' => $proceso,
+                'comentarios' => $comentarios,
+                'costo' => $costo,
+                'procesos_adicionales' => $procesos_adicionales,
+                'fecha_corte' => $fecha_corte,
+                'fecha_creacion' => date('Y-m-d H:i:s'),
+                'fecha_actualizacion' => date('Y-m-d H:i:s')
+            ];
+
+            $crearCaso = $casoModel->crearCaso($data);
+
+            $response['data'] = $data;
+            $response['crearCaso'] = $crearCaso;
+        }
+
+        $clienteModel = new ClienteModel();
+
+        $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
+
+
+        $response['success'] = true;
+        $response['estatus'] = $estatus;
+        $response['actualizarEstatus'] = $actualizarEstatus;
+
+        return $this->response->setJSON($response);
+    }
+
     public function verCliente($idCliente)
     {
         $clienteModel = new ClienteModel();
-
         $cliente = $clienteModel->find($idCliente);
 
         if (!$cliente) {
             return "Cliente no encontrado " . $idCliente;
         }
+
+        $casoModel = new CasoModel();
+        $casos = $casoModel->obtenerCasosPorCliente($idCliente);
+
         $formularioAdmisionModel = new FormularioAdmisionModel();
         $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
 
 
         $data["title"] = "Cliente";
         $data['cliente'] = $cliente;
+        $data['casos'] = $casos;
         $data['formulario'] = $formulario;
         $data['renderBody'] = $this->render("clientes/cliente", $data);
 
-        $data['scripts'] = "<script src='" . base_url("js/cliente.js") . "'></script>";
+        $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
+
+        $data['scripts'] = "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        $data['scripts'] .= "<script src='" . base_url("js/cliente.js") . "'></script>";
 
         return $this->render('shared/layout', $data);
+    }
+
+    public function obtenerCasosPorCliente()
+    {
+        $casoModel = new CasoModel();
+        $idCliente = $this->request->getPost('id_cliente');
+        $casos = $casoModel->obtenerCasosPorCliente($idCliente);
+
+        $response['casos'] = $casos;
+
+        return $this->response->setJSON($response);
     }
 
     public function crearCaso()
@@ -242,5 +323,35 @@ class ClientesController extends BaseController
         }
 
         return $this->response->setJSON($response);
+    }
+
+    public function actualizarClientID()
+    {
+        $clienteModel = new ClienteModel();
+
+        $idCliente = $this->request->getPost('id_cliente');
+        $nuevoClientID = $this->request->getPost('clientID');
+
+        if ($clienteModel->actualizarClientID($idCliente, $nuevoClientID)) {
+            // La actualización fue exitosa.
+            return $this->response->setJSON(['success' => true, 'message' => 'ClientID actualizado correctamente.']);
+        } else {
+            // Hubo un error al actualizar.
+            return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el ClientID.']);
+        }
+    }
+
+    public function actualizarEstatus()
+    {
+        $clienteModel = new ClienteModel();
+
+        $idCliente = $this->request->getPost('id_cliente');
+        $estatus = $this->request->getPost('estatus');
+
+        if ($clienteModel->actualizarEstatusCliente($idCliente, $estatus)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'estatus actualizado correctamente.']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el estatus.']);
+        }
     }
 }

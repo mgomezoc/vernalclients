@@ -97,7 +97,7 @@ $(function () {
                     if (!resultado.success) {
                         swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
                     } else {
-                        swal.fire("Listo", resultado.message, "success");
+                        swal.fire("¡Listo!", resultado.message, "success");
                         $tablaAbogados.bootstrapTable("refresh");
                         $modalNuevoAbogado.modal("hide");
                         form.reset();
@@ -123,7 +123,7 @@ $(function () {
                     swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
 
                 } else {
-                    swal.fire("Listo", resultado.message, "success");
+                    swal.fire("¡Listo!", resultado.message, "success");
                     $tablaAbogados.bootstrapTable("refresh");
                 }
             });
@@ -176,7 +176,7 @@ function eliminarAbogado(id) {
         data: { id: id },
         dataType: "json"
     }).then(function (resultado) {
-        swal.fire("Listo", resultado.message, "success");
+        swal.fire("¡Listo!", resultado.message, "success");
         $tablaAbogados.bootstrapTable("refresh");
     });
 }

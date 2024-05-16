@@ -1,0 +1,28 @@
+{
+	"caseID": 0,
+	"applicationText": "Aplicación inicial para revisión",
+	"caseCategoryID": 1, // Asumiendo que 1 es un ID válido para la categoría de casos en tu sistema
+	"caseName": "Nuevo Caso para Cliente 41970",
+	"caseNumber": "CN-41970-001", // Asegúrate de seguir cualquier formato específico necesario
+	"creationDate": "2024-03-26T18:46:47.217Z",
+	"createdBy": "usuarioAdmin", // Cambiar por el nombre de usuario real del creador
+	"denialText": "",
+	"expirationText": "",
+	"externalCaseID": "EXT-41970-001", // Si aplica
+	"externalCaseNumber": "", // Si aplica
+	"filingTypeID": 1, // Asumiendo que 1 es un ID válido para el tipo de presentación en tu sistema
+	"physicalDocumentLocationID": 1, // Asumiendo un lugar físico de almacenamiento de documentos
+	"processID": 1, // Asumiendo un ID de proceso válido en tu sistema
+	"areaOfPracticeID": 1, // Asumiendo un ID de área de práctica válido
+	"processingText": "En proceso de revisión inicial",
+	"statusChangeComment": "Caso creado y pendiente de asignación",
+	"statusChangeDate": "2024-03-26T18:46:47.217Z",
+	"statusID": 1, // Asumiendo que 1 representa un estado inicial válido en tu sistema
+	"updateDate": "2024-03-26T18:46:47.217Z",
+	"lastUpdatedBy": "usuarioAdmin", // Cambiar por el nombre de usuario real que hace la última actualización
+	"incidentText": "Descripción inicial del incidente",
+	"statuteOfLimitationText": "",
+	"incidentLocation": "Ubicación del incidente",
+	"note": "Notas adicionales sobre el caso",
+	"clientID": 41970 // Asumiendo que necesitas vincular el caso a un cliente específico
+}

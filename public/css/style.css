@@ -81,10 +81,40 @@ textarea {
   box-sizing: border-box;
   overflow-wrap: break-word;
 }
+.btn-azul {
+  background-color: var(--azul);
+  border-color: var(--azul);
+  color: #fff;
+}
+.btn-verde {
+  background-color: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+.btn-naranja {
+  background-color: var(--naranja);
+  border-color: var(--naranja);
+  color: #fff;
+}
+.btn-gris {
+  background-color: var(--gris);
+  border-color: var(--gris);
+  color: #000;
+}
+.btn-negro {
+  background-color: var(--negro);
+  border-color: var(--negro);
+  color: #fff;
+}
 body {
   font-size: 16px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Raleway", sans-serif;
   background: #d8d3cb url(../img/interlaced.png) repeat;
+}
+.form-label {
+  font-weight: 600;
+  color: #0e1c2c;
+  font-size: 1em;
 }
 .layout {
   display: grid;
@@ -106,17 +136,21 @@ body {
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
+  background: #0e1c2c;
+  background-size: cover;
 }
 .menu-top {
-  border-bottom: 1px solid #575746;
+  border-bottom: 1px solid #0e1c2c;
   padding: 1rem 1rem;
 }
 .menu-top-info {
-  color: #999;
+  color: #fff;
   font-size: 14px;
-  border: 1px solid #272626;
+  border: 1px solid #62b732;
   border-radius: 5px;
   padding: 0.5rem;
+  text-align: left;
+  box-shadow: inset -8px -4px 1px #0e1c2c;
 }
 .menu-logo {
   display: block;
@@ -147,13 +181,13 @@ body {
 }
 .menu-link:hover,
 .menu-link.active {
-  background: #000;
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   text-decoration: none;
 }
 .menu-link:hover svg,
 .menu-link.active svg {
-  color: var(--naranja);
+  color: #62b732;
 }
 .menu-link svg {
   display: block;
@@ -183,7 +217,7 @@ body {
 .section-title {
   font-size: 24px;
   font-weight: 600;
-  color: #9b9b9b;
+  color: #2d2326;
 }
 .section-table {
   padding: 15px;
@@ -191,19 +225,24 @@ body {
   background: #fff;
   border-radius: 12px;
 }
-.modal-header {
-  background: var(--gris);
-  color: #000;
-  text-transform: uppercase;
+/*
+.modal {
+	@colorModal: @gris;
+	&-header {
+		background: @colorModal;
+		color: #000;
+		text-transform: uppercase;
+	}
+	&-body {
+		background: @colorModal;
+	}
+	&-footer {
+		background: @colorModal;
+	}
 }
-.modal-body {
-  background: #d8d3cb;
-}
-.modal-footer {
-  background: #d8d3cb;
-}
+*/
 .table-linklaw thead {
-  background: linear-gradient(to bottom, var(--azul), #0068a9);
+  background: #1e4a73;
 }
 .table-linklaw thead tr {
   border: 0;
@@ -213,6 +252,9 @@ body {
   color: #fff;
   text-align: center;
   text-transform: uppercase;
+}
+.svg-inline--fa {
+  animation: fadeIn 1s ease;
 }
 label.error {
   color: #c10d00;
@@ -241,6 +283,87 @@ label.error {
 }
 .data-text {
   color: #222;
+}
+.caso {
+  background: #fff;
+}
+.caso-titulo {
+  font-size: 20px;
+  font-weight: 600;
+}
+.caso-item {
+  margin-bottom: 1rem;
+}
+.caso-label {
+  font-weight: 600;
+}
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+.dashboard-card {
+  display: block;
+  background: var(--gris);
+  padding: 12px 12px 32px 12px;
+}
+.dashboard-card.color-1 {
+  background: #1e4a73;
+  color: #fff;
+}
+.dashboard-card.color-2 {
+  background: #62b732;
+  color: #fff;
+}
+.dashboard-card.color-3 {
+  background: #011438;
+  color: #fff;
+}
+.dashboard-card.color-4 {
+  background: #252525;
+  color: #fff;
+}
+.dashboard-card.color-5 {
+  background: #0f1921;
+  color: #fff;
+}
+.dashboard-card-header {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.dashboard-card-body {
+  text-align: center;
+  font-weight: 600;
+  font-size: 26px;
+}
+.dashboard-titulo {
+  color: #a3998d;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 14px;
+}
+#chart-container {
+  width: 100%;
+  height: 400px;
+  margin: auto;
+}
+#myBarChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+/* Estilos personalizados para los toasts de SweetAlert2 */
+.colored-toast .swal2-popup {
+  background-color: #333;
+  /* Color de fondo por defecto */
+}
+.colored-toast .swal2-popup.swal2-icon-success {
+  background-color: #28a745;
+  /* Verde para mensajes de éxito */
+}
+.colored-toast .swal2-popup.swal2-icon-error {
+  background-color: #dc3545;
+  /* Rojo para mensajes de error */
 }
 /* ==========================================================================
    Helper classes

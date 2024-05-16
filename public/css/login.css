@@ -2,7 +2,7 @@
    Login
    ========================================================================== */
 .login {
-  background: #cdc4ba url(../img/login.png) no-repeat right center;
+  background: #33356e url(../img/login.png) no-repeat right bottom;
   background-size: cover;
   height: 100vh;
   overflow: hidden;

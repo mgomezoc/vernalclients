@@ -26,7 +26,7 @@
     <meta name="theme-color" content="#fafafa">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/d179c845aa.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script>
@@ -56,6 +56,7 @@
                         </div>
                         <span>Inicio</span>
                     </a>
+
                     <?php if ($usuario["perfil"] == 1) : ?>
                         <a href="<?= base_url("usuarios") ?>" class="menu-link" data-menu="usuarios">
                             <div class="icon-container">
@@ -90,6 +91,7 @@
                             </div>
                             <span>Reportes</span>
                         </a>
+
                     <?php elseif ($usuario["perfil"] == 2) : ?>
                         <a href="<?= base_url("clientes/abogado") ?>" class="menu-link" data-menu="clientes">
                             <div class="icon-container">
@@ -97,6 +99,13 @@
                             </div>
                             <span>Clientes</span>
                         </a>
+                        <a href="<?= base_url("") ?>" class="menu-link" data-menu="reportes">
+                            <div class="icon-container">
+                                <i class="fa-duotone fa-file-chart-column"></i>
+                            </div>
+                            <span>Reportes</span>
+                        </a>
+
                     <?php elseif ($usuario["perfil"] == 3) : ?>
                         <a href="<?= base_url("clientes/recepcion") ?>" class="menu-link" data-menu="clientes">
                             <div class="icon-container">
@@ -104,6 +113,7 @@
                             </div>
                             <span>Clientes</span>
                         </a>
+
                     <?php endif; ?>
 
                 </div>

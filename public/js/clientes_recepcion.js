@@ -6,21 +6,24 @@ const urls = {
     obtener: baseUrl + "clientes/obtener-recepcion",
     asignar: baseUrl + "clientes/asignar-abogado",
     editar: baseUrl + "clientes/editar-cliente",
-    borrar: baseUrl + "clientes/eliminar-cliente"
+    borrar: baseUrl + "clientes/eliminar-cliente",
+    casos_cliente: baseUrl + "clientes/casos-cliente",
 };
 
 let $tablaClientes;
 let $modalAsignarAbogado;
+let $modalCobrar;
 let tplAccionesTabla = "";
 let tplEditarCliente = "";
-let tplClienteSlug = "";
+let tplCobroCliente = "";
 
 $(function () {
     setActiveMenu("clientes");
     tplAccionesTabla = $("#tplAccionesTabla").html();
     tplEditarCliente = $("#tplEditarCliente").html();
-    tplClienteSlug = $("#tplClienteSlug").html();
+    tplCobroCliente = $("#tplCobroCliente").html();
     $modalAsignarAbogado = $("#modalAsignarAbogado");
+    $modalCobrar = $("#modalCobrar");
 
     $modalAsignarAbogado.find(".select2").select2({
         placeholder: "Seleccione una opción",
@@ -39,6 +42,26 @@ $(function () {
         $frm[0].reset();
         $frm.find("select").trigger("change");
         $("#btnAsignarAbogado").attr("disabled", false);
+    });
+
+    $modalCobrar.on("show.bs.modal", function (e) {
+        const $btn = $(e.relatedTarget);
+        const id_cliente = $btn.data("id");
+        const Clientes = $tablaClientes.bootstrapTable("getData");
+        const cliente = Clientes.find((cliente) => cliente.id_cliente == id_cliente);
+
+        obtenerCasosPorCliente(id_cliente).then(function (r) {
+            cliente.casos = r.casos;
+            console.log(cliente);
+
+            const renderData = Handlebars.compile(tplCobroCliente)(cliente);
+
+            $("#modalCobrar .modal-body").html(renderData);
+        });
+
+
+    }).on("hide.bs.modal", function () {
+
     });
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({
@@ -75,7 +98,7 @@ $(function () {
                     if (!resultado.success) {
                         swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
                     } else {
-                        swal.fire("Listo", resultado.message, "success");
+                        swal.fire("¡Listo!", resultado.message, "success");
                         $tablaClientes.bootstrapTable("refresh");
                         $frm.find("input, select").attr("disabled", true);
                         $("#btnAsignarAbogado").attr("disabled", true);
@@ -88,14 +111,13 @@ $(function () {
                 });
         }
     }).validate();
-
-    $(document).on("click", "#btnCopiarSlug", function () {
-        const url = $("#linkSlug").prop("href");
-        copyToClipboard(url);
-    });
 });
 
 function accionesTablaUsuarios(value, row, index, field) {
+
+    row.esIntake = row.estatus == "2";
+    row.esViable = row.estatus == "4";
+
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
 
     return renderData;
@@ -110,37 +132,13 @@ function agregarAbogado(data) {
     });
 }
 
-function copyToClipboard(text) {
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(text)
-            .then(function () {
-                console.log('Texto copiado al portapapeles');
-            })
-            .catch(function (err) {
-                console.error('No se pudo copiar el texto: ', err);
-            });
-    } else {
-        fallbackCopyToClipboard(text);
-    }
-}
-
-function fallbackCopyToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
-
-    document.body.appendChild(textArea);
-
-    textArea.select();
-
-    try {
-        var successful = document.execCommand('copy');
-        var message = successful ? 'Texto copiado al portapapeles' : 'Error al copiar el texto';
-        console.log(message);
-    } catch (err) {
-        console.error('No se pudo copiar el texto: ', err);
-    }
-
-    document.body.removeChild(textArea);
+function obtenerCasosPorCliente(id_cliente) {
+    return $.ajax({
+        type: "post",
+        url: urls.casos_cliente,
+        data: { id_cliente },
+        dataType: "json"
+    });
 }
 
 function formatoNombre(value, row, index, field) {
@@ -148,3 +146,4 @@ function formatoNombre(value, row, index, field) {
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
     return tpl;
 }
+

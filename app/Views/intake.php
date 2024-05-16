@@ -34,6 +34,7 @@
 </head>
 
 <body>
+
     <header class="container header mt-3">
         <div class="row align-items-center mb-3">
             <div class="col-md-5">
@@ -58,7 +59,7 @@
                 <div class="card card-body text-center">
                     <h2 class="mb-3">Gracias por elegir a “The Law Office of Vernal Farnum Mejia”</h2>
                     <p class="mb-5">
-                        para realizar tus trámites migratorios. Deseamos ofrecerte un servicio humano, honesto y eficaz. Además, deseamos que tu visita a nuestras oficinas sea lo más agradable posible. Por eso, para evaluar mejor tu caso de inmigración queremos que tomes en cuenta las siguientes recomendaciones.
+                        Para realizar tus trámites migratorios. Deseamos ofrecerte un servicio humano, honesto y eficaz. Además, deseamos que tu visita a nuestras oficinas sea lo más agradable posible. Por eso, para evaluar mejor tu caso de inmigración queremos que tomes en cuenta las siguientes recomendaciones.
                     </p>
 
                     <div class="row mb-5">
@@ -69,16 +70,17 @@
                             <h3>Debes traer contigo:</h3>
                             <ol class="list-group list-group-flush list-group-numbered text-start">
                                 <li class="list-group-item">Una identificación de tu país de origen.</li>
-                                <li class="list-group-item">Documentos de la Corte de inmigración</li>
-                                <li class="list-group-item">Reporte de detenciones en la frontera</li>
-                                <li class="list-group-item">Recibos de procesos migratorios sometidos</li>
+                                <li class="list-group-item">Documentos de la Corte de inmigración.</li>
+                                <li class="list-group-item">Reporte de detenciones en la frontera.</li>
+                                <li class="list-group-item">Recibos de procesos migratorios sometidos.</li>
                                 <li class="list-group-item">Reportes de la policía</li>
                             </ol>
                             <div class="text-center my-3">
-                                <button class="btn btn-lg btn-primary">
-                                    <i class="fa-duotone fa-credit-card me-1"></i>
-                                    <span>Pagar Cita</span>
-                                </button>
+                                <script async src="https://js.stripe.com/v3/buy-button.js">
+                                </script>
+
+                                <stripe-buy-button buy-button-id="buy_btn_1PGpApFzRmkRg5Ln10pQL9pH" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o">
+                                </stripe-buy-button>
                             </div>
                         </div>
                     </div>
@@ -97,9 +99,17 @@
                             <h3>INFORMACIÓN GENERAL:</h3>
                             <div class="container-fluid">
                                 <div class="row mb-4">
-                                    <label class="col-sm-3 col-form-label">Fecha de consulta:</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" name="fecha_creado" value="<?= $fechaActual ?>" class="form-control-plaintext" readonly>
+                                    <div class="col-md-6">
+                                        <div class="row justify-content-center align-content-center">
+                                            <label class="col-sm-3 col-form-label">Fecha de consulta:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="fecha_creado" value="<?= $fechaActual ?>" class="form-control-plaintext" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cbSucursales">Sucursal</label>
+                                        <select id="cbSucursales" name="sucursal" class="form-select select2"></select>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -247,6 +257,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label for="Ciudadanía">Ciudadanía</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex flex-column-reverse">
+                                        <select name="nationality" id="cbCuidadania" class="comboPaises form-select select2" required></select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
@@ -279,7 +299,18 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Nombre Completo</label>
-                                <input type="text" class="form-control" name="beneficiario_nombre" required>
+                                <input type="hidden" name="beneficiario_nombre">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="name1" placeholder="Primer Nombre" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="name2" placeholder="Segundo Nombre">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="name3" placeholder="Apellidos" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Género</label>
@@ -338,33 +369,43 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Ciudad y País de Nacimiento</label>
-                                <input type="text" class="form-control" name="beneficiario_ciudad_pais">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Ciudad de Nacimiento</label>
+                                    <input type="text" class="form-control" name="beneficiario_ciudad">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Estado de Nacimiento</label>
+                                    <input type="text" class="form-control" name="beneficiario_estado">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">País de Nacimiento</label>
+                                    <select name="beneficiario_pais" id="cbPaisNacimiento" class="comboPaises form-select select2"></select>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Estado Civil</label>
                                 <div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_estado_civil" value="1">
+                                        <input type="radio" name="beneficiario_estado_civil" value="Married">
                                         <div class="state p-primary-o">
                                             <label>Casado</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_estado_civil" value="2">
+                                        <input type="radio" name="beneficiario_estado_civil" value="Divorced">
                                         <div class="state p-primary-o">
                                             <label>Divorciado</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_estado_civil" value="3">
+                                        <input type="radio" name="beneficiario_estado_civil" value="Widowed">
                                         <div class="state p-primary-o">
                                             <label>Viudo</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_estado_civil" value="4">
+                                        <input type="radio" name="beneficiario_estado_civil" value="Single">
                                         <div class="state p-primary-o">
                                             <label>Soltero</label>
                                         </div>
@@ -468,7 +509,6 @@
                                 <select id="horarioContacto" name="horario_contacto" class="form-select">
                                     <option value="manana">Mañana (9:00 AM - 12:00 PM)</option>
                                     <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
-                                    <option value="noche">Noche (6:00 PM - 9:00 PM)</option>
                                     <!-- Puedes agregar más opciones de horarios según tus necesidades -->
                                 </select>
                             </div>

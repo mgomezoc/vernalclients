@@ -28,7 +28,6 @@ $(function () {
 
     $tablaUsuarios = $("#tablaUsuarios").bootstrapTable({
         url: urls.obtenerUsuarios,
-        method: "GET",
         search: true,
         pagination: true,
         detailView: true,
@@ -93,7 +92,7 @@ $(function () {
                     if (!resultado.success) {
                         swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
                     } else {
-                        swal.fire("Listo", resultado.message, "success");
+                        swal.fire("¡Listo!", resultado.message, "success");
                         $tablaUsuarios.bootstrapTable("refresh");
                         $modalAgregarUsuario.modal("hide");
                         form.reset();
@@ -119,7 +118,7 @@ $(function () {
                     swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
 
                 } else {
-                    swal.fire("Listo", resultado.message, "success");
+                    swal.fire("¡Listo!", resultado.message, "success");
                     $tablaUsuarios.bootstrapTable("refresh");
                 }
             });
@@ -169,7 +168,7 @@ function eliminarUsuario(id) {
         data: { id: id },
         dataType: "json"
     }).then(function (resultado) {
-        swal.fire("Listo", resultado.message, "success");
+        swal.fire("¡Listo!", resultado.message, "success");
         $tablaUsuarios.bootstrapTable("refresh");
     });
 }

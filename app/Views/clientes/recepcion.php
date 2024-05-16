@@ -31,10 +31,19 @@
 
 <!-- ACCIONES TABLA -->
 <template id="tplAccionesTabla">
-    <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
-        <i class="fa-duotone fa-user-tie"></i>
-        <span>Asignar</span>
-    </button>
+    {{#if esIntake}}
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
+            <i class="fa-duotone fa-user-tie"></i>
+            <span>Asignar</span>
+        </button>
+    {{/if}}
+
+    {{#if esViable}}
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalCobrar" data-id="{{id_cliente}}" title="Cobrar">
+            <i class="fa-solid fa-cash-register ms-1"></i>
+            <span>Cobrar</span>
+        </button>
+    {{/if}}
 </template>
 
 <!-- Modal -->
@@ -75,6 +84,55 @@
         </div>
     </div>
 </div>
+
+<div id="modalCobrar" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Cobrar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="tplCobroCliente">
+    <div class="p-4">
+        {{#each casos}}
+            <div class="card card-body mb-5">
+                <div class="mb-3">
+                    <h5>Caso #{{id_caso}}</h5>
+                </div>
+                <div class="mb-3">
+                    <b>Comentarios:</b>
+                    <div>{{comentarios}}</div>
+                </div>
+                <div class="mb-5">
+                    <b>Costo:</b>
+                    <div>{{costo}}</div>
+                </div>
+                <div class="text-center">
+                    <a href="https://www.eimmigration.com/VFMLaw/Cases/{{caseID}}/#!/Expenses" class="btn btn-secondary" target="_blank">
+                        <span>Pagar</span>
+                        <img src="https://www.eimmigration.com/Images/ApplicationLogo.png" alt="eimmigration" width="126px">
+                    </a>
+                    <!--
+                    <button class="btn btn-success" data-cliente="{{../id_cliente}}">
+                        <i class="fa-solid fa-money-bill me-1"></i>
+                        <span>Pago en Efectivo</span>
+                    </button>
+                    <a class="btn btn-info" href="https://wa.me/{{../telefono}}?text=Hola!%20Puedes%20realizar%20tu%20pago%20en%20línea%20a%20través%20del%20siguiente%20enlace:%20https://buy.stripe.com/test_5kA3el8wHbHp6fCdQQ" target="_blank">
+                        <i class="fa-brands fa-whatsapp me-1"></i>
+                        <span>Pago en linea</span>
+                    </a>
+                    -->
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</template>
 
 <script>
     const abogados = <?= json_encode($abogados) ?>;

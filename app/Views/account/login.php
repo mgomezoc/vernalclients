@@ -25,6 +25,9 @@
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#fafafa">
     <script src="https://www.google.com/recaptcha/api.js?render=6Lec0ccnAAAAAKFUlFpz2MPD2ZjV2YKC14-0l0KV"></script>
+    <script>
+        const baseUrl = "<?= base_url() ?>";
+    </script>
 </head>
 
 <body>
@@ -33,7 +36,7 @@
         <div class="login-col">
             <div class="login-wrapper">
                 <div class="login-content">
-                    <img src="<?= base_url("img/logo-vernal-black.svg") ?>" alt="logo" class="login-logo">
+                    <img src="<?= base_url("img/logo-vernal-black.svg") ?>" alt="logo" class="login-logo" width="240px">
 
                     <form id="frmLogin" action="login" method="post" class="w-100">
                         <div class="mb-3">

@@ -10,12 +10,14 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                Formulario de Admisión
+                <i class="fa-solid fa-square-list me-1"></i>
+                <span>Formulario de Admisión</span>
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                Casos
+                <i class="fa-solid fa-folder-user me-1"></i>
+                <span>Casos</span>
             </button>
         </li>
     </ul>
@@ -180,15 +182,174 @@
                 </div>
             </div>
         </div>
+
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            <div class="card card-body text-center">
-                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-                <dotlottie-player src="https://lottie.host/2dd14c8c-49f9-463b-8f96-d5cd15939761/9YecvAjtkr.json" background="transparent" speed="1" style="width: 300px; height: 300px;margin:0 auto" loop autoplay></dotlottie-player>
-                <p class="mt-3">No existen registros.</p>
+            <div class="card card-body">
+                <?php if (empty($casos)) : ?>
+                    <div class="text-center">
+                        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                        <dotlottie-player src="https://lottie.host/2dd14c8c-49f9-463b-8f96-d5cd15939761/9YecvAjtkr.json" background="transparent" speed="1" style="width: 300px; height: 300px;margin:0 auto" loop autoplay></dotlottie-player>
+                        <p class="mt-3">No existen registros.</p>
+                    </div>
+                <?php else : ?>
+                    <div class="casos">
+                        <?php foreach ($casos as $caso) : ?>
+                            <div class="caso card mb-4">
+                                <div class="card-header">
+                                    <div class="caso-titulo">CASO #<?= $caso['id_caso'] ?> - <?= $caso['proceso'] ?></div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="caso-item">
+                                                <div class="caso-label">Proceso Principal</div>
+                                                <div class="caso-text"><?= $caso['proceso'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <div class="caso-label">Costo</div>
+                                                <div class="caso-text"><?= $caso['costo'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <div class="caso-label">Comentarios</div>
+                                                <div class="caso-text"><?= $caso['comentarios'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <div class="caso-label">Creado</div>
+                                                <div class="caso-text"><?= $caso['fecha_creacion'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <div class="caso-label">Fecha de corte</div>
+                                                <div class="caso-text"><?= $caso['fecha_corte'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <div class="caso-label">Ultima Actualización</div>
+                                                <div class="caso-text"><?= $caso['fecha_actualizacion'] ?></div>
+                                            </div>
+                                            <div class="caso-item">
+                                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalComentarios" data-id="<?= $caso['id_caso'] ?>">Comentarios</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php if ($caso['pagado'] == "0") : ?>
+                                                <div class="text-center">
+                                                    <script async src="https://js.stripe.com/v3/buy-button.js">
+                                                    </script>
+
+                                                    <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o">
+                                                    </stripe-buy-button>
+                                                </div>
+                                            <?php else : ?>
+                                                <div class="text-center mt-3">
+                                                    <div class="alert alert-success" role="alert">
+                                                        <?php if ($caso['forma_pago'] == "1") : ?>
+                                                            <span>Caso pagado en linea.</span>
+                                                        <?php else : ?>
+                                                            <span>Caso pagado en oficina.</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <?php if ($caso['estatus'] != "4") : ?>
+                                        <button class="btn btn-danger btnCerrarCaso" data-id="<?= $caso['id_caso'] ?>">
+                                            <i class="fa-duotone fa-ballot-check me-1"></i>
+                                            <span>Cerrar</span>
+                                        </button>
+                                    <?php endif; ?>
+                                    <button class="btnEncuesta btn btn-azul">
+                                        <i class="fa-duotone fa-paper-plane-top me-1"></i>
+                                        <span>Encuesta</span>
+                                    </button>
+                                    <?php if ($caso['pagado'] == "0") : ?>
+                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
+                                            <i class="fa-duotone fa-receipt me-1"></i>
+                                            <span>Pagado en linea</span>
+                                        </button>
+                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="2">
+                                            <i class="fa-duotone fa-receipt me-1"></i>
+                                            <span>Pagado en oficina</span>
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modalComentarios" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Comentarios
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form id="frmComentario" method="post" autocomplete="off">
+                            <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
+                            <input type="hidden" name="id_caso" id="inputCasoComentario">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Comentario</label>
+                                <textarea name="comentario" class="form-control" required></textarea>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary">Agregar Comentario</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="comentariosContainer"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<template id="tplComentarios">
+    <div class="card">
+        <div class="card-body">
+            {{#each comentarios}}
+                <div class="mb-4">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fa-light fa-message-lines"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="mb-1">{{comentario}}</p>
+                            <div class="text-muted small mt-1">{{fecha_creacion}}</div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <div class="text-center text-muted">
+                    No hay comentarios
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+
+
 
 <template id="tplFormulario">
     <div id="formulario_admision">
@@ -392,6 +553,7 @@
 
 <script>
     const cliente = <?= json_encode($cliente) ?>;
+    const casos = <?= json_encode($casos) ?>;
     const formulario = <?= json_encode($formulario) ?>;
     const datos = formulario ? JSON.parse(formulario.datos_admision) : [];
 </script>

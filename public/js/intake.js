@@ -213,10 +213,19 @@ $(function () {
         }));
     });
 
+    cargarPaises();
+
+    cargarSucursales();
+
     $(".select2").select2({
         placeholder: "Seleccione una opción",
         theme: 'bootstrap-5',
         width: '100%',
+    });
+
+    // Forzar la validación en Select2 al cambiar
+    $('.select2').on('change', function () {
+        $(this).valid();
     });
 
     $('#cbTipoVisa').select2({
@@ -288,9 +297,10 @@ $(function () {
         }
     });
 
-    $("#frmIntake").on("submit", function () {
+    $("#frmIntake").on("submit", function (e) {
+        e.preventDefault();
         const $frm = $(this);
-        const formData = $frm.serializeObject();
+        let formData = $frm.serializeObject();
 
         if (formData.fuente_informacion) {
             if ($.isArray(formData.fuente_informacion)) {
@@ -300,14 +310,73 @@ $(function () {
             formData.fuente_informacion = "";
         }
 
-        console.log(formData);
+        formData.beneficiario_nombre = `${formData.name1} ${formData.name2} ${formData.name3}`;
 
+        const sexID = formData.beneficiario_genero == "Masculino" ? 0 : 1;
+
+
+        let dataCliente = {
+            "id_cliente": formData.id_cliente,
+            //"clientID": 0,
+            "typeID": 0,
+            //"statusID": 0,
+            "sexID": sexID,
+            "clientNumber": formData.a_number,
+            //"externalClientNumber": "string",
+            "name1": formData.name1,
+            "name2": formData.name2,
+            "name3": formData.name3,
+            //"maidenName": "string",
+            //"title": "string",
+            "maritalStatus": formData.beneficiario_estado_civil,
+            //"ssn": "string",
+            //"alienNumber": "string",
+            "birthText": formData.beneficiario_fecha_nacimiento,
+            "birthCity": formData.beneficiario_ciudad,
+            "birthState": formData.beneficiario_estado,
+            "birthCountry": formData.beneficiario_pais,
+            "dayPhone": formData.direccion_telefono,
+            "eveningPhone": formData.direccion_telefono,
+            "cellPhone": formData.direccion_telefono,
+            //"fax": "string",
+            "email": formData.direccion_email,
+            "nationality": formData.nationality,
+            //"educationField": "string",
+            //"educationDegree": "string",
+            //"naicsNumber": "string",
+            //"businessType": "string",
+            //"establishmentYear": "string",
+            //"employeesCount": "string",
+            //"annualGrossIncome": "string",
+            //"annualNetIncome": "string",
+            //"blanketLPetitionReceiptNumber": "string",
+            //"niStatus": "string",
+            //"niStatusExpirationText": "string",
+            //"niStatusMaximumExpirationText": "string",
+            //"elisAccountNumber": "string",
+            //"preferredName": "string",
+            //"pronounID": 0,
+            //"preferredContactMethod": "string",
+            //"preferredLanguage": "string",
+            //"householdSize": "string",
+            //"householdIncome": "string",
+            //"emergencyContactName": "string",
+            //"emergencyContactBirthText": "string",
+            //"emergencyContactRelationshipToClient": "string",
+            //"emergencyContactPhone": "string"
+            autoGenerateClientNumber: false,
+            lawFirmLocationID: formData.sucursal
+        };
+
+        console.log(dataCliente, formData);
 
         if ($frm.valid()) {
             guardarIntake(formData).then(function (r) {
                 if (!r.success) {
                     swal.fire("¡Oops! Algo salió mal.", r.message, "error");
                 } else {
+                    addClient(dataCliente);
+
                     $("#formContainer").hide();
                     $("#mensajeCorrecto").fadeIn();
                 }
@@ -357,11 +426,205 @@ function esMenorDeEdad(fechaString) {
     }
 }
 
-
 function guardarIntake(data) {
     return $.ajax({
         type: "post",
         url: baseUrl + "intake/guardar",
+        data: data,
+        dataType: "json",
+    });
+}
+
+function addClient(data) {
+
+    const lawFirmLocationID = data.lawFirmLocationID;
+
+    return $.ajax({
+        url: `${baseUrl}api/addClient`,
+        type: 'POST',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (r) {
+            actualizarClientID(data.id_cliente, r.clientID);
+            createCase(r.clientID, lawFirmLocationID);
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function createCase(clientID, lawFirmLocationID) {
+
+    var caseData = {
+        "autoGenerateCaseNumber": true,
+        "clientID": clientID,
+        "caseID": 0,
+        "applicationText": "Aplicación inicial para revisión",
+        "caseCategoryID": null,
+        "caseName": "Intake",
+        "caseNumber": `CONSULTA CN-${clientID}-001`,
+        //"creationDate": "2024-03-26T18:46:47.217Z",
+        "denialText": null,
+        "expirationText": null,
+        "externalCaseID": null,
+        "externalCaseNumber": null,
+        "filingTypeID": null,
+        "physicalDocumentLocationID": null,
+        "processID": 167,
+        "areaOfPracticeID": 1,
+        "processingText": null,
+        "statusChangeComment": null,
+        //"statusChangeDate": "2024-03-26T18:46:47.217Z",
+        "statusID": 0,
+        //"updateDate": "2024-03-26T18:46:47.217Z",
+        "incidentText": null,
+        "statuteOfLimitationText": null,
+        "incidentLocation": null,
+        "note": null,
+        "case_Client": clientID,
+        "lawFirmLocationID": lawFirmLocationID,
+        "mainPartyID": clientID,
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/createCase`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(caseData),
+        dataType: 'json',
+        success: function (r) {
+            console.log('Case created successfully:', r);
+            addCaseParty(r.caseID, clientID);
+        },
+        error: function (error) {
+            console.error('Error creating case:', error);
+        }
+    });
+}
+
+function addCaseParty(caseID, clientID, clientName) {
+
+    var partyData = {
+        "clientID": clientID,
+        "caseID": caseID,
+        "clientName": clientName,
+        "clientTypeID": 0,
+        "isMainParty": true,
+        "roleID": 8,
+        "addressID": null,
+        "address": "",
+        "signatoryID": null,
+        "signatory": "",
+        "clientType": {
+            "typeID": 0,
+            "name": "Individual"
+        },
+        "role": {
+            "roleID": 8,
+            "name": "Beneficiary"
+        }
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/addCaseParty/${caseID}`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(partyData),
+        dataType: 'json',
+        success: function (data) {
+            console.log('Party created successfully:', data);
+        },
+        error: function (error) {
+            console.error('Error creating case:', error);
+        }
+    });
+}
+
+//GeneralAPI
+function cargarPaises() {
+    $.ajax({
+        url: `${baseUrl}api/worldCountries`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            var $selectsPaisNacimiento = $('.comboPaises');
+
+            $selectsPaisNacimiento.each(function () {
+                var $select = $(this);
+                $select.empty();
+
+                $select.append($('<option>', {
+                    value: '',
+                    text: 'Seleccione un país'
+                }));
+
+                $.each(response, function (i, country) {
+                    $select.append($('<option>', {
+                        value: country.name,
+                        text: country.name
+                    }));
+                });
+
+                $select.select2({
+                    placeholder: "Seleccione una opción",
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                });
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al cargar los países: " + error);
+        }
+    });
+}
+
+
+function cargarSucursales() {
+    $.ajax({
+        url: `${baseUrl}api/lawFirmLocations`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            var $select = $('#cbSucursales');
+            $select.empty();
+
+            $select.append($('<option>', {
+                value: '',
+                text: 'Seleccione una sucursal'
+            }));
+
+            const data = response.totalCount > 0 ? response.data : [];
+
+            $.each(data, function (i, option) {
+                $select.append($('<option>', {
+                    value: option.lawFirmLocationID,
+                    text: option.name
+                }));
+            });
+
+            $select.select2({
+                placeholder: "Seleccione una opción",
+                theme: 'bootstrap-5',
+                width: '100%',
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al cargar los países: " + error);
+        }
+    });
+}
+
+function actualizarClientID(id_cliente, clientID) {
+    const data = {
+        id_cliente: id_cliente,
+        clientID: clientID,
+    };
+
+    return $.ajax({
+        type: "post",
+        url: baseUrl + "clientes/clientid",
         data: data,
         dataType: "json",
     });

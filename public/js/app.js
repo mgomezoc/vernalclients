@@ -47,4 +47,61 @@ function mostrarConfirmacion(mensaje, confirmCallback, ...params) {
   });
 }
 
+function showSweetAlert(type, message) {
+  Swal.fire({
+    position: 'top-end',
+    icon: type,
+    title: message,
+    showConfirmButton: false,
+    timer: 3000,
+    toast: true,
+    customClass: {
+      popup: 'colored-toast'
+    }
+  });
+}
+
+function ajaxCall(options) {
+  return $.ajax({
+    ...options,
+    success: function (response) {
+      if (options.success) {
+        options.success(response);
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      if (xhr.status === 401 || xhr.getResponseHeader("Location")) {
+        // Mostrar un mensaje con SweetAlert indicando que la sesión ha expirado
+        swal.fire("Sesión Expirada", "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.", "warning")
+          .then(() => {
+            // Redirigir al usuario a la página de inicio de sesión
+            window.location.href = `${Server}Account/Login`;
+          });
+      } else {
+        handleError(xhr.status, xhr, textStatus, errorThrown);
+      }
+    }
+  });
+}
+
+function handleError(status, xhr, textStatus, errorThrown) {
+  switch (status) {
+    case 400:
+      swal.fire("Solicitud Incorrecta", "La solicitud no pudo ser procesada. Por favor, verifica los datos ingresados.", "error");
+      break;
+    case 404:
+      swal.fire("No Encontrado", "El recurso solicitado no se encontró. Por favor, verifica la URL.", "error");
+      break;
+    case 500:
+      swal.fire("Error del Servidor", "Ocurrió un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.", "error");
+      break;
+    default:
+      swal.fire("Error", `Ocurrió un error: ${textStatus}. Por favor, inténtalo de nuevo más tarde.`, "error");
+      break;
+  }
+  console.error("Error en la llamada Ajax:", textStatus, errorThrown);
+}
+
+
+
 
