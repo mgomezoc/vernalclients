@@ -125,3 +125,6 @@ tests/_ci_phpunit_test/
 *.wmv
 *.mkv
 *.wav
+
+# Ignorar archivos de depuración de CodeIgniter Debug Toolbar
+writable/debugbar/
