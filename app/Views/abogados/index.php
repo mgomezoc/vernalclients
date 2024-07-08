@@ -18,7 +18,7 @@
                             <th data-field="correo_electronico">Correo</th>
                             <th data-field="sucursal_nombre" data-sortable="true">Sucursal</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
-                            <th data-field="id">Casos</th>
+                            <th data-field="casos_count">Casos</th>
                             <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
                         </tr>
                     </thead>

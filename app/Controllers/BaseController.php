@@ -24,7 +24,19 @@ abstract class BaseController extends Controller
     protected function render($view, $data)
     {
         $usuario = session('usuario');
+        $perfil = session('perfil');
+
         $data['usuario'] = $usuario;
+        $data['perfil'] = $perfil;
+
+
+        if (!$usuario) {
+            //echo "<pre>" . print_r($data, true) . "</pre>";
+
+            //exit();
+            return redirect()->to(site_url('login'));
+        }
+
 
         return view($view, $data);
     }

@@ -14,6 +14,7 @@ class AbogadoModel extends Model
     {
         return $this->db->table('abogados a')
             ->select('a.id AS abogado_id, u.id AS usuario_id, u.nombre AS usuario_nombre, u.apellido_paterno AS usuario_apellido_paterno, u.apellido_materno AS usuario_apellido_materno, u.correo_electronico AS correo_electronico, s.id AS sucursal_id, s.nombre AS sucursal_nombre, a.especialidad, a.telefono, a.fecha_creacion AS abogado_fecha_creacion')
+            ->select('(SELECT COUNT(*) FROM casos c WHERE c.id_usuario = a.id_usuario) AS casos_count')
             ->join('usuarios u', 'a.id_usuario = u.id')
             ->join('sucursales s', 'a.id_sucursal = s.id')
             ->get()

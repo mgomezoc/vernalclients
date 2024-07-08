@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<?= base_url("css/style.css") ?>">
     <link rel="stylesheet" href="<?= base_url("css/login.css") ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://kit.fontawesome.com/d179c845aa.js" crossorigin="anonymous"></script>
 
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#fafafa">
@@ -41,11 +42,16 @@
                     <form id="frmLogin" action="login" method="post" class="w-100">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="correo_electronico" required>
+                            <input type="email" class="form-control" id="email" name="correo_electronico" value="<?= old('correo_electronico') ?>" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="contrasena" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="contrasena" required>
+                                <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                                    <i class="fa fa-eye" id="icon-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div id="recaptchaContainer"></div>
                         <input type="hidden" id="recaptchaToken" name="recaptchaToken">
@@ -64,7 +70,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js" integrity="sha512-v0vjOquuhHQslRkq1a5BwUIyKSD7ZbgFfQv4jzSBGwbIVTCOs5JQdotZVoRjPRzb9UToTvuP2kdR5CVE4TLgMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="<?= base_url("js/app.js") ?>"></script>
     <script src="<?= base_url("js/login.js") ?>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
 
+    <script>
+        // Mostrar / Ocultar Contraseña
+        $(document).ready(function() {
+            $('#togglePassword').click(function() {
+                const passwordField = $('#password');
+                const passwordFieldType = passwordField.attr('type') === 'password' ? 'text' : 'password';
+                passwordField.attr('type', passwordFieldType);
+
+                const icon = $(this).find('#icon-eye');
+                icon.toggleClass('fa-eye fa-eye-slash');
+            });
+
+            // Almacenar y recuperar correo electrónico usando localForage
+            localforage.getItem('lastEmail').then(function(value) {
+                if (value) {
+                    $('#email').val(value);
+                }
+            });
+
+            $('#frmLogin').submit(function() {
+                const email = $('#email').val();
+                localforage.setItem('lastEmail', email);
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -48,3 +48,26 @@
   background: #31395f !important;
   color: #fff;
 }
+.toggle-password-btn {
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+}
+.toggle-password-btn .fa {
+  font-size: 1.2rem;
+}
+.input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

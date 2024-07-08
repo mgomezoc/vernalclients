@@ -200,43 +200,73 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="caso-item">
-                                                <div class="caso-label">Proceso Principal</div>
-                                                <div class="caso-text"><?= $caso['proceso'] ?></div>
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Proceso Principal</div>
+                                                        <div class="caso-text"><?= $caso['proceso'] ?></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Procesos Adicionales</div>
+                                                        <?php $procesos_adicionales = json_decode($caso['procesos_adicionales'], true); ?>
+                                                        <ul class="caso-text">
+                                                            <?php if (!empty($procesos_adicionales)) : ?>
+                                                                <?php foreach ($procesos_adicionales as $proceso) : ?>
+                                                                    <li><?= $proceso['label'] ?></li>
+                                                                <?php endforeach; ?>
+                                                            <?php else : ?>
+                                                                <li>No hay procesos adicionales.</li>
+                                                            <?php endif; ?>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="caso-item">
-                                                <div class="caso-label">Costo</div>
-                                                <div class="caso-text"><?= $caso['costo'] ?></div>
-                                            </div>
-                                            <div class="caso-item">
-                                                <div class="caso-label">Comentarios</div>
+                                                <div class="caso-label">Antecedente</div>
                                                 <div class="caso-text"><?= $caso['comentarios'] ?></div>
                                             </div>
-                                            <div class="caso-item">
-                                                <div class="caso-label">Creado</div>
-                                                <div class="caso-text"><?= $caso['fecha_creacion'] ?></div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Creado</div>
+                                                        <div class="caso-text"><?= $caso['fecha_creacion'] ?></div>
+                                                    </div>
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Costo</div>
+                                                        <div class="caso-text"><?= $caso['costo'] ?></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Ultima Actualización</div>
+                                                        <div class="caso-text"><?= $caso['fecha_actualizacion'] ?></div>
+                                                    </div>
+                                                    <div class="caso-item">
+                                                        <div class="caso-label">Fecha de corte</div>
+                                                        <div class="caso-text"><?= $caso['fecha_corte'] ?></div>
+                                                    </div>
+                                                </div>
                                             </div>
+
+
                                             <div class="caso-item">
-                                                <div class="caso-label">Fecha de corte</div>
-                                                <div class="caso-text"><?= $caso['fecha_corte'] ?></div>
-                                            </div>
-                                            <div class="caso-item">
-                                                <div class="caso-label">Ultima Actualización</div>
-                                                <div class="caso-text"><?= $caso['fecha_actualizacion'] ?></div>
-                                            </div>
-                                            <div class="caso-item">
-                                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalComentarios" data-id="<?= $caso['id_caso'] ?>">Comentarios</button>
+                                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalComentarios" data-id="<?= $caso['id_caso'] ?>">
+                                                    <i class="fa-regular fa-comment-lines me-1"></i>
+                                                    <span>Comentarios</span>
+                                                </button>
+                                                <a href="https://www.eimmigration.com/VFMLaw/Cases/<?= $caso['caseID'] ?>/#!/GeneralInfo" class="btn btn-link" target="_blank">
+                                                    <span>Ver en eimmigration</span>
+                                                    <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i></a>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <?php if ($caso['pagado'] == "0") : ?>
                                                 <div class="text-center">
-                                                    <script async src="https://js.stripe.com/v3/buy-button.js">
-                                                    </script>
-
-                                                    <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o">
-                                                    </stripe-buy-button>
+                                                    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+                                                    <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o"></stripe-buy-button>
                                                 </div>
                                             <?php else : ?>
                                                 <div class="text-center mt-3">
@@ -249,11 +279,9 @@
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
-
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="card-footer">
                                     <?php if ($caso['estatus'] != "4") : ?>
                                         <button class="btn btn-danger btnCerrarCaso" data-id="<?= $caso['id_caso'] ?>">
@@ -279,6 +307,7 @@
                             </div>
                         <?php endforeach; ?>
                     </div>
+
                 <?php endif; ?>
             </div>
         </div>
@@ -303,10 +332,13 @@
                             <input type="hidden" name="id_caso" id="inputCasoComentario">
                             <div class="mb-3">
                                 <label for="" class="form-label">Comentario</label>
-                                <textarea name="comentario" class="form-control" required></textarea>
+                                <textarea name="comentario" class="form-control" rows="10" required></textarea>
                             </div>
                             <div>
-                                <button class="btn btn-primary">Agregar Comentario</button>
+                                <button class="btn btn-primary">
+                                    <i class="fa-regular fa-comment-lines me-1"></i>
+                                    <span>Agregar Comentario</span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -328,7 +360,7 @@
     <div class="card">
         <div class="card-body">
             {{#each comentarios}}
-                <div class="mb-4">
+                <div class=" mb-4">
                     <div class="d-flex align-items-start">
                         <div class="flex-shrink-0">
                             <i class="fa-light fa-message-lines"></i>

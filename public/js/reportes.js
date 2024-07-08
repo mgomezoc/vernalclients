@@ -65,6 +65,8 @@ $(function () {
             cargarDashborad(data);
         }
     });
+
+    init();
 });
 
 function accionesTablaUsuarios() {
@@ -246,4 +248,140 @@ function procesarDatos(datos) {
         promedioProfesionalismoActitud,
         respuestaMasComunTiempo
     };
+}
+
+
+function init() {
+    CasosPorTipo().then(function (r) {
+        $("#tbCasosPorTipo").bootstrapTable({
+            data: r
+        });
+    });
+
+    CasosPorEstatus().then(function (r) {
+        $("#tbCasosPorEstatus").bootstrapTable({
+            data: r
+        });
+    });
+
+    CasosPorAbogado().then(function (r) {
+        $("#tbCasosPorAbogado").bootstrapTable({
+            data: r
+        });
+    });
+
+    CasosPorSucursal().then(function (r) {
+        $("#tbCasosPorSucursal").bootstrapTable({
+            data: r
+        });
+    });
+
+    CasosPagadosNoPagados().then(function (r) {
+        $("#tbCasosPagadosNoPagados").bootstrapTable({
+            data: r
+        });
+    });
+
+    ClientesPorSucursal().then(function (r) {
+        $("#tbClientesPorSucursal").bootstrapTable({
+            data: r
+        });
+    });
+    ClientesPorEstatus().then(function (r) {
+        $("#tbClientesPorEstatus").bootstrapTable({
+            data: r
+        });
+    });
+    ComentariosPorCaso();
+    EncuestaDeSatisfaccion();
+    IngresosPorTipoDeCaso();
+    IngresosPorSucursal();
+}
+
+function CasosPorTipo() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/casos-por-tipo`,
+        dataType: "json"
+    })
+}
+
+function CasosPorEstatus() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/casos-por-estatus`,
+        dataType: "json"
+    })
+}
+
+function CasosPorAbogado() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/casos-por-abogado`,
+        dataType: "json"
+    })
+}
+
+function CasosPorSucursal() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/casos-por-sucursal`,
+        dataType: "json"
+    })
+}
+
+function CasosPagadosNoPagados() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/casos-pagados-vs-no-pagados`,
+        dataType: "json"
+    })
+}
+
+function ClientesPorSucursal() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/clientes-por-sucursal`,
+        dataType: "json"
+    })
+}
+
+function ClientesPorEstatus() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/clientes-por-estatus`,
+        dataType: "json"
+    })
+}
+
+function ComentariosPorCaso() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/comentarios-por-caso`,
+        dataType: "json"
+    })
+}
+
+function EncuestaDeSatisfaccion() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/encuestas-de-satisfaccion`,
+        dataType: "json"
+    })
+}
+
+function IngresosPorTipoDeCaso() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/ingresos-por-tipo-de-caso`,
+        dataType: "json"
+    })
+}
+
+function IngresosPorSucursal() {
+    return ajaxCall({
+        type: "post",
+        url: `${baseUrl}reportes/ingresos-por-sucursal`,
+        dataType: "json"
+    })
 }

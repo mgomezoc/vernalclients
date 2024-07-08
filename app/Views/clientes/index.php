@@ -5,8 +5,7 @@
             <span>Clientes</span>
         </h1>
         <div>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">Añadir
-                nuevo</button>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">Añadir nuevo</button>
         </div>
     </div>
 
@@ -21,7 +20,8 @@
                             <th data-field="nombre_sucursal">Sucursal</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
                             <th data-field="nombre_estatus" data-formatter="columnaEstatus">Estatus</th>
-                            <th data-field="fecha_ultima_actualizacion">Ultima Actualización</th>
+                            <th data-field="tipo_consulta" data-visible="false">Tipo de Consulta</th>
+                            <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true">Creado</th>
                             <th data-field="slug" data-formatter="accionesTablaUsuarios" data-align="center"></th>
                         </tr>
@@ -109,6 +109,18 @@
                 </select>
                 <div id="ayudaEstatus" class="form-text">Estatus actual: {{nombre_estatus}}</div>
             </div>
+            <div class="mb-3">
+                <label for="cbTipoConsulta" class="form-label">Tipo de Consulta</label>
+                <div class="d-flex flex-column-reverse">
+                    <select name="tipo_consulta" id="cbTipoConsulta" class="form-control select2" aria-describedby="ayudaTipoConsulta">
+                        <option value="">Selecciona el tipo de consulta</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="online">En Línea</option>
+                    </select>
+                </div>
+                <div id=" ayudaTipoConsulta" class="form-text">Tipo de consulta actual: {{tipo_consulta}}
+                </div>
+            </div>
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">Cambiar estatus</button>
             </div>
@@ -148,6 +160,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <label for="nuevo_tipo_consulta" class="form-label">Tipo de Consulta</label>
+                            <div class="d-flex flex-column-reverse">
+                                <select name="tipo_consulta" id="nuevo_tipo_consulta" class="select2 form-select" required>
+                                    <option value="">Seleccionar Tipo de Consulta</option>
+                                    <option value="presencial" selected>Presencial</option>
+                                    <option value="online">En Línea</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div id="clienteSlug"></div>
                         </div>
@@ -164,11 +186,11 @@
 
 <template id="tplClienteSlug">
     <div class="p-3 text-center">
-        <div class="mb-3">Esta es la url del formulario de admisión <a href="<?= base_url("/") ?>intake/{{this}}" id="linkSlug" target="_blank"><?= base_url("/") ?>intake/{{this}} <i class="fa-duotone fa-arrow-up-right-from-square"></i></a></div>
+        <div class="mb-3">Esta es la URL del formulario de admisión <a href="<?= base_url("/") ?>intake/{{this}}" id="linkSlug" target="_blank"><?= base_url("/") ?>intake/{{this}} <i class="fa-duotone fa-arrow-up-right-from-square"></i></a></div>
         <div>
             <button type="button" class="btn btn-sm btn-outline-secondary" id="btnCopiarSlug">
                 <i class="fa-duotone fa-copy"></i>
-                <span>copiar!</span>
+                <span>¡Copiar!</span>
             </button>
         </div>
     </div>

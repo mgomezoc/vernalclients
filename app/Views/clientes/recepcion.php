@@ -17,7 +17,7 @@
                             <th data-field="nombre_sucursal">Sucursal</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
                             <th data-field="nombre_estatus">Estatus</th>
-                            <th data-field="fecha_ultima_actualizacion">Ultima Actualización</th>
+                            <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true">Creado</th>
                             <th data-field="slug" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
                         </tr>
@@ -26,7 +26,6 @@
             </div>
         </div>
     </div>
-
 </section>
 
 <!-- ACCIONES TABLA -->
@@ -46,7 +45,7 @@
     {{/if}}
 </template>
 
-<!-- Modal -->
+<!-- Modal Asignar Abogado -->
 <div class="modal fade" id="modalAsignarAbogado" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -56,20 +55,27 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form id="frmAsignarAbogado" action="#" method="post" class="row g-5">
+                    <form id="frmAsignarAbogado" action="#" method="post" class="row g-3">
                         <input type="hidden" name="id_cliente" id="idClienteAsignarAbogado">
                         <div class="col-md-12">
                             <label for="abogados" class="form-label">Abogado a asignar:</label>
-                            <div class="d-flex flex-column-reverse">
-                                <select name="id_abogado" id="abogados" class="select2 form-select" required>
-                                    <option value="">Seleccionar Abogado</option>
+                            <select name="id_abogado" id="abogados" class="select2 form-select" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <optgroup label="Abogados">
                                     <?php foreach ($abogados as $abogado) : ?>
                                         <option value="<?= esc($abogado['usuario_id']) ?>">
                                             <?= esc($abogado['usuario_nombre'] . " " . $abogado['usuario_apellido_paterno']) ?>
                                         </option>
                                     <?php endforeach; ?>
-                                </select>
-                            </div>
+                                </optgroup>
+                                <optgroup label="Paralegal">
+                                    <?php foreach ($paralegales as $paralegal) : ?>
+                                        <option value="<?= esc($paralegal['id']) ?>">
+                                            <?= esc($paralegal['nombre'] . " " . $paralegal['apellido_paterno']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="col-md-12">
                             <div id="clienteSlug"></div>
@@ -85,6 +91,7 @@
     </div>
 </div>
 
+<!-- Modal Cobrar -->
 <div id="modalCobrar" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -118,16 +125,6 @@
                         <span>Pagar</span>
                         <img src="https://www.eimmigration.com/Images/ApplicationLogo.png" alt="eimmigration" width="126px">
                     </a>
-                    <!--
-                    <button class="btn btn-success" data-cliente="{{../id_cliente}}">
-                        <i class="fa-solid fa-money-bill me-1"></i>
-                        <span>Pago en Efectivo</span>
-                    </button>
-                    <a class="btn btn-info" href="https://wa.me/{{../telefono}}?text=Hola!%20Puedes%20realizar%20tu%20pago%20en%20línea%20a%20través%20del%20siguiente%20enlace:%20https://buy.stripe.com/test_5kA3el8wHbHp6fCdQQ" target="_blank">
-                        <i class="fa-brands fa-whatsapp me-1"></i>
-                        <span>Pago en linea</span>
-                    </a>
-                    -->
                 </div>
             </div>
         {{/each}}

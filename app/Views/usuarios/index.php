@@ -35,7 +35,9 @@
 <template id="tplEditarUsuario">
   <div class="card card-body p-5">
     <form method="post" class="frmEditarUsuario row g-3">
+      <?= csrf_field() ?>
       <input type="hidden" name="id" value="{{id}}">
+
       <div class="col-md-4">
         <label for="name" class="form-label">Nombre(s)</label>
         <input type="text" id="name" name="nombre" value="{{nombre}}" class="form-control" placeholder="Su nombre" required>
@@ -56,9 +58,12 @@
         <label for="profile" class="form-label">Perfil</label>
         <select name="perfil" id="profile" class="cbPerfiles form-select" required>
           <option value="">Selecciona una opción</option>
-          <option value="1">Administrador</option>
-          <option value="2">Abogado</option>
-          <option value="3">Recepción</option>
+          <option value="1">CALL</option>
+          <option value="2">RECEPTION</option>
+          <option value="3">PARALEGAL</option>
+          <option value="4">ADMIN</option>
+          <option value="5">MARKETING</option>
+          <option value="6">ATTORNEY</option>
         </select>
       </div>
       <div class="col-12 mt-5">
@@ -79,6 +84,7 @@
       <div class="modal-body">
         <div class="container-fluid">
           <form id="frmAgregarUsuario" action="#" method="post" class="row g-5">
+            <?= csrf_field() ?>
             <div class="col-md-4">
               <label for="name" class="form-label">Nombre(s)</label>
               <input type="text" id="name" name="nombre" class="form-control" placeholder="Su nombre" required>
@@ -100,9 +106,12 @@
               <div class="d-flex flex-column-reverse">
                 <select name="perfil" id="profile" class="select2 form-select" required>
                   <option value="">Selecciona una opción</option>
-                  <option value="1">Administrador</option>
-                  <option value="2">Abogado</option>
-                  <option value="3">Recepción</option>
+                  <option value="1">CALL</option>
+                  <option value="2">RECEPTION</option>
+                  <option value="3">PARALEGAL</option>
+                  <option value="4">ADMIN</option>
+                  <option value="5">MARKETING</option>
+                  <option value="6">ATTORNEY</option>
                 </select>
               </div>
             </div>

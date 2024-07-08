@@ -291,7 +291,9 @@
                                     <div id="container-nacionalidad" class="row" hidden>
                                         <label class="col-sm-6 col-form-label">Nacionalidad</label>
                                         <div class="col-sm-6">
-                                            <select id="cbNacionalidad" name="segunda_nacionalidad" class="form-select"></select>
+                                            <select id="cbNacionalidad" name="segunda_nacionalidad" class="form-select">
+                                                <option value="" selected disabled></option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

@@ -30,6 +30,7 @@ $(function () {
         url: urls.obtenerUsuarios,
         search: true,
         pagination: true,
+        pageSize: 50,
         detailView: true,
         iconsPrefix: 'fa-duotone',
         icons: {
@@ -131,6 +132,16 @@ $(function () {
         const id = $(this).data("id");
         mostrarConfirmacion("¿Seguro que deseas borrar este usuario?", eliminarUsuario, id)
     });
+
+    // Convierte a minúsculas el texto en el input #email cada vez que se escribe algo
+    $('#email').on('input', function () {
+        this.value = this.value.toLowerCase();
+    });
+
+    // Aplica el mismo comportamiento al input de correo electrónico del formulario de editar usuario
+    $(document).on('input', 'input[name="correo_electronico"]', function () {
+        this.value = this.value.toLowerCase();
+    });
 });
 
 function accionesTablaUsuarios(value, row, index, field) {
@@ -140,7 +151,20 @@ function accionesTablaUsuarios(value, row, index, field) {
 }
 
 function formatoPerfiles(value, row, index, field) {
-    return value == 1 ? "Administrador" : value == 2 ? "Abogado" : "Recepcion";
+    switch (value) {
+        case "1":
+            return "CALL";
+        case "2":
+            return "RECEPTION";
+        case "3":
+            return "PARALEGAL";
+        case "4":
+            return "ADMIN";
+        case "5":
+            return "MARKETING";
+        case "6":
+            return "ATTORNEY";
+    }
 }
 
 function agregarUsuario(data) {

@@ -3,70 +3,63 @@
  *
  */
 const urls = {
-    obtener: baseUrl + "clientes/obtener-recepcion",
-    asignar: baseUrl + "clientes/asignar-abogado",
-    editar: baseUrl + "clientes/editar-cliente",
-    borrar: baseUrl + "clientes/eliminar-cliente",
-    casos_cliente: baseUrl + "clientes/casos-cliente",
+    obtener: baseUrl + 'clientes/obtener-recepcion',
+    asignar: baseUrl + 'clientes/asignar-abogado',
+    editar: baseUrl + 'clientes/editar-cliente',
+    borrar: baseUrl + 'clientes/eliminar-cliente',
+    casos_cliente: baseUrl + 'clientes/casos-cliente'
 };
 
 let $tablaClientes;
 let $modalAsignarAbogado;
 let $modalCobrar;
-let tplAccionesTabla = "";
-let tplEditarCliente = "";
-let tplCobroCliente = "";
+let tplAccionesTabla = '';
+let tplEditarCliente = '';
+let tplCobroCliente = '';
 
 $(function () {
-    setActiveMenu("clientes");
-    tplAccionesTabla = $("#tplAccionesTabla").html();
-    tplEditarCliente = $("#tplEditarCliente").html();
-    tplCobroCliente = $("#tplCobroCliente").html();
-    $modalAsignarAbogado = $("#modalAsignarAbogado");
-    $modalCobrar = $("#modalCobrar");
+    setActiveMenu('clientes');
+    tplAccionesTabla = $('#tplAccionesTabla').html();
+    tplCobroCliente = $('#tplCobroCliente').html();
+    $modalAsignarAbogado = $('#modalAsignarAbogado');
+    $modalCobrar = $('#modalCobrar');
 
-    $modalAsignarAbogado.find(".select2").select2({
-        placeholder: "Seleccione una opción",
+    $modalAsignarAbogado.find('.select2').select2({
+        placeholder: 'Seleccione una opción',
         dropdownParent: $modalAsignarAbogado,
         theme: 'bootstrap-5'
     });
 
-    $modalAsignarAbogado.on("show.bs.modal", function (e) {
-        const $btn = $(e.relatedTarget);
-        const id_cliente = $btn.data("id");
+    $modalAsignarAbogado
+        .on('show.bs.modal', function (e) {
+            const $btn = $(e.relatedTarget);
+            const id_cliente = $btn.data('id');
+            $('#idClienteAsignarAbogado').val(id_cliente);
+        })
+        .on('hide.bs.modal', function () {
+            const $frm = $('#frmAsignarAbogado');
+            $frm.find('input, select').attr('disabled', false);
+            $frm[0].reset();
+            $frm.find('select').trigger('change');
+            $('#btnAsignarAbogado').attr('disabled', false);
+        });
 
-        $("#idClienteAsignarAbogado").val(id_cliente);
-    }).on("hide.bs.modal", function () {
-        const $frm = $("#frmAsignarAbogado");
-        $frm.find("input, select").attr("disabled", false);
-        $frm[0].reset();
-        $frm.find("select").trigger("change");
-        $("#btnAsignarAbogado").attr("disabled", false);
-    });
-
-    $modalCobrar.on("show.bs.modal", function (e) {
+    $modalCobrar.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
-        const id_cliente = $btn.data("id");
-        const Clientes = $tablaClientes.bootstrapTable("getData");
-        const cliente = Clientes.find((cliente) => cliente.id_cliente == id_cliente);
+        const id_cliente = $btn.data('id');
+        const Clientes = $tablaClientes.bootstrapTable('getData');
+        const cliente = Clientes.find(cliente => cliente.id_cliente == id_cliente);
 
         obtenerCasosPorCliente(id_cliente).then(function (r) {
             cliente.casos = r.casos;
-            console.log(cliente);
-
             const renderData = Handlebars.compile(tplCobroCliente)(cliente);
-
-            $("#modalCobrar .modal-body").html(renderData);
+            $('#modalCobrar .modal-body').html(renderData);
         });
-
-
-    }).on("hide.bs.modal", function () {
-
     });
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
-        method: "GET",
+        method: 'GET',
         search: true,
         showRefresh: true,
         pagination: true,
@@ -83,40 +76,71 @@ $(function () {
         }
     });
 
-    $("#btnAsignarAbogado").on("click", function () {
-        $("#frmAsignarAbogado").trigger("submit");
+    $('#btnAsignarAbogado').on('click', function () {
+        $('#frmAsignarAbogado').trigger('submit');
     });
 
-    $("#frmAsignarAbogado").on("submit", function (e) {
-        e.preventDefault();
-        const $frm = $(this);
-        const data = $frm.serializeObject();
+    $('#frmAsignarAbogado')
+        .on('submit', function (e) {
+            e.preventDefault();
+            const $frm = $(this);
+            const data = $frm.serializeObject();
 
-        if ($frm.valid()) {
-            agregarAbogado(data)
-                .then(function (resultado) {
-                    if (!resultado.success) {
-                        swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
-                    } else {
-                        swal.fire("¡Listo!", resultado.message, "success");
-                        $tablaClientes.bootstrapTable("refresh");
-                        $frm.find("input, select").attr("disabled", true);
-                        $("#btnAsignarAbogado").attr("disabled", true);
-                        $frm.find("select").trigger("change");
-                        $modalAsignarAbogado.modal("hide");
-                    }
-                })
-                .catch(function (error) {
-                    swal.fire("¡Oops! Algo salió mal.", "Hubo un problema al agregar el usuario.", "error");
-                });
-        }
-    }).validate();
+            if ($frm.valid()) {
+                agregarAbogado(data)
+                    .then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaClientes.bootstrapTable('refresh');
+                            $frm.find('input, select').attr('disabled', true);
+                            $('#btnAsignarAbogado').attr('disabled', true);
+                            $frm.find('select').trigger('change');
+                            $modalAsignarAbogado.modal('hide');
+                        }
+                    })
+                    .catch(function (error) {
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                    });
+            }
+        })
+        .validate();
 });
 
 function accionesTablaUsuarios(value, row, index, field) {
+    row.esIntake = row.estatus == '2';
+    row.esViable = row.estatus == '4';
+    const renderData = Handlebars.compile(tplAccionesTabla)(row);
+    return renderData;
+}
 
-    row.esIntake = row.estatus == "2";
-    row.esViable = row.estatus == "4";
+function agregarAbogado(data) {
+    return $.ajax({
+        type: 'post',
+        url: urls.asignar,
+        data: data,
+        dataType: 'json'
+    });
+}
+
+function obtenerCasosPorCliente(id_cliente) {
+    return $.ajax({
+        type: 'post',
+        url: urls.casos_cliente,
+        data: { id_cliente },
+        dataType: 'json'
+    });
+}
+
+function formatoNombre(value, row, index, field) {
+    const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
+    return tpl;
+}
+
+function accionesTablaUsuarios(value, row, index, field) {
+    row.esIntake = row.estatus == '2';
+    row.esViable = row.estatus == '4';
 
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
 
@@ -125,19 +149,19 @@ function accionesTablaUsuarios(value, row, index, field) {
 
 function agregarAbogado(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.asignar,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function obtenerCasosPorCliente(id_cliente) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.casos_cliente,
         data: { id_cliente },
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
@@ -146,4 +170,3 @@ function formatoNombre(value, row, index, field) {
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
     return tpl;
 }
-

@@ -80,7 +80,7 @@ $(function () {
             forma_pago
         };
 
-        mostrarConfirmacion("¿Seguro que deseas borrar este abogado?", pagarCaso, data);
+        mostrarConfirmacion("¿Seguro que deseas realizar este pago?", pagarCaso, data);
     });
 });
 
@@ -139,6 +139,12 @@ function pagarCaso(data) {
 
     editarCaso(formData).then(function (r) {
         console.log(r);
+        if (r.success) {
+            showSweetAlert('success', 'El pago se ha realizado con éxito.');
+            $(`.btnVerCaso[data-id=${formData.id_caso}]`).remove();
+        } else {
+            showSweetAlert('error', 'No se pudo realizar el pago.');
+        }
     });
 }
 

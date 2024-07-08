@@ -108,8 +108,20 @@ textarea {
 }
 body {
   font-size: 16px;
-  font-family: "Raleway", sans-serif;
+  font-family: 'Raleway', sans-serif;
   background: #d8d3cb url(../img/interlaced.png) repeat;
+}
+.select2-selection__placeholder {
+  color: #6c757d;
+}
+.select2-container--bootstrap-5 .select2-results__group {
+  font-weight: bold !important;
+  font-size: 1.1em;
+  color: #333 !important;
+  background-color: #deeeff;
+  padding: 5px 10px !important;
+  display: inline-block;
+  width: 100%;
 }
 .form-label {
   font-weight: 600;
@@ -198,6 +210,30 @@ body {
   width: 1rem;
   height: 1rem;
   animation: fadeInLeft 0.8s ease-in-out;
+}
+.buscador {
+  text-align: center;
+  height: 60px;
+  background: #0e1c2c;
+  position: relative;
+  padding: 8px;
+}
+.buscador-input {
+  width: 70%;
+  padding: 10px;
+  border-radius: 5px;
+}
+.buscador-resultados {
+  background: #fff;
+  position: absolute;
+  top: 100%;
+  width: 80%;
+  z-index: 9999;
+  border: 1px solid #0e1c2c;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px;
+  display: none;
 }
 .icon-container {
   width: 1.1rem;
@@ -424,7 +460,7 @@ label.error {
  */
 .clearfix::before,
 .clearfix::after {
-  content: "";
+  content: '';
   display: table;
 }
 .clearfix::after {
@@ -461,18 +497,18 @@ label.error {
     text-decoration: underline;
   }
   a[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
   abbr[title]::after {
-    content: " (" attr(title) ")";
+    content: ' (' attr(title) ')';
   }
   /*
    * Don't show links that are fragment identifiers,
    * or use the `javascript:` pseudo protocol
    */
-  a[href^="#"]::after,
-  a[href^="javascript:"]::after {
-    content: "";
+  a[href^='#']::after,
+  a[href^='javascript:']::after {
+    content: '';
   }
   pre {
     white-space: pre-wrap !important;

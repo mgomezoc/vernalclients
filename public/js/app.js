@@ -3,9 +3,35 @@
  *
  */
 
+let tplResultados = "";
 
 $(function () {
 
+  tplResultados = $("#tplResultados").html();
+
+  $('#search').on('keyup', function () {
+    let searchTerm = $(this).val();
+    if (searchTerm.length > 2) {
+      $("#results").show();
+      $.ajax({
+        url: `${baseUrl}buscar`,
+        type: 'GET',
+        data: { term: searchTerm },
+        dataType: 'json',
+        success: function (data) {
+          if (data.casos.length > 0 || data.clientes.length > 0) {
+            const renderData = Handlebars.compile(tplResultados)(data);
+            $('#results').html(renderData);
+          } else {
+            $('#results').html('<p>No se encontraron resultados.</p>');
+          }
+        }
+      });
+    } else {
+      $("#results").hide();
+      $('#results').html('');
+    }
+  });
 });
 
 function setActiveMenu(menu) {

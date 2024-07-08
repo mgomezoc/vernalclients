@@ -1,3 +1,10 @@
+<?php
+
+use Config\Profiles;
+
+$profileConfig = new Profiles();
+$menus = $profileConfig->menus[$perfil] ?? [];
+?>
 <!doctype html>
 <html class="no-js" lang="es">
 
@@ -36,7 +43,6 @@
 </head>
 
 <body>
-
     <div class="layout">
         <div class="layout-col menu">
             <div class="menu">
@@ -57,68 +63,18 @@
                         <span>Inicio</span>
                     </a>
 
-                    <?php if ($usuario["perfil"] == 1) : ?>
-                        <a href="<?= base_url("usuarios") ?>" class="menu-link" data-menu="usuarios">
+                    <?php foreach ($menus as $menu) : ?>
+                        <a href="<?= base_url($menu['url']) ?>" class="menu-link" data-menu="<?= $menu['url'] ?>">
                             <div class="icon-container">
-                                <i class="fa-duotone fa-users fa-fade"></i>
+                                <i class="<?= $menu['icon'] ?>"></i>
                             </div>
-
-                            <span>Usuarios</span>
+                            <span><?= $menu['label'] ?></span>
                         </a>
-                        <a href="<?= base_url("sucursales") ?>" class="menu-link" data-menu="sucursales">
-                            <div class="icon-container">
-                                <i class="fa-duotone fa-building fa-fade"></i>
-                            </div>
-
-                            <span>Sucursales</span>
-                        </a>
-                        <a href="<?= base_url("abogados") ?>" class="menu-link" data-menu="abogados">
-                            <div class="icon-container">
-                                <i class="fa-solid fa-gavel"></i>
-                            </div>
-
-                            <span>Abogados</span>
-                        </a>
-                        <a href="<?= base_url("clientes") ?>" class="menu-link" data-menu="clientes">
-                            <div class="icon-container">
-                                <i class="fa-solid fa-people-simple"></i>
-                            </div>
-                            <span>Clientes</span>
-                        </a>
-                        <a href="<?= base_url("reportes") ?>" class="menu-link" data-menu="reportes">
-                            <div class="icon-container">
-                                <i class="fa-duotone fa-file-chart-column"></i>
-                            </div>
-                            <span>Reportes</span>
-                        </a>
-
-                    <?php elseif ($usuario["perfil"] == 2) : ?>
-                        <a href="<?= base_url("clientes/abogado") ?>" class="menu-link" data-menu="clientes">
-                            <div class="icon-container">
-                                <i class="fa-solid fa-people-simple"></i>
-                            </div>
-                            <span>Clientes</span>
-                        </a>
-                        <a href="<?= base_url("") ?>" class="menu-link" data-menu="reportes">
-                            <div class="icon-container">
-                                <i class="fa-duotone fa-file-chart-column"></i>
-                            </div>
-                            <span>Reportes</span>
-                        </a>
-
-                    <?php elseif ($usuario["perfil"] == 3) : ?>
-                        <a href="<?= base_url("clientes/recepcion") ?>" class="menu-link" data-menu="clientes">
-                            <div class="icon-container">
-                                <i class="fa-solid fa-people-simple"></i>
-                            </div>
-                            <span>Clientes</span>
-                        </a>
-
-                    <?php endif; ?>
+                    <?php endforeach; ?>
 
                 </div>
                 <div class="menu-footer">
-                    <a href="#" class="menu-link">
+                    <a href="<?= base_url('cuenta') ?>" class="menu-link">
                         <div class="icon-container">
                             <i class="fa-duotone fa-user-gear"></i>
                         </div>
@@ -136,9 +92,47 @@
             </div>
         </div>
         <div class="layout-col main">
+            <div id="buscador" class="buscador">
+                <div class="buscador-container">
+                    <div class="buscador-group">
+                        <input type="text" id="search" class="buscador-input" placeholder="Buscar casos o clientes...">
+                        <i class="fa-sharp fa-solid fa-user-magnifying-glass"></i>
+                    </div>
+                    <div id="results" class="buscador-resultados"></div>
+                </div>
+            </div>
             <?= $renderBody ?>
         </div>
     </div>
+
+    <template id="tplResultados">
+        <ul class="list-group list-group-flush">
+            {{#if casos}}
+                <li class="list-group-item disabled">
+                    CASOS
+                </li>
+                {{#each casos}}
+                    <a href="<?= base_url("/") ?>clientes/{{id_cliente}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                        <div class="mb-1">Caso #{{id_caso}}: {{proceso}}</div>
+                        <small>Creado: {{fecha_creacion}}</small>
+                    </a>
+                {{/each}}
+            {{/if}}
+        </ul>
+        {{#if clientes}}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item disabled">
+                    CLIENTES
+                </li>
+                {{#each clientes}}
+                    <a href="<?= base_url("/") ?>clientes/{{id_cliente}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                        <div class="mb-1">{{nombre}}</div>
+                        <small class="mb-1">Teléfono: {{telefono}}</small>
+                    </a>
+                {{/each}}
+            </ul>
+        {{/if}}
+    </template>
 
     <script src="<?= base_url("js/vendor/modernizr-3.12.0.min.js") ?>"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>

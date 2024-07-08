@@ -60,4 +60,13 @@ class CasoModel extends Model
             return false; // Ocurrió un error al actualizar.
         }
     }
+
+    public function buscarCasos($term)
+    {
+        return $this->like('proceso', $term)
+            ->orLike('caseID', $term)
+            ->orderBy('fecha_actualizacion', 'DESC')
+            ->limit(10)
+            ->findAll();
+    }
 }

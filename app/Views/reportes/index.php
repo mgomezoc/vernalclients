@@ -9,16 +9,156 @@
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="encuestas-tab" data-bs-toggle="tab" data-bs-target="#tab-encuestas" type="button" role="tab" aria-controls="tab-encuestas" aria-selected="true">Encuestas</button>
+                <button class="nav-link active" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#tab-clientes" type="button" role="tab" aria-controls="tab-clientes" aria-selected="true">Clientes</button>
             </li>
-            <!--
+
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#tab-clientes" type="button" role="tab" aria-controls="tab-clientes" aria-selected="true">Clientes</button>
+                <button class="nav-link" id="casos-tab" data-bs-toggle="tab" data-bs-target="#tab-casos" type="button" role="tab" aria-controls="tab-casos" aria-selected="false">Casos</button>
             </li>
-            -->
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="encuestas-tab" data-bs-toggle="tab" data-bs-target="#tab-encuestas" type="button" role="tab" aria-controls="tab-encuestas" aria-selected="false">Encuestas</button>
+            </li>
         </ul>
+
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tab-encuestas" role="tabpanel" tabindex="0">
+            <div id="tab-clientes" class="tab-pane fade show active" role="tabpanel" tabindex="0">
+                <div class="card card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-secondary text-white">
+                                    <h5 class="card-title mb-0">Clientes por Sucursal</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbClientesPorSucursal" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="sucursal">Sucursal</th>
+                                                <th data-field="total_clientes">Total Clientes</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="card-title mb-0">Clientes por Estatus</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbClientesPorEstatus" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="estatus">Estatus</th>
+                                                <th data-field="total_clientes">Total Clientes</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="tab-casos" class="tab-pane fade" role="tabpanel" tabindex="0">
+                <div class="card card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="card-title mb-0">Casos por Tipo</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbCasosPorTipo" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="tipo_caso">Proceso</th>
+                                                <th data-field="total_casos">Total</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-secondary text-white">
+                                    <h5 class="card-title mb-0">Casos por Estatus</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbCasosPorEstatus" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="estatus">Estatus</th>
+                                                <th data-field="total_casos">Total</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="card-title mb-0">Casos por Abogado</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbCasosPorAbogado" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="nombre">Nombre</th>
+                                                <th data-field="total_casos">Total</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="card-title mb-0">Casos por Sucursal</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbCasosPorSucursal" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="sucursal">Sucursal</th>
+                                                <th data-field="total_casos">Casos</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-warning">
+                                    <h5 class="card-title mb-0">Casos Pagados vs No Pagados</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table id="tbCasosPagadosNoPagados" class="table table-sm table-striped mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th data-field="estado_pago">Estado de pago</th>
+                                                <th data-field="total_casos">Casos</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-encuestas" role="tabpanel" tabindex="0">
                 <div class="card card-body">
                     <h3>Encuestas</h3>
                     <div class="section-table row justify-content-end align-items-center">

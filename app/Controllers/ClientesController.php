@@ -10,6 +10,7 @@ use App\Models\ClienteEstatusModel;
 use App\Models\ClienteModel;
 use App\Models\FormularioAdmisionModel;
 use App\Models\SucursalModel;
+use App\Models\UsuarioModel;
 
 class ClientesController extends BaseController
 {
@@ -47,7 +48,8 @@ class ClientesController extends BaseController
         $data["title"] = "Clientes";
         $abogadoModel = new AbogadoModel();
         $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
-
+        $usuarioModel = new UsuarioModel();
+        $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
 
         $data['renderBody'] = $this->render("clientes/recepcion", $data);
 
@@ -137,6 +139,7 @@ class ClientesController extends BaseController
         $nombre = $this->request->getPost('nombre');
         $telefono = $this->request->getPost('telefono');
         $sucursal = $this->request->getPost('sucursal');
+        $tipo_consulta = $this->request->getPost('tipo_consulta');
 
         $clienteModel = new ClienteModel();
 
@@ -147,12 +150,13 @@ class ClientesController extends BaseController
             'sucursal' => $sucursal,
             'slug'     => $slug,
             'estatus'  => 1,
+            'tipo_consulta' => $tipo_consulta,
             'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
         ];
 
         if ($clienteModel->insert($data)) {
             $response['success'] = true;
-            $response['message'] = 'Se creo correctamente el cliente.';
+            $response['message'] = 'Se creó correctamente el cliente.';
             $response['slug'] = $slug;
         } else {
             $response['success'] = false;
@@ -347,9 +351,16 @@ class ClientesController extends BaseController
 
         $idCliente = $this->request->getPost('id_cliente');
         $estatus = $this->request->getPost('estatus');
+        $tipo_consulta = $this->request->getPost('tipo_consulta');
 
-        if ($clienteModel->actualizarEstatusCliente($idCliente, $estatus)) {
-            return $this->response->setJSON(['success' => true, 'message' => 'estatus actualizado correctamente.']);
+        $data = [
+            'estatus' => $estatus,
+            'tipo_consulta' => $tipo_consulta,
+            'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
+        ];
+
+        if ($clienteModel->update($idCliente, $data)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Estatus actualizado correctamente.']);
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el estatus.']);
         }
