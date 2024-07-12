@@ -15,9 +15,10 @@
                             <th data-field="id_cliente">ID</th>
                             <th data-field="nombre" data-formatter="formatoNombre" data-sortable="true">Nombre</th>
                             <th data-field="nombre_sucursal">Sucursal</th>
+                            <th data-field="tipo_consulta">Tipo</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
-                            <th data-field="nombre_estatus">Estatus</th>
-                            <th data-field="fecha_ultima_actualizacion">Ultima Actualización</th>
+                            <th data-field="nombre_estatus" data-formatter="columnaEstatus">Estatus</th>
+                            <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true">Creado</th>
                         </tr>
                     </thead>
@@ -121,7 +122,7 @@
                             <label for="costo-{{id_cliente}}" class="form-label">Costo</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1">$</span>
-                                <input type="text" class="form-control" name="costo" id="costo-{{id_cliente}}" value="0" require>
+                                <input type="text" class="form-control" name="costo" id="costo-{{id_cliente}}" value="0" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -133,13 +134,12 @@
                                 <input type="text" name="fecha_corte" id="fecha_corte-{{id_cliente}}" class="flatpickr form-control" readonly>
                             </div>
                         </div>
-
                     </div>
 
                     <div>
                         <button class="btnNuevoCaso btn btn-success" data-tipo="4" data-target="#frmNuevoCaso-{{id_cliente}}">
                             <i class="fa-solid fa-check-to-slot me-1"></i>
-                            <span>Elegible </span>
+                            <span>Elegible</span>
                         </button>
                         <button class="btnNuevoCaso btn btn-danger" data-tipo="5" data-target="#frmNuevoCaso-{{id_cliente}}">
                             <i class="fa-sharp fa-light fa-xmark-to-slot me-1"></i>
@@ -148,9 +148,24 @@
                     </div>
                 </form>
             </div>
+            {{#if consultaOnline}}
+                <div class="col-md-4">
+                    <div class="card consulta-online-card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Consulta en línea</h5>
+                            <p class="card-text"><strong>Meet URL:</strong></p>
+                            <p class="card-text text-break"><a href="{{meet_url}}" target="_blank">{{meet_url}}</a></p>
+                            <div class="text-center">
+                                <img src="<?= base_url('img/google-meet.png') ?>" alt="google meet" class="img-fluid google-meet-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
 </template>
+
 
 <script>
     const abogados = <?= json_encode($abogados) ?>;

@@ -16,14 +16,15 @@ class ClienteModel extends Model
         'estatus',
         'clientID',
         'fecha_ultima_actualizacion',
-        'tipo_consulta'
+        'tipo_consulta',
+        'meet_url'
     ];
 
     public function obtenerTodosClientes()
     {
         $this->join('sucursales', 'sucursales.id = clientes.sucursal');
         $this->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
-        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta'); // Añadir el campo tipo_consulta
+        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
         $this->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         return $this->findAll();
     }
@@ -32,7 +33,7 @@ class ClienteModel extends Model
     {
         $this->join('sucursales', 'sucursales.id = clientes.sucursal');
         $this->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
-        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta'); // Añadir el campo tipo_consulta
+        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
         $this->where('clientes.estatus', $estatus);
         $this->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         return $this->findAll();
@@ -43,9 +44,8 @@ class ClienteModel extends Model
         $this->join('sucursales', 'sucursales.id = clientes.sucursal');
         $this->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
         $this->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente');
-        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta'); // Añadir el campo tipo_consulta
+        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
         $this->where('clientes.estatus', 3);
-        //$this->where('clientes.estatus', 6);
         $this->where('cliente_abogado.id_usuario', $idUsuario);
         $this->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         return $this->findAll();
@@ -88,5 +88,15 @@ class ClienteModel extends Model
         return $this->like('nombre', $term)
             ->orLike('telefono', $term)
             ->findAll();
+    }
+
+    public function obtenerClientesPorEstatus($estatuses)
+    {
+        $this->join('sucursales', 'sucursales.id = clientes.sucursal');
+        $this->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
+        $this->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
+        $this->whereIn('clientes.estatus', $estatuses);
+        $this->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
+        return $this->findAll();
     }
 }

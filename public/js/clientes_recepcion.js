@@ -111,6 +111,10 @@ $(function () {
 function accionesTablaUsuarios(value, row, index, field) {
     row.esIntake = row.estatus == '2';
     row.esViable = row.estatus == '4';
+    row.esPorAsignar = row.estatus == '8';
+
+    console.log(row);
+
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
     return renderData;
 }
@@ -136,15 +140,6 @@ function obtenerCasosPorCliente(id_cliente) {
 function formatoNombre(value, row, index, field) {
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
     return tpl;
-}
-
-function accionesTablaUsuarios(value, row, index, field) {
-    row.esIntake = row.estatus == '2';
-    row.esViable = row.estatus == '4';
-
-    const renderData = Handlebars.compile(tplAccionesTabla)(row);
-
-    return renderData;
 }
 
 function agregarAbogado(data) {

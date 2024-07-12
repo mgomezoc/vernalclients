@@ -43,6 +43,13 @@
             <span>Cobrar</span>
         </button>
     {{/if}}
+
+    {{#if esPorAsignar}}
+        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
+            <i class="fa-duotone fa-user-tie"></i>
+            <span>Asignar</span>
+        </button>
+    {{/if}}
 </template>
 
 <!-- Modal Asignar Abogado -->

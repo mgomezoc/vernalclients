@@ -37,7 +37,7 @@ class Profiles extends BaseConfig
         'CALL' => [
             'clientes' => [
                 'icon' => 'fa-solid fa-people-simple',
-                'url' => 'clientes/recepcion',
+                'url' => 'clientes/callcenter',
                 'label' => 'Clientes',
             ]
         ],

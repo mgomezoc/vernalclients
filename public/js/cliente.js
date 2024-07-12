@@ -1,59 +1,59 @@
 /**
- * 
+ *
  * CLIENTE
- * 
+ *
  */
 
-let tplFormulario = "";
-let tplComentarios = "";
+let tplFormulario = '';
+let tplComentarios = '';
 let $modalComentarios;
 
 $(function () {
-    tplFormulario = $("#tplFormulario").html();
-    tplComentarios = $("#tplComentarios").html();
-    $modalComentarios = $("#modalComentarios");
+    tplFormulario = $('#tplFormulario').html();
+    tplComentarios = $('#tplComentarios').html();
+    $modalComentarios = $('#modalComentarios');
 
     const renderData = Handlebars.compile(tplFormulario)(datos);
 
-    $("#formulario_admision").html(renderData);
+    $('#formulario_admision').html(renderData);
 
-    $(".btnEncuesta").on("click", function () {
-        swal.fire("¡Listo!", "Se ha enviado la encuesta", "success");
+    $('.btnEncuesta').on('click', function () {
+        swal.fire('¡Listo!', 'Se ha enviado la encuesta', 'success');
     });
 
-    $(".btnCerrarCaso").on("click", function (e) {
+    $('.btnCerrarCaso').on('click', function (e) {
         e.preventDefault();
         const $btn = $(this);
-        const id_caso = $btn.data("id");
+        const id_caso = $btn.data('id');
 
         const data = {
             id_caso: id_caso,
             nuevo_estatus: 4
-        }
+        };
 
         actualizarEstatus(data).then(function (r) {
             if (!r.success) {
-                swal.fire("¡Oops! Algo salía mal.", r.message, "error");
+                swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
             } else {
-                swal.fire("¡Listo!", 'Se ha actualizado correctamente la informacion.', "success");
+                swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
                 $btn.remove();
             }
         });
     });
 
-    $modalComentarios.on("show.bs.modal", function (e) {
+    $modalComentarios.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
-        const id_caso = $btn.data("id");
+        const id_caso = $btn.data('id');
 
         console.log(id_caso);
-        $("#comentariosContainer").html("...cargando");
+        $('#comentariosContainer').html('...cargando');
 
-        $("#inputCasoComentario").val(id_caso);
+        $('#inputCasoComentario').val(id_caso);
 
         cargarComentarios(id_caso);
     });
 
-    $("#frmComentario").on("submit", function (e) {
+    $('#frmComentario').on('submit', function (e) {
         e.preventDefault();
         const $frm = $(this);
         const formData = $frm.serializeObject();
@@ -70,44 +70,60 @@ $(function () {
         });
     });
 
-    $(".btnPagarCaso").on("click", function (e) {
+    $('.btnPagarCaso').on('click', function (e) {
         const $btn = $(this);
-        const id_caso = $btn.data("id");
-        const forma_pago = $btn.data("tipo");
+        const id_caso = $btn.data('id');
+        const forma_pago = $btn.data('tipo');
 
         const data = {
             id_caso,
             forma_pago
         };
 
-        mostrarConfirmacion("¿Seguro que deseas realizar este pago?", pagarCaso, data);
+        mostrarConfirmacion('¿Seguro que deseas realizar este pago?', pagarCaso, data);
+    });
+
+    $('#frmEditarCliente').on('submit', function (e) {
+        e.preventDefault();
+        const $frm = $(this);
+        const formData = $frm.serializeObject();
+
+        console.log(formData);
+
+        actualizarCliente(formData).then(function (r) {
+            if (r.success) {
+                showSweetAlert('success', 'Información actualizada correctamente.');
+            } else {
+                showSweetAlert('error', 'No se pudo actualizar la información.');
+            }
+        });
     });
 });
 
 function actualizarEstatus(data) {
-    return $.ajax({
-        type: "post",
+    return ajaxCall({
+        type: 'post',
         url: `${baseUrl}casos/actualizar-estatus`,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function obtenerComentarios(data) {
-    return $.ajax({
-        type: "post",
+    return ajaxCall({
+        type: 'post',
         url: `${baseUrl}casos/comentarios`,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function agregarComentario(data) {
-    return $.ajax({
-        type: "post",
+    return ajaxCall({
+        type: 'post',
         url: `${baseUrl}casos/comentarios-agregar`,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
@@ -118,24 +134,22 @@ function cargarComentarios(id_caso) {
         };
 
         const renderData = Handlebars.compile(tplComentarios)(data);
-        $("#comentariosContainer").html(renderData);
+        $('#comentariosContainer').html(renderData);
 
         console.log(r);
         accionesComentarios();
     });
 }
 
-function accionesComentarios() {
-
-}
+function accionesComentarios() {}
 
 function pagarCaso(data) {
     const formData = {
         id_caso: data.id_caso,
         pagado: 1,
         forma_pago: data.forma_pago
-    }
-    console.log("pagarCaso", formData);
+    };
+    console.log('pagarCaso', formData);
 
     editarCaso(formData).then(function (r) {
         console.log(r);
@@ -149,10 +163,28 @@ function pagarCaso(data) {
 }
 
 function editarCaso(data) {
-    return $.ajax({
-        type: "post",
+    return ajaxCall({
+        type: 'post',
         url: `${baseUrl}casos/editar`,
         data: data,
-        dataType: "json"
+        dataType: 'json'
+    });
+}
+
+function actualizarCliente(data) {
+    return ajaxCall({
+        type: 'post',
+        url: `${baseUrl}clientes/actualizarCliente`,
+        data: data,
+        dataType: 'json'
+    });
+}
+
+function showSweetAlert(type, message) {
+    swal.fire({
+        icon: type,
+        title: message,
+        showConfirmButton: true,
+        timer: 2000
     });
 }

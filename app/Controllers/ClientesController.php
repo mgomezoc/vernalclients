@@ -81,8 +81,9 @@ class ClientesController extends BaseController
         $clienteModel = new ClienteModel();
         $clientesIntake = $clienteModel->obtenerTodosClientesConEstatus(2);
         $clientesViable = $clienteModel->obtenerTodosClientesConEstatus(4);
+        $clientesPorAsignar = $clienteModel->obtenerTodosClientesConEstatus(8);
 
-        $clientes = array_merge($clientesIntake, $clientesViable);
+        $clientes = array_merge($clientesIntake, $clientesViable, $clientesPorAsignar);
 
         return $this->response->setJSON($clientes);
     }
@@ -140,17 +141,20 @@ class ClientesController extends BaseController
         $telefono = $this->request->getPost('telefono');
         $sucursal = $this->request->getPost('sucursal');
         $tipo_consulta = $this->request->getPost('tipo_consulta');
+        $meet_url = $tipo_consulta === 'online' ? $this->request->getPost('meet_url') : null;
 
         $clienteModel = new ClienteModel();
 
         $slug = $this->safeBase64UrlEncode($nombre . $telefono);
+        $estatus = $tipo_consulta === 'online' ? 8 : 1;
         $data = [
             'nombre' => $nombre,
             'telefono' => $telefono,
             'sucursal' => $sucursal,
-            'slug'     => $slug,
-            'estatus'  => 1,
+            'slug' => $slug,
+            'estatus' => $estatus,
             'tipo_consulta' => $tipo_consulta,
+            'meet_url' => $meet_url,
             'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
         ];
 
@@ -271,6 +275,9 @@ class ClientesController extends BaseController
         $formularioAdmisionModel = new FormularioAdmisionModel();
         $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
 
+        $sucursalModel = new SucursalModel();
+        $data['sucursales'] = $sucursalModel->obtenerTodas();
+
 
         $data["title"] = "Cliente";
         $data['cliente'] = $cliente;
@@ -352,10 +359,12 @@ class ClientesController extends BaseController
         $idCliente = $this->request->getPost('id_cliente');
         $estatus = $this->request->getPost('estatus');
         $tipo_consulta = $this->request->getPost('tipo_consulta');
+        $meet_url = $tipo_consulta === 'online' ? $this->request->getPost('meet_url') : null;
 
         $data = [
             'estatus' => $estatus,
             'tipo_consulta' => $tipo_consulta,
+            'meet_url' => $meet_url,
             'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
         ];
 
@@ -364,5 +373,105 @@ class ClientesController extends BaseController
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el estatus.']);
         }
+    }
+
+    public function actualizarCliente()
+    {
+        $clienteModel = new ClienteModel();
+
+        $idCliente = $this->request->getPost('id_cliente');
+        $nombre = $this->request->getPost('nombre');
+        $telefono = $this->request->getPost('telefono');
+        $sucursal = $this->request->getPost('sucursal');
+        $tipo_consulta = $this->request->getPost('tipo_consulta');
+        $meet_url = $tipo_consulta === 'online' ? $this->request->getPost('meet_url') : null;
+
+        $data = [
+            'nombre' => $nombre,
+            'telefono' => $telefono,
+            'sucursal' => $sucursal,
+            'tipo_consulta' => $tipo_consulta,
+            'meet_url' => $meet_url,
+            'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
+        ];
+
+
+        if ($clienteModel->update($idCliente, $data)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Información del cliente actualizada correctamente.']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar la información del cliente.']);
+        }
+    }
+    //CALL CENTER
+    public function callcenter()
+    {
+        $data["title"] = "Clientes";
+        $sucursalModel = new SucursalModel();
+        $estatusModel = new ClienteEstatusModel();
+
+        $estatus = $estatusModel->obtenerTodosEstatus();
+
+        $data['sucursales'] = $sucursalModel->obtenerTodas();
+        $data['estatus'] = $estatus;
+
+
+        $data['renderBody'] = $this->render("clientes/call_center", $data);
+
+        $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
+
+        $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
+        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
+        $data['scripts'] .= "<script src='" . base_url("js/clientes_call.js") . "'></script>";
+
+
+        return $this->render('shared/layout', $data);
+    }
+
+    public function obtenerClientesCallCenter()
+    {
+        $clienteModel = new ClienteModel();
+        $clientes = $clienteModel->obtenerClientesPorEstatus([1, 2, 8]);
+
+        return $this->response->setJSON($clientes);
+    }
+
+    public function insertarClienteCallCenter()
+    {
+        $nombre = $this->request->getPost('nombre');
+        $telefono = $this->request->getPost('telefono');
+        $sucursal = $this->request->getPost('sucursal');
+        $tipo_consulta = $this->request->getPost('tipo_consulta');
+        $meet_url = $tipo_consulta === 'online' ? $this->request->getPost('meet_url') : null;
+
+        $clienteModel = new ClienteModel();
+
+        $slug = $this->safeBase64UrlEncode($nombre . $telefono);
+        $estatus = $tipo_consulta === 'online' ? 8 : 1;
+        $data = [
+            'nombre' => $nombre,
+            'telefono' => $telefono,
+            'sucursal' => $sucursal,
+            'slug' => $slug,
+            'estatus' => $estatus,
+            'tipo_consulta' => $tipo_consulta,
+            'meet_url' => $meet_url,
+            'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
+        ];
+
+        if ($clienteModel->insert($data)) {
+            $response['success'] = true;
+            $response['message'] = 'Se creó correctamente el cliente.';
+            $response['slug'] = $slug;
+        } else {
+            $response['success'] = false;
+            $response['message'] = 'Ocurrió un error al agregar el cliente.';
+        }
+
+        return $this->response->setJSON($response);
     }
 }

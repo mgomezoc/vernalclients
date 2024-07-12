@@ -310,6 +310,7 @@ $(function () {
     $('#frmIntake')
         .on('submit', function (e) {
             e.preventDefault();
+
             const $frm = $(this);
             let formData = $frm.serializeObject();
 

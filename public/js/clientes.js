@@ -3,58 +3,66 @@
  *
  */
 const urls = {
-    obtener: baseUrl + "clientes/obtener-clientes",
-    agregar: baseUrl + "clientes/agregar-cliente",
-    editar: baseUrl + "clientes/editar-cliente",
-    borrar: baseUrl + "clientes/eliminar-cliente",
-    actualizarEstaus: baseUrl + "clientes/actualizar-estatus",
+    obtener: baseUrl + 'clientes/obtener-clientes',
+    agregar: baseUrl + 'clientes/agregar-cliente',
+    editar: baseUrl + 'clientes/editar-cliente',
+    borrar: baseUrl + 'clientes/eliminar-cliente',
+    actualizarEstaus: baseUrl + 'clientes/actualizar-estatus'
 };
 
 let $tablaClientes;
 let $modalNuevoCliente;
-let tplAccionesTabla = "";
-let tplEditarCliente = "";
-let tplClienteSlug = "";
-let tplModalEstatus = "";
+let tplAccionesTabla = '';
+let tplEditarCliente = '';
+let tplClienteSlug = '';
+let tplModalEstatus = '';
 let $modalEstatus;
 
 $(function () {
-    $.validator.addMethod("validarTelefonoInternacional", function (value, element) {
-        return this.optional(element) || /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value);
-    }, "Por favor, introduce un número de teléfono válido.");
+    $.validator.addMethod(
+        'validarTelefonoInternacional',
+        function (value, element) {
+            return (
+                this.optional(element) ||
+                /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value)
+            );
+        },
+        'Por favor, introduce un número de teléfono válido.'
+    );
 
-    setActiveMenu("clientes");
+    setActiveMenu('clientes');
 
-    tplAccionesTabla = $("#tplAccionesTabla").html();
-    tplEditarCliente = $("#tplEditarCliente").html();
-    tplClienteSlug = $("#tplClienteSlug").html();
-    tplModalEstatus = $("#tplModalEstatus").html();
+    tplAccionesTabla = $('#tplAccionesTabla').html();
+    tplEditarCliente = $('#tplEditarCliente').html();
+    tplClienteSlug = $('#tplClienteSlug').html();
+    tplModalEstatus = $('#tplModalEstatus').html();
 
-    $modalNuevoCliente = $("#modalNuevoCliente");
-    $modalEstatus = $("#modalEstatus");
+    $modalNuevoCliente = $('#modalNuevoCliente');
+    $modalEstatus = $('#modalEstatus');
 
-    $modalNuevoCliente.find(".select2").select2({
-        placeholder: "Seleccione una opción",
+    $modalNuevoCliente.find('.select2').select2({
+        placeholder: 'Seleccione una opción',
         dropdownParent: $modalNuevoCliente,
         theme: 'bootstrap-5'
     });
 
-    $modalNuevoCliente.on("hide.bs.modal", function () {
-        const $frm = $("#frmNuevoCliente");
-        $frm.find("input, select").attr("disabled", false);
+    $modalNuevoCliente.on('hide.bs.modal', function () {
+        const $frm = $('#frmNuevoCliente');
+        $frm.find('input, select').attr('disabled', false);
         $frm[0].reset();
-        $frm.find("select").trigger("change");
-        $("#clienteSlug").html("");
-        $("#btnAgregarCliente").attr("disabled", false);
+        $frm.find('select').trigger('change');
+        $('#clienteSlug').html('');
+        $('#btnAgregarCliente').attr('disabled', false);
     });
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
-        method: "GET",
+        method: 'GET',
         search: true,
         showRefresh: true,
         pagination: true,
         pageSize: 50,
+        showColumns: true,
         iconsPrefix: 'fa-duotone',
         icons: {
             paginationSwitchDown: 'fa-caret-square-down',
@@ -66,59 +74,74 @@ $(function () {
             detailOpen: 'fa-circle-plus',
             detailClose: 'fa-circle-minus'
         },
-    });
-
-    $("#btnAgregarCliente").on("click", function () {
-        $("#frmNuevoCliente").trigger("submit");
-    });
-
-    $("#frmNuevoCliente").on("submit", function (e) {
-        e.preventDefault();
-        const $frm = $(this);
-        const data = $frm.serializeObject();
-
-        if ($frm.valid()) {
-            agregarCliente(data)
-                .then(function (resultado) {
-                    if (!resultado.success) {
-                        swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
-                    } else {
-                        swal.fire("¡Listo!", resultado.message, "success");
-                        $tablaClientes.bootstrapTable("refresh");
-                        $frm.find("input, select").attr("disabled", true);
-                        $("#btnAgregarCliente").attr("disabled", true);
-                        $frm.find("select").trigger("change");
-                        const renderData = Handlebars.compile(tplClienteSlug)(resultado.slug);
-                        $("#clienteSlug").html(renderData);
-                    }
-                })
-                .catch(function (error) {
-                    swal.fire("¡Oops! Algo salió mal.", "Hubo un problema al agregar el usuario.", "error");
-                });
-        }
-    }).validate({
-        rules: {
-            telefono: {
-                required: true,
-                validarTelefonoInternacional: true
-            }
-        },
-        messages: {
-            telefono: {
-                required: "Este campo es obligatorio",
-                validarTelefonoInternacional: "Introduce un número de teléfono válido."
-            }
+        onLoadSuccess: function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 
-    $(document).on("click", "#btnCopiarSlug", function () {
-        const url = $("#linkSlug").prop("href");
+    $('#btnAgregarCliente').on('click', function () {
+        $('#frmNuevoCliente').trigger('submit');
+    });
+
+    $('#frmNuevoCliente')
+        .on('submit', function (e) {
+            e.preventDefault();
+            const $frm = $(this);
+            const data = $frm.serializeObject();
+
+            if ($frm.valid()) {
+                agregarCliente(data)
+                    .then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaClientes.bootstrapTable('refresh');
+                            $frm.find('input, select').attr('disabled', true);
+                            $('#btnAgregarCliente').attr('disabled', true);
+                            $frm.find('select').trigger('change');
+                            const renderData = Handlebars.compile(tplClienteSlug)(resultado.slug);
+                            $('#clienteSlug').html(renderData);
+                        }
+                    })
+                    .catch(function (error) {
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                    });
+            }
+        })
+        .validate({
+            rules: {
+                telefono: {
+                    required: true,
+                    validarTelefonoInternacional: true
+                }
+            },
+            messages: {
+                telefono: {
+                    required: 'Este campo es obligatorio',
+                    validarTelefonoInternacional: 'Introduce un número de teléfono válido.'
+                }
+            }
+        });
+
+    $('#nuevo_tipo_consulta').on('change', function () {
+        const tipo_consulta = $(this).val();
+
+        if (tipo_consulta == 'online') {
+            $('#containerURLGoogleMeet').show();
+        } else {
+            $('#containerURLGoogleMeet').hide();
+        }
+    });
+
+    $(document).on('click', '#btnCopiarSlug', function () {
+        const url = $('#linkSlug').prop('href');
         copyToClipboard(url);
     });
 
-    $(document).on("click", ".btnReactivar", function (e) {
+    $(document).on('click', '.btnReactivar', function (e) {
         e.preventDefault();
-        const id_cliente = $(this).data("id");
+        const id_cliente = $(this).data('id');
         const data = {
             id_cliente: id_cliente,
             estatus: 2
@@ -126,29 +149,31 @@ $(function () {
 
         actualizarEstatus(data).then(function (r) {
             if (!r.success) {
-                swal.fire("¡Oops! Algo salió mal.", "Hubo un problema al agregar el usuario.", "error");
+                swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
             } else {
-                $tablaClientes.bootstrapTable("refresh");
+                $tablaClientes.bootstrapTable('refresh');
             }
         });
     });
 
-    $modalEstatus.on("show.bs.modal", function (e) {
+    $modalEstatus.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
-        const id_cliente = $btn.data("id");
-        const cliente = $tablaClientes.bootstrapTable("getData").find((cliente) => cliente.id_cliente == id_cliente);
+        const id_cliente = $btn.data('id');
+        const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
+
+        console.log({ cliente });
 
         const renderData = Handlebars.compile(tplModalEstatus)(cliente);
 
-        $("#containerFormCambioEstatus").html(renderData);
+        $('#containerFormCambioEstatus').html(renderData);
 
-        $("#containerFormCambioEstatus .select2").select2({
-            placeholder: "Seleccione una opción",
+        $('#containerFormCambioEstatus .select2').select2({
+            placeholder: 'Seleccione una opción',
             theme: 'bootstrap-5'
         });
     });
 
-    $(document).on("submit", ".frmCambioEstatus", function (e) {
+    $(document).on('submit', '.frmCambioEstatus', function (e) {
         e.preventDefault();
         const $frm = $(this);
         const formData = $frm.serializeObject();
@@ -156,10 +181,10 @@ $(function () {
         console.log(formData);
         actualizarEstatusCliente(formData).then(function (r) {
             if (r.success) {
-                $tablaClientes.bootstrapTable("refresh");
-                $modalEstatus.modal("hide");
+                $tablaClientes.bootstrapTable('refresh');
+                $modalEstatus.modal('hide');
             } else {
-                swal.fire("¡Oops! Algo salía mal.", r.message, "error");
+                swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
             }
         });
     });
@@ -171,54 +196,41 @@ function formatoNombre(value, row, index, field) {
 }
 
 function columnaEstatus(value, row) {
+    const estatusClasses = {
+        1: 'text-bg-secondary', // prospecto
+        2: 'text-bg-light', // intake
+        3: 'text-bg-primary', // asignado
+        4: 'text-bg-success', // elegible
+        5: 'text-bg-danger', // no elegible
+        6: 'text-bg-info', // activo
+        7: 'text-bg-warning', // inactivo
+        8: 'text-bg-dark' // por asignar
+    };
 
-    let color = "";
+    const defaultClass = 'text-bg-dark';
+    const color = estatusClasses[row.estatus] || defaultClass;
 
-    switch (row.estatus) {
-        case "1":
-            color = "text-bg-secondary"
-            break;
-        case "2":
-            color = "text-bg-light"
-            break;
-        case "3":
-            color = "text-bg-primary"
-            break;
-        case "4":
-            color = "text-bg-success"
-            break;
-        case "5":
-            color = "text-bg-danger"
-            break;
-        case "6":
-            color = "text-bg-info"
-            break;
-        default:
-            color = "text-bg-dark"
-            break;
-    }
-
-    return `<span class="badge ${color}">${value}</span>`;
+    return `<span class="badge ${color}" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
 }
 
 function accionesTablaUsuarios(value, row, index, field) {
     switch (row.estatus) {
-        case "1":
+        case '1':
             row.esProspecto = true;
             break;
-        case "2":
+        case '2':
             row.esIntake = true;
             break;
-        case "3":
+        case '3':
             row.esAsignado = true;
             break;
-        case "4":
+        case '4':
             row.esViable = true;
             break;
-        case "5":
+        case '5':
             row.esNoViable = true;
             break;
-        case "7":
+        case '7':
             row.estaInactivo = true;
             break;
         default:
@@ -234,25 +246,26 @@ function accionesTablaUsuarios(value, row, index, field) {
 
 function agregarCliente(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.agregar,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function actualizarEstatus(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.actualizarEstaus,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function copyToClipboard(text) {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(text)
+        navigator.clipboard
+            .writeText(text)
             .then(function () {
                 console.log('Texto copiado al portapapeles');
             })
@@ -265,7 +278,7 @@ function copyToClipboard(text) {
 }
 
 function fallbackCopyToClipboard(text) {
-    var textArea = document.createElement("textarea");
+    var textArea = document.createElement('textarea');
     textArea.value = text;
 
     document.body.appendChild(textArea);
@@ -285,10 +298,9 @@ function fallbackCopyToClipboard(text) {
 
 function actualizarEstatusCliente(data) {
     return ajaxCall({
-        type: "post",
+        type: 'post',
         url: `${baseUrl}clientes/actualizar-estatus`,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
-

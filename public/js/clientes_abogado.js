@@ -3,52 +3,54 @@
  *
  */
 const urls = {
-    obtener: baseUrl + "clientes/obtener-abogado",
-    asignar: baseUrl + "clientes/asignar-abogado",
-    editar: baseUrl + "clientes/editar-cliente",
-    borrar: baseUrl + "clientes/eliminar-cliente",
-    caso: baseUrl + "clientes/nuevo-caso"
+    obtener: baseUrl + 'clientes/obtener-abogado',
+    asignar: baseUrl + 'clientes/asignar-abogado',
+    editar: baseUrl + 'clientes/editar-cliente',
+    borrar: baseUrl + 'clientes/eliminar-cliente',
+    caso: baseUrl + 'clientes/nuevo-caso'
 };
 
 let $tablaClientes;
 let $modalAsignarAbogado;
-let tplAccionesTabla = "";
-let tplEditarCliente = "";
-let tplClienteSlug = "";
-let tplNuevoCaso = "";
+let tplAccionesTabla = '';
+let tplEditarCliente = '';
+let tplClienteSlug = '';
+let tplNuevoCaso = '';
 let fieldValue = [];
 let ProcesosCasos = [];
 
 $(function () {
-    setActiveMenu("clientes");
-    tplAccionesTabla = $("#tplAccionesTabla").html();
-    tplEditarCliente = $("#tplEditarCliente").html();
-    tplClienteSlug = $("#tplClienteSlug").html();
-    tplNuevoCaso = $("#tplNuevoCaso").html();
-    $modalAsignarAbogado = $("#modalAsignarAbogado");
+    setActiveMenu('clientes');
+    tplAccionesTabla = $('#tplAccionesTabla').html();
+    tplEditarCliente = $('#tplEditarCliente').html();
+    tplClienteSlug = $('#tplClienteSlug').html();
+    tplNuevoCaso = $('#tplNuevoCaso').html();
+    $modalAsignarAbogado = $('#modalAsignarAbogado');
 
-    $modalAsignarAbogado.find(".select2").select2({
-        placeholder: "Seleccione una opción",
+    $modalAsignarAbogado.find('.select2').select2({
+        placeholder: 'Seleccione una opción',
         dropdownParent: $modalAsignarAbogado,
         theme: 'bootstrap-5'
     });
 
-    $modalAsignarAbogado.on("show.bs.modal", function (e) {
-        const $btn = $(e.relatedTarget);
-        const id_cliente = $btn.data("id");
+    $modalAsignarAbogado
+        .on('show.bs.modal', function (e) {
+            const $btn = $(e.relatedTarget);
+            const id_cliente = $btn.data('id');
 
-        $("#idClienteAsignarAbogado").val(id_cliente);
-    }).on("hide.bs.modal", function () {
-        const $frm = $("#frmAsignarAbogado");
-        $frm.find("input, select").attr("disabled", false);
-        $frm[0].reset();
-        $frm.find("select").trigger("change");
-        $("#btnAsignarAbogado").attr("disabled", false);
-    });
+            $('#idClienteAsignarAbogado').val(id_cliente);
+        })
+        .on('hide.bs.modal', function () {
+            const $frm = $('#frmAsignarAbogado');
+            $frm.find('input, select').attr('disabled', false);
+            $frm[0].reset();
+            $frm.find('select').trigger('change');
+            $('#btnAsignarAbogado').attr('disabled', false);
+        });
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
-        method: "GET",
+        method: 'GET',
         search: true,
         showRefresh: true,
         pagination: true,
@@ -65,103 +67,110 @@ $(function () {
             detailClose: 'fa-circle-minus'
         },
         onExpandRow: function (index, row, $detail) {
-            $detail.html("...cargando");
+            $detail.html('...cargando');
             row.ProcesosCasos = ProcesosCasos;
+            row.consultaOnline = row.tipo_consulta == 'online';
             console.log(row);
             const renderData = Handlebars.compile(tplNuevoCaso)(row);
             $detail.html(renderData);
 
-            $detail.find(".cbTiposCaso").on("change", function () {
-                const $cb = $(this);
-                const $input = $($cb.data("target"));
-                const costo = $cb.find('option:selected').data('costo');
+            $detail
+                .find('.cbTiposCaso')
+                .on('change', function () {
+                    const $cb = $(this);
+                    const $input = $($cb.data('target'));
+                    const costo = $cb.find('option:selected').data('costo');
 
-                $input.val(costo);
-            }).select2({
-                placeholder: "Seleccione una opción",
-                theme: 'bootstrap-5'
-            });
-
-            $(".flatpickr").flatpickr();
-        }
-    });
-
-    $("#btnAsignarAbogado").on("click", function () {
-        $("#frmAsignarAbogado").trigger("submit");
-    });
-
-    $("#frmAsignarAbogado").on("submit", function (e) {
-        e.preventDefault();
-        const $frm = $(this);
-        const data = $frm.serializeObject();
-
-        if ($frm.valid()) {
-            agregarAbogado(data)
-                .then(function (resultado) {
-                    if (!resultado.success) {
-                        swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
-                    } else {
-                        swal.fire("¡Listo!", resultado.message, "success");
-                        $tablaClientes.bootstrapTable("refresh");
-                        $frm.find("input, select").attr("disabled", true);
-                        $("#btnAsignarAbogado").attr("disabled", true);
-                        $frm.find("select").trigger("change");
-                        $modalAsignarAbogado.modal("hide");
-                    }
+                    $input.val(costo);
                 })
-                .catch(function (error) {
-                    swal.fire("¡Oops! Algo salió mal.", "Hubo un problema al agregar el usuario.", "error");
+                .select2({
+                    placeholder: 'Seleccione una opción',
+                    theme: 'bootstrap-5'
                 });
-        }
-    }).validate();
 
-    $(document).on("click", "#btnCopiarSlug", function () {
-        const url = $("#linkSlug").prop("href");
+            $('.flatpickr').flatpickr();
+        }
+    });
+
+    $('#btnAsignarAbogado').on('click', function () {
+        $('#frmAsignarAbogado').trigger('submit');
+    });
+
+    $('#frmAsignarAbogado')
+        .on('submit', function (e) {
+            e.preventDefault();
+            const $frm = $(this);
+            const data = $frm.serializeObject();
+
+            if ($frm.valid()) {
+                agregarAbogado(data)
+                    .then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaClientes.bootstrapTable('refresh');
+                            $frm.find('input, select').attr('disabled', true);
+                            $('#btnAsignarAbogado').attr('disabled', true);
+                            $frm.find('select').trigger('change');
+                            $modalAsignarAbogado.modal('hide');
+                        }
+                    })
+                    .catch(function (error) {
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                    });
+            }
+        })
+        .validate();
+
+    $(document).on('click', '#btnCopiarSlug', function () {
+        const url = $('#linkSlug').prop('href');
         copyToClipboard(url);
     });
 
-    $(document).on("click", ".btnNuevoCaso", function (e) {
-        const $btn = $(this);
-        const $frm = $($btn.data("target"));
+    $(document)
+        .on('click', '.btnNuevoCaso', function (e) {
+            const $btn = $(this);
+            const $frm = $($btn.data('target'));
 
-        if ($frm.valid()) {
-            const formData = $frm.serializeObject();
-            const estatus = $btn.data("tipo");
+            if ($frm.valid()) {
+                const formData = $frm.serializeObject();
+                const estatus = $btn.data('tipo');
 
-            formData.estatus = estatus;
-            formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
+                formData.estatus = estatus;
+                formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
 
-            let procesos_adicionales = [];
-            $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
-                const $option = $(option);
-                procesos_adicionales.push({
-                    id: $option.val(),
-                    label: $option.text()
+                let procesos_adicionales = [];
+                $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
+                    const $option = $(option);
+                    procesos_adicionales.push({
+                        id: $option.val(),
+                        label: $option.text()
+                    });
+
+                    fieldValue.push($option.text());
                 });
 
-                fieldValue.push($option.text());
-            });
+                formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
 
-            formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
+                console.log(formData);
 
-            console.log(formData);
+                nuevoCaso(formData).then(function (r) {
+                    console.log(r);
+                    if (!r.success) {
+                        swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                    } else {
+                        swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
+                        $tablaClientes.bootstrapTable('refresh');
+                        const id_caso = r.crearCaso;
+                        createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
+                    }
+                });
+            }
+        })
+        .validate();
 
-            nuevoCaso(formData).then(function (r) {
-                console.log(r);
-                if (!r.success) {
-                    swal.fire("¡Oops! Algo salía mal.", r.message, "error");
-                } else {
-                    swal.fire("¡Listo!", 'Se ha actualizado correctamente la informacion.', "success");
-                    $tablaClientes.bootstrapTable("refresh");
-                    const id_caso = r.crearCaso;
-                    createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
-                }
-            })
-        }
-
-    }).validate();
-
-    $(document).on("submit", ".frmNuevoCaso", function (e) {
+    $(document).on('submit', '.frmNuevoCaso', function (e) {
         e.preventDefault();
     });
 
@@ -174,27 +183,58 @@ function accionesTablaUsuarios(value, row, index, field) {
     return renderData;
 }
 
+function columnaEstatus(value, row) {
+    let color = '';
+
+    switch (row.estatus) {
+        case '1':
+            color = 'text-bg-secondary';
+            break;
+        case '2':
+            color = 'text-bg-light';
+            break;
+        case '3':
+            color = 'text-bg-primary';
+            break;
+        case '4':
+            color = 'text-bg-success';
+            break;
+        case '5':
+            color = 'text-bg-danger';
+            break;
+        case '6':
+            color = 'text-bg-info';
+            break;
+        default:
+            color = 'text-bg-dark';
+            break;
+    }
+
+    return `<span class="badge ${color}">${value}</span>`;
+}
+
 function agregarAbogado(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.asignar,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function nuevoCaso(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.caso,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function copyToClipboard(text) {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(text)
+        navigator.clipboard
+            .writeText(text)
             .then(function () {
                 console.log('Texto copiado al portapapeles');
             })
@@ -207,7 +247,7 @@ function copyToClipboard(text) {
 }
 
 function fallbackCopyToClipboard(text) {
-    var textArea = document.createElement("textarea");
+    var textArea = document.createElement('textarea');
     textArea.value = text;
 
     document.body.appendChild(textArea);
@@ -241,52 +281,50 @@ function caseProcesses() {
             ProcesosCasos = response.data;
         },
         error: function (xhr, status, error) {
-            console.error("Error al cargar caseProcesses: " + error);
+            console.error('Error al cargar caseProcesses: ' + error);
         }
     });
 }
 
 function createCase(clientID, sucursal, processID, id_caso) {
-
     const sucursalToLocationIDMap = {
         1: 1,
         2: 0,
         4: 2,
-        5: 3,
+        5: 3
     };
 
     const lawFirmLocationID = sucursalToLocationIDMap[sucursal] !== undefined ? sucursalToLocationIDMap[sucursal] : 1;
 
-
     var caseData = {
-        "autoGenerateCaseNumber": true,
-        "clientID": clientID,
-        "caseID": 0,
-        "applicationText": "",
-        "caseCategoryID": null,
-        "caseName": "Intake",
-        "caseNumber": `CN-${clientID}-${processID}`,
+        autoGenerateCaseNumber: true,
+        clientID: clientID,
+        caseID: 0,
+        applicationText: '',
+        caseCategoryID: null,
+        caseName: 'Intake',
+        caseNumber: `CN-${clientID}-${processID}`,
         //"creationDate": "2024-03-26T18:46:47.217Z",
-        "denialText": null,
-        "expirationText": null,
-        "externalCaseID": null,
-        "externalCaseNumber": null,
-        "filingTypeID": null,
-        "physicalDocumentLocationID": null,
-        "processID": processID,
-        "areaOfPracticeID": 1,
-        "processingText": null,
-        "statusChangeComment": null,
+        denialText: null,
+        expirationText: null,
+        externalCaseID: null,
+        externalCaseNumber: null,
+        filingTypeID: null,
+        physicalDocumentLocationID: null,
+        processID: processID,
+        areaOfPracticeID: 1,
+        processingText: null,
+        statusChangeComment: null,
         //"statusChangeDate": "2024-03-26T18:46:47.217Z",
-        "statusID": 0,
+        statusID: 0,
         //"updateDate": "2024-03-26T18:46:47.217Z",
-        "incidentText": null,
-        "statuteOfLimitationText": null,
-        "incidentLocation": null,
-        "note": null,
-        "case_Client": clientID,
-        "lawFirmLocationID": lawFirmLocationID,
-        "mainPartyID": clientID,
+        incidentText: null,
+        statuteOfLimitationText: null,
+        incidentLocation: null,
+        note: null,
+        case_Client: clientID,
+        lawFirmLocationID: lawFirmLocationID,
+        mainPartyID: clientID
     };
 
     return $.ajax({
@@ -300,8 +338,8 @@ function createCase(clientID, sucursal, processID, id_caso) {
             actualizarCaseID(id_caso, r.caseID);
             addCaseParty(r.caseID, clientID);
             updateCustomField(r.caseID, 1, {
-                fieldValue: fieldValue.join(" --- "),
-                description: "Procesos Adicionales"
+                fieldValue: fieldValue.join(' --- '),
+                description: 'Procesos Adicionales'
             });
         },
         error: function (error) {
@@ -311,25 +349,24 @@ function createCase(clientID, sucursal, processID, id_caso) {
 }
 
 function addCaseParty(caseID, clientID, clientName) {
-
     var partyData = {
-        "clientID": clientID,
-        "caseID": caseID,
-        "clientName": "",
-        "clientTypeID": 0,
-        "isMainParty": true,
-        "roleID": 8,
-        "addressID": null,
-        "address": "",
-        "signatoryID": null,
-        "signatory": "",
-        "clientType": {
-            "typeID": 0,
-            "name": "Individual"
+        clientID: clientID,
+        caseID: caseID,
+        clientName: '',
+        clientTypeID: 0,
+        isMainParty: true,
+        roleID: 8,
+        addressID: null,
+        address: '',
+        signatoryID: null,
+        signatory: '',
+        clientType: {
+            typeID: 0,
+            name: 'Individual'
         },
-        "role": {
-            "roleID": 8,
-            "name": "Beneficiary"
+        role: {
+            roleID: 8,
+            name: 'Beneficiary'
         }
     };
 
@@ -351,14 +388,14 @@ function addCaseParty(caseID, clientID, clientName) {
 function actualizarCaseID(id_caso, caseID) {
     const data = {
         id_caso: id_caso,
-        caseID: caseID,
+        caseID: caseID
     };
 
     return $.ajax({
-        type: "post",
-        url: baseUrl + "casos/actualizarCaseID",
+        type: 'post',
+        url: baseUrl + 'casos/actualizarCaseID',
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
