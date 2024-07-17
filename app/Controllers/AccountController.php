@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UsuarioModel;
 use App\Models\PerfilModel;
+use App\Services\EmailService;
 use CodeIgniter\Controller;
 
 class AccountController extends Controller
@@ -19,6 +20,14 @@ class AccountController extends Controller
 
     public function login()
     {
+        // Enviar correo de bienvenida
+        $emailService = new EmailService();
+        $to = '0013zkr@gmail.com';
+        $subject = 'Bienvenido a Vernal Clients';
+        $message = "<p>Hola Cesar</p><p>Gracias por registrarte.</p>";
+
+        $emailService->sendEmail($to, $subject, $message);
+
         $data = [];
         echo view('account/login', $data);
     }
