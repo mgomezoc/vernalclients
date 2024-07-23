@@ -51,9 +51,23 @@ $(function () {
         const cliente = Clientes.find(cliente => cliente.id_cliente == id_cliente);
 
         obtenerCasosPorCliente(id_cliente).then(function (r) {
-            cliente.casos = r.casos;
+            const casos = r.casos
+                .filter(caso => caso.pagado == '0')
+                .map(caso => {
+                    const muestraCasoAPI = caso.caseID !== '0';
+                    const casoPagado = caso.pagado == '1';
+
+                    caso.muestraCasoAPI = muestraCasoAPI;
+                    caso.casoPagado = casoPagado;
+
+                    return caso;
+                });
+            cliente.casos = casos;
+
             const renderData = Handlebars.compile(tplCobroCliente)(cliente);
             $('#modalCobrar .modal-body').html(renderData);
+
+            console.log(cliente);
         });
     });
 
@@ -63,6 +77,7 @@ $(function () {
         search: true,
         showRefresh: true,
         pagination: true,
+        pageSize: 50,
         iconsPrefix: 'fa-duotone',
         icons: {
             paginationSwitchDown: 'fa-caret-square-down',

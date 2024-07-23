@@ -127,13 +127,24 @@
                     <b>Costo:</b>
                     <div>{{costo}}</div>
                 </div>
-                <div class="text-center">
-                    <a href="https://www.eimmigration.com/VFMLaw/Cases/{{caseID}}/#!/Expenses" class="btn btn-secondary" target="_blank">
-                        <span>Pagar</span>
-                        <img src="https://www.eimmigration.com/Images/ApplicationLogo.png" alt="eimmigration" width="126px">
-                    </a>
-                </div>
+                {{#if muestraCasoAPI}}
+                    <div class="text-center">
+                        <a href="https://www.eimmigration.com/VFMLaw/Cases/{{caseID}}/#!/Expenses" class="btn btn-secondary" target="_blank">
+                            <span>Pagar</span>
+                            <img src="https://www.eimmigration.com/Images/ApplicationLogo.png" alt="eimmigration" width="126px">
+                        </a>
+                    </div>
+                {{else}}
+                    <div class="text-center">
+                        <a href="https://www.eimmigration.com/VFMLaw/Clients/{{../clientID}}/#!/GeneralInfo" class="btn btn-secondary" target="_blank">
+                            <span>Pagar</span>
+                            <img src="https://www.eimmigration.com/Images/ApplicationLogo.png" alt="eimmigration" width="126px">
+                        </a>
+                    </div>
+                {{/if}}
             </div>
+        {{else}}
+            <div class="card card-body text-center">No existen casos por cobrar.</div>
         {{/each}}
     </div>
 </template>

@@ -93,7 +93,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:CALL'], function ($routes)
 });
 
 // Casos
-$routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL'], function ($routes) {
+$routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,RECEPTION'], function ($routes) {
     $routes->post('actualizarCaseID', 'CasosController::actualizarCaseID');
     $routes->post('actualizar-estatus', 'CasosController::actualizarEstatus');
     $routes->post('comentarios', 'CasosController::obtenerComentarios');

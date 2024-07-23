@@ -23,7 +23,7 @@
             </button>
         </li>
         <?php
-        $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY"];
+        $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY", "RECEPTION"];
         if (in_array($perfil, $perfilesPermitidos)) : ?>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
