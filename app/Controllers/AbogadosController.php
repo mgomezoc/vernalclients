@@ -12,7 +12,7 @@ class AbogadosController extends BaseController
     public function index()
     {
         $usuarioModel = new UsuarioModel();
-        $data['usuarios'] = $usuarioModel->getUsuariosPerfil2();
+        $data['usuarios'] = $usuarioModel->obtenerUsuariosNoAbogados();
 
         $sucursalModel = new SucursalModel();
         $data['sucursales'] = $sucursalModel->obtenerTodas();

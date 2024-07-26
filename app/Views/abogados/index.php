@@ -2,8 +2,7 @@
     <div class="section-header">
         <h1 class="section-title"><i class="fa-solid fa-gavel"></i> Abogados</h1>
         <div>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoAbogado">Añadir
-                nuevo</button>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoAbogado">Añadir nuevo</button>
         </div>
     </div>
 
@@ -30,7 +29,7 @@
 
 <!-- ACCIONES TABLA -->
 <template id="tplAccionesTabla">
-    <button class="btnEliminarAbogado btn btn-sm btn-danger" data-id="{{abogado_id}}" title="Eliminar a {{usuario_nombre}} {{usuario_apellido_paterno}} {{apellido_materno}}">
+    <button class="btnEliminarAbogado btn btn-sm btn-danger" data-id="{{abogado_id}}" title="Eliminar a {{usuario_nombre}} {{usuario_apellido_paterno}} {{usuario_apellido_materno}}">
         <i class="fa-solid fa-user-xmark"></i>
     </button>
 </template>

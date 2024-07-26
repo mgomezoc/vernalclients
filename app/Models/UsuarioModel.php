@@ -66,4 +66,14 @@ class UsuarioModel extends Model
     {
         return $this->orderBy('fecha_creacion', 'DESC')->findAll();
     }
+
+    public function obtenerUsuariosNoAbogados()
+    {
+        $builder = $this->db->table('usuarios u');
+        $builder->select('u.id, u.nombre, u.apellido_paterno, u.apellido_materno, u.correo_electronico');
+        $builder->join('abogados a', 'u.id = a.id_usuario', 'left');
+        $builder->where('a.id_usuario IS NULL');
+
+        return $builder->get()->getResultArray();
+    }
 }

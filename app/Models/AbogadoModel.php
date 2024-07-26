@@ -8,7 +8,7 @@ class AbogadoModel extends Model
 {
     protected $table      = 'abogados';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['id_usuario', 'id_sucursal', 'especialidad', 'telefono'];
+    protected $allowedFields = ['id_usuario', 'id_sucursal', 'especialidad', 'telefono', 'fecha_creacion'];
 
     public function obtenerAbogadosConInfo()
     {
@@ -17,6 +17,7 @@ class AbogadoModel extends Model
             ->select('(SELECT COUNT(*) FROM casos c WHERE c.id_usuario = a.id_usuario) AS casos_count')
             ->join('usuarios u', 'a.id_usuario = u.id')
             ->join('sucursales s', 'a.id_sucursal = s.id')
+            ->orderBy('a.fecha_creacion', 'DESC')
             ->get()
             ->getResultArray();
     }
