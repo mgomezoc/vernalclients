@@ -2,8 +2,7 @@
     <div class="section-header">
         <h1 class="section-title"><i class="fa-duotone fa-building me-2"></i> Sucursales</h1>
         <div>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaSucursal">Añadir
-                nueva</button>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaSucursal">Añadir nueva</button>
         </div>
     </div>
 

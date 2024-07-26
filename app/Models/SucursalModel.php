@@ -19,7 +19,7 @@ class SucursalModel extends Model
 
     public function obtenerTodas()
     {
-        return $this->findAll();
+        return $this->orderBy('fecha_creacion', 'DESC')->findAll();
     }
 
     public function agregarSucursal($data)

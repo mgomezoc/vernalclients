@@ -16,7 +16,7 @@ class Sucursales extends BaseController
 
     public function index()
     {
-        $sucursales = $this->sucursalModel->findAll();
+        $sucursales = $this->sucursalModel->obtenerTodas();
 
         $data = [
             "sucursales" => $sucursales,
@@ -26,12 +26,10 @@ class Sucursales extends BaseController
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
-
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js'></script>";
         $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
-
         $data['scripts'] .= "<script src='" . base_url("js/sucursales.js") . "'></script>";
 
         return $this->render('shared/layout', $data);
@@ -46,6 +44,19 @@ class Sucursales extends BaseController
     public function agregarSucursal()
     {
         $data = $this->request->getPost();
+
+        // Validaciones
+        if (!$this->validate([
+            'nombre' => 'required|min_length[3]',
+            'direccion' => 'required|min_length[5]',
+            'telefono' => 'permit_empty|numeric|exact_length[10]',
+            'url_google_maps' => 'required|valid_url'
+        ])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $this->validator->getErrors()
+            ]);
+        }
 
         $insertedId = $this->sucursalModel->agregarSucursal($data);
 
@@ -65,6 +76,19 @@ class Sucursales extends BaseController
     {
         $id = $this->request->getPost("id");
         $data = $this->request->getPost();
+
+        // Validaciones
+        if (!$this->validate([
+            'nombre' => 'required|min_length[3]',
+            'direccion' => 'required|min_length[5]',
+            'telefono' => 'permit_empty|numeric|exact_length[10]',
+            'url_google_maps' => 'required|valid_url'
+        ])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $this->validator->getErrors()
+            ]);
+        }
 
         $updated = $this->sucursalModel->editarSucursal($id, $data);
 
