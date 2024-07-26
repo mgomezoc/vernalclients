@@ -14,7 +14,8 @@ class UsuarioModel extends Model
         'apellido_materno',
         'correo_electronico',
         'perfil',
-        'contrasena'
+        'contrasena',
+        'fecha_creacion'
     ];
 
     public function agregarUsuario($data)
@@ -59,5 +60,10 @@ class UsuarioModel extends Model
         return $this->select('id, nombre, apellido_paterno, apellido_materno, correo_electronico, perfil')
             ->whereIn('perfil', $perfiles)
             ->findAll();
+    }
+
+    public function obtenerUsuariosOrdenados()
+    {
+        return $this->orderBy('fecha_creacion', 'DESC')->findAll();
     }
 }

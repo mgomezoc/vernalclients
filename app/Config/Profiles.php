@@ -52,7 +52,12 @@ class Profiles extends BaseConfig
             'clientes' => [
                 'icon' => 'fa-solid fa-people-simple',
                 'url' => 'clientes/abogado',
-                'label' => 'Clientes',
+                'label' => 'Prospectos',
+            ],
+            'todos_clientes' => [
+                'icon' => 'fa-solid fa-people-simple',
+                'url' => 'clientes/asignados',
+                'label' => 'Bitácora Clientes',
             ],
             'reportes' => [
                 'icon' => 'fa-duotone fa-file-chart-column',

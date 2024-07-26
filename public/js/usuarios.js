@@ -2,32 +2,33 @@
  * USUARIOS
  */
 const urls = {
-    obtenerUsuarios: "usuarios/obtener-usuarios",
-    agregarUsuario: "usuarios/agregar-usuario",
-    editarUsuario: "usuarios/editar-usuario",
-    borrarUsuario: "usuarios/borrar-usuario"
+    obtenerUsuarios: 'usuarios/obtener-usuarios',
+    agregarUsuario: 'usuarios/agregar-usuario',
+    editarUsuario: 'usuarios/editar-usuario',
+    borrarUsuario: 'usuarios/borrar-usuario'
 };
 
-let tplAccionesTabla = "";
-let tplEditarUsuario = "";
+let tplAccionesTabla = '';
+let tplEditarUsuario = '';
 let $tablaUsuarios;
 let $modalAgregarUsuario;
 
 $(function () {
-    setActiveMenu("usuarios");
+    setActiveMenu('usuarios');
 
-    tplAccionesTabla = $("#tplAccionesTabla").html();
-    tplEditarUsuario = $("#tplEditarUsuario").html();
-    $modalAgregarUsuario = $("#modalAgregarUsuario");
+    tplAccionesTabla = $('#tplAccionesTabla').html();
+    tplEditarUsuario = $('#tplEditarUsuario').html();
+    $modalAgregarUsuario = $('#modalAgregarUsuario');
 
-    $modalAgregarUsuario.find(".select2").select2({
-        placeholder: "Seleccione una opción",
-        dropdownParent: $("#modalAgregarUsuario"),
+    $modalAgregarUsuario.find('.select2').select2({
+        placeholder: 'Seleccione una opción',
+        dropdownParent: $('#modalAgregarUsuario'),
         theme: 'bootstrap-5'
     });
 
-    $tablaUsuarios = $("#tablaUsuarios").bootstrapTable({
+    $tablaUsuarios = $('#tablaUsuarios').bootstrapTable({
         url: urls.obtenerUsuarios,
+        showRefresh: true,
         search: true,
         pagination: true,
         pageSize: 50,
@@ -44,26 +45,26 @@ $(function () {
             detailClose: 'fa-circle-minus'
         },
         onExpandRow: function (index, row, $detail) {
-            $detail.html("...cargando");
-            const usuarios = $tablaUsuarios.bootstrapTable("getData");
+            $detail.html('...cargando');
+            const usuarios = $tablaUsuarios.bootstrapTable('getData');
             const usuario = encontrarUsuarioPorId(usuarios, row.id);
             const renderData = Handlebars.compile(tplEditarUsuario)(usuario);
             $detail.html(renderData);
-            const $comboPerfiles = $detail.find(".cbPerfiles");
-            $comboPerfiles.find(`option[value=${row.perfil}]`).prop("selected", true);
+            const $comboPerfiles = $detail.find('.cbPerfiles');
+            $comboPerfiles.find(`option[value=${row.perfil}]`).prop('selected', true);
             $comboPerfiles.select2({
-                placeholder: "Seleccione una opción",
+                placeholder: 'Seleccione una opción',
                 theme: 'bootstrap-5'
             });
-            $detail.find(".frmEditarUsuario").validate();
+            $detail.find('.frmEditarUsuario').validate();
         }
     });
 
-    $("#btnAgregarUsuario").on("click", function () {
-        $("#frmAgregarUsuario").trigger("submit");
+    $('#btnAgregarUsuario').on('click', function () {
+        $('#frmAgregarUsuario').trigger('submit');
     });
 
-    $("#frmAgregarUsuario").validate({
+    $('#frmAgregarUsuario').validate({
         rules: {
             contrasena: {
                 required: true,
@@ -91,24 +92,24 @@ $(function () {
             agregarUsuario(data)
                 .then(function (resultado) {
                     if (!resultado.success) {
-                        swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
+                        swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
                     } else {
-                        swal.fire("¡Listo!", resultado.message, "success");
-                        $tablaUsuarios.bootstrapTable("refresh");
-                        $modalAgregarUsuario.modal("hide");
+                        swal.fire('¡Listo!', resultado.message, 'success');
+                        $tablaUsuarios.bootstrapTable('refresh');
+                        $modalAgregarUsuario.modal('hide');
                         form.reset();
-                        $frm.find("select").trigger("change");
+                        $frm.find('select').trigger('change');
                     }
                 })
                 .catch(function (error) {
-                    swal.fire("¡Oops! Algo salió mal.", "Hubo un problema al agregar el usuario.", "error");
+                    swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
                 });
 
             return false;
         }
     });
 
-    $(document).on("submit", ".frmEditarUsuario", function (e) {
+    $(document).on('submit', '.frmEditarUsuario', function (e) {
         e.preventDefault();
         const $frm = $(this);
         const data = $frm.serializeObject();
@@ -116,11 +117,10 @@ $(function () {
         if ($frm.valid()) {
             editarUsuario(data).then(function (resultado) {
                 if (!resultado.success) {
-                    swal.fire("¡Oops! Algo salió mal.", resultado.message, "error");
-
+                    swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
                 } else {
-                    swal.fire("¡Listo!", resultado.message, "success");
-                    $tablaUsuarios.bootstrapTable("refresh");
+                    swal.fire('¡Listo!', resultado.message, 'success');
+                    $tablaUsuarios.bootstrapTable('refresh');
                 }
             });
         }
@@ -128,9 +128,9 @@ $(function () {
         return false;
     });
 
-    $(document).on("click", ".btnEliminarUsuario", function () {
-        const id = $(this).data("id");
-        mostrarConfirmacion("¿Seguro que deseas borrar este usuario?", eliminarUsuario, id)
+    $(document).on('click', '.btnEliminarUsuario', function () {
+        const id = $(this).data('id');
+        mostrarConfirmacion('¿Seguro que deseas borrar este usuario?', eliminarUsuario, id);
     });
 
     // Convierte a minúsculas el texto en el input #email cada vez que se escribe algo
@@ -152,48 +152,48 @@ function accionesTablaUsuarios(value, row, index, field) {
 
 function formatoPerfiles(value, row, index, field) {
     switch (value) {
-        case "1":
-            return "CALL";
-        case "2":
-            return "RECEPTION";
-        case "3":
-            return "PARALEGAL";
-        case "4":
-            return "ADMIN";
-        case "5":
-            return "MARKETING";
-        case "6":
-            return "ATTORNEY";
+        case '1':
+            return 'CALL';
+        case '2':
+            return 'RECEPTION';
+        case '3':
+            return 'PARALEGAL';
+        case '4':
+            return 'ADMIN';
+        case '5':
+            return 'MARKETING';
+        case '6':
+            return 'ATTORNEY';
     }
 }
 
 function agregarUsuario(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.agregarUsuario,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function editarUsuario(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.editarUsuario,
         data: data,
-        dataType: "json"
+        dataType: 'json'
     });
 }
 
 function eliminarUsuario(id) {
     $.ajax({
-        type: "post",
+        type: 'post',
         url: urls.borrarUsuario,
         data: { id: id },
-        dataType: "json"
+        dataType: 'json'
     }).then(function (resultado) {
-        swal.fire("¡Listo!", resultado.message, "success");
-        $tablaUsuarios.bootstrapTable("refresh");
+        swal.fire('¡Listo!', resultado.message, 'success');
+        $tablaUsuarios.bootstrapTable('refresh');
     });
 }
 

@@ -17,7 +17,7 @@ class Usuarios extends BaseController
     public function index()
     {
         // Obtener todos los usuarios desde el modelo
-        $usuarios = $this->usuarioModel->findAll();
+        $usuarios = $this->usuarioModel->obtenerUsuariosOrdenados();
 
         $data = [
             "usuarios" => $usuarios,
@@ -42,7 +42,7 @@ class Usuarios extends BaseController
 
     public function obtenerUsuarios()
     {
-        $usuarios = $this->usuarioModel->findAll();
+        $usuarios = $this->usuarioModel->obtenerUsuariosOrdenados();
 
         return $this->response->setJSON($usuarios);
     }
@@ -106,7 +106,6 @@ class Usuarios extends BaseController
         return $this->response->setJSON($data);
     }
 
-
     public function editarUsuario()
     {
         $usuarioId = $this->request->getPost("id");
@@ -157,8 +156,6 @@ class Usuarios extends BaseController
 
         return $this->response->setJSON($data);
     }
-
-
 
     public function borrarUsuario()
     {
