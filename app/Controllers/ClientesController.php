@@ -20,25 +20,22 @@ class ClientesController extends BaseController
         $sucursalModel = new SucursalModel();
         $estatusModel = new ClienteEstatusModel();
 
-        $estatus = $estatusModel->obtenerTodosEstatus();
-
         $data['sucursales'] = $sucursalModel->obtenerTodas();
-        $data['estatus'] = $estatus;
-
+        $data['estatus'] = $estatusModel->obtenerTodosEstatus();
 
         $data['renderBody'] = $this->render("clientes/index", $data);
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
 
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
-        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes.js") . "'></script>";
-
 
         return $this->render('shared/layout', $data);
     }
@@ -71,7 +68,14 @@ class ClientesController extends BaseController
     public function obtenerClientes()
     {
         $clienteModel = new ClienteModel();
-        $clientes = $clienteModel->obtenerTodosClientes();
+        $filtros = [
+            'tipo' => $this->request->getPost('tipo'),
+            'sucursal' => $this->request->getPost('sucursal'),
+            'estatus' => $this->request->getPost('estatus'),
+            'periodo' => $this->request->getPost('periodo')
+        ];
+
+        $clientes = $clienteModel->obtenerClientesFiltrados($filtros);
 
         return $this->response->setJSON($clientes);
     }

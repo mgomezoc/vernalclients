@@ -70,10 +70,10 @@ $routes->group('abogados', ['filter' => 'SessionAdmin:ADMIN,ATTORNEY'], function
 // CLIENTES
 $routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,RECEPTION,CALL'], function ($routes) {
     $routes->get('/', 'ClientesController::index', ['as' => 'clientes.index']);
-    $routes->get('obtener-clientes', 'ClientesController::obtenerClientes');
+    $routes->post('obtener-clientes', 'ClientesController::obtenerClientes'); // Modificado para soportar filtros
     $routes->post('agregar-cliente', 'ClientesController::insertarCliente');
     $routes->post('actualizar-estatus', 'ClientesController::actualizarEstatus');
-    $routes->post('actualizarCliente', 'ClientesController::actualizarCliente');  // Nueva ruta añadida
+    $routes->post('actualizarCliente', 'ClientesController::actualizarCliente');
     $routes->get('recepcion', 'ClientesController::recepcion');
     $routes->get('obtener-recepcion', 'ClientesController::obtenerClientesRecepcion');
     $routes->post('asignar-abogado', 'ClientesController::asignarAbogado');

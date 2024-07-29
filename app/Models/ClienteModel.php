@@ -110,4 +110,37 @@ class ClienteModel extends Model
         $this->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         return $this->findAll();
     }
+
+    public function obtenerClientesFiltrados($filtros)
+    {
+        $builder = $this->db->table($this->table);
+        $builder->join('sucursales', 'sucursales.id = clientes.sucursal');
+        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
+        $builder->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
+
+        if (!empty($filtros['tipo'])) {
+            $builder->where('clientes.tipo_consulta', $filtros['tipo']);
+        }
+
+        if (!empty($filtros['sucursal'])) {
+            $builder->where('clientes.sucursal', $filtros['sucursal']);
+        }
+
+        if (!empty($filtros['estatus'])) {
+            $builder->where('clientes.estatus', $filtros['estatus']);
+        }
+
+        if (!empty($filtros['periodo'])) {
+            $periodo = explode(' to ', $filtros['periodo']);
+            if (count($periodo) === 2) {
+                $fechaInicio = date('Y-m-d', strtotime($periodo[0]));
+                $fechaFin = date('Y-m-d', strtotime($periodo[1]));
+                $builder->where('clientes.fecha_creado >=', $fechaInicio);
+                $builder->where('clientes.fecha_creado <=', $fechaFin);
+            }
+        }
+
+        $builder->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
+        return $builder->get()->getResultArray();
+    }
 }

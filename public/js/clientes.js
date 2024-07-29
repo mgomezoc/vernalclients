@@ -7,13 +7,12 @@ const urls = {
     agregar: baseUrl + 'clientes/agregar-cliente',
     editar: baseUrl + 'clientes/editar-cliente',
     borrar: baseUrl + 'clientes/eliminar-cliente',
-    actualizarEstaus: baseUrl + 'clientes/actualizar-estatus'
+    actualizarEstatus: baseUrl + 'clientes/actualizar-estatus'
 };
 
 let $tablaClientes;
 let $modalNuevoCliente;
 let tplAccionesTabla = '';
-let tplEditarCliente = '';
 let tplClienteSlug = '';
 let tplModalEstatus = '';
 let $modalEstatus;
@@ -32,8 +31,12 @@ $(function () {
 
     setActiveMenu('clientes');
 
+    $('.select2').select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5'
+    });
+
     tplAccionesTabla = $('#tplAccionesTabla').html();
-    tplEditarCliente = $('#tplEditarCliente').html();
     tplClienteSlug = $('#tplClienteSlug').html();
     tplModalEstatus = $('#tplModalEstatus').html();
 
@@ -57,7 +60,7 @@ $(function () {
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
-        method: 'GET',
+        method: 'POST',
         search: true,
         showRefresh: true,
         pagination: true,
@@ -77,6 +80,36 @@ $(function () {
         onLoadSuccess: function () {
             $('[data-toggle="tooltip"]').tooltip();
         }
+    });
+
+    $('#resetFiltros').on('click', function () {
+        $('#filtrosClientes')[0].reset();
+        $('#filtrosClientes .select2').val(null).trigger('change');
+        $('#filtroPeriodo').flatpickr().clear();
+        $tablaClientes.bootstrapTable('refresh', {
+            url: urls.obtener,
+            method: 'POST'
+        });
+    });
+
+    $('#filtrosClientes').on('submit', function (e) {
+        e.preventDefault();
+
+        let filtros = $(this).serialize();
+
+        $.ajax({
+            url: baseUrl + 'clientes/obtener-clientes',
+            method: 'POST',
+            data: filtros,
+            dataType: 'json',
+            success: function (response) {
+                $tablaClientes.bootstrapTable('load', response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error al obtener clientes:', textStatus, errorThrown);
+                alert('Hubo un error al obtener los clientes. Por favor, inténtelo de nuevo.');
+            }
+        });
     });
 
     $('#btnAgregarCliente').on('click', function () {
@@ -161,8 +194,6 @@ $(function () {
         const id_cliente = $btn.data('id');
         const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
 
-        console.log({ cliente });
-
         const renderData = Handlebars.compile(tplModalEstatus)(cliente);
 
         $('#containerFormCambioEstatus').html(renderData);
@@ -178,7 +209,6 @@ $(function () {
         const $frm = $(this);
         const formData = $frm.serializeObject();
 
-        console.log(formData);
         actualizarEstatusCliente(formData).then(function (r) {
             if (r.success) {
                 $tablaClientes.bootstrapTable('refresh');
@@ -188,7 +218,20 @@ $(function () {
             }
         });
     });
+
+    $('#filtroPeriodo').flatpickr({
+        mode: 'range',
+        dateFormat: 'Y-m-d'
+    });
 });
+
+function actualizarTablaClientes(filtros) {
+    $tablaClientes.bootstrapTable('refresh', {
+        url: urls.obtener,
+        query: filtros,
+        method: 'POST'
+    });
+}
 
 function formatoNombre(value, row, index, field) {
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}" class="link-offset-2 link-underline link-underline-opacity-10">${value}</a>`;
@@ -256,7 +299,7 @@ function agregarCliente(data) {
 function actualizarEstatus(data) {
     return $.ajax({
         type: 'post',
-        url: urls.actualizarEstaus,
+        url: urls.actualizarEstatus,
         data: data,
         dataType: 'json'
     });
@@ -297,9 +340,9 @@ function fallbackCopyToClipboard(text) {
 }
 
 function actualizarEstatusCliente(data) {
-    return ajaxCall({
+    return $.ajax({
         type: 'post',
-        url: `${baseUrl}clientes/actualizar-estatus`,
+        url: urls.actualizarEstatus,
         data: data,
         dataType: 'json'
     });
