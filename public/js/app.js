@@ -6,6 +6,13 @@
 let tplResultados = '';
 
 $(function () {
+    $(document).ajaxComplete(function (event, xhr, settings) {
+        // Comprobamos si la respuesta contiene el formulario de inicio de sesión
+        if (xhr.status === 200 && xhr.responseText.includes('id="frmLogin"')) {
+            window.location.href = baseUrl + 'login';
+        }
+    });
+
     tplResultados = $('#tplResultados').html();
 
     $('#search').on('keyup', function () {

@@ -51,11 +51,11 @@
                 </select>
             </div>
             <div class="col-md-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary animate__animated animate__fadeIn">
+                <button type="submit" class="btn btn-azul animate__animated animate__fadeIn">
                     <i class="fa fa-search me-2"></i>Aplicar filtros
                 </button>
                 <button type="button" id="resetFiltros" class="btn btn-secondary ms-2 animate__animated animate__fadeIn">
-                    <i class="fa fa-redo me-2"></i>Resetear
+                    <i class="fa fa-redo me-2"></i>Limpiar
                 </button>
             </div>
         </form>
@@ -80,6 +80,7 @@
                 </table>
             </div>
         </div>
+
     </div>
 </section>
 

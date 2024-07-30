@@ -14,6 +14,8 @@ class AccountController extends Controller
 
     public function __construct()
     {
+        helper('auditoria'); // Cargar el helper de auditoría
+
         $this->usuarioModel = new UsuarioModel();
         $this->perfilModel = new PerfilModel();
     }
@@ -46,14 +48,28 @@ class AccountController extends Controller
             $perfil = $this->perfilModel->find($usuario['perfil']);
             session()->set('usuario', $usuario);
             session()->set('perfil', $perfil['nombre']);
+
+            // Registrar acción de inicio de sesión
+            registrarAccion($usuario['id'], 'login', 'El usuario inició sesión.');
+
             return redirect()->to(site_url('/'));
         } else {
+            // Registrar intento de inicio de sesión fallido
+            registrarAccion(0, 'login_failed', 'Intento de inicio de sesión fallido para el correo: ' . $correoElectronico);
+
             return redirect()->to(site_url('login'))->with('error', 'Invalid email or password.');
         }
     }
 
     public function salir()
     {
+        $usuario = session()->get('usuario');
+
+        // Registrar acción de cierre de sesión
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'logout', 'El usuario cerró sesión.');
+        }
+
         session()->destroy();
         return redirect()->to(site_url('login'));
     }

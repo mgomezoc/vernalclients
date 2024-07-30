@@ -12,12 +12,19 @@ class Usuarios extends BaseController
     public function __construct()
     {
         $this->usuarioModel = new UsuarioModel();
+        helper('auditoria'); // Cargar el helper de auditoría
     }
 
     public function index()
     {
         // Obtener todos los usuarios desde el modelo
         $usuarios = $this->usuarioModel->obtenerUsuariosOrdenados();
+
+        // Registrar acción de visualización de lista de usuarios
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_users', 'El usuario visualizó la lista de usuarios.');
+        }
 
         $data = [
             "usuarios" => $usuarios,
@@ -55,6 +62,12 @@ class Usuarios extends BaseController
             // Excluir la contraseña y la fecha de creación del usuario
             unset($usuario['contrasena']);
             unset($usuario['fecha_creacion']);
+
+            // Registrar acción de obtener usuario por ID
+            $usuarioSesion = session()->get('usuario');
+            if ($usuarioSesion) {
+                registrarAccion($usuarioSesion['id'], 'get_user', 'El usuario obtuvo los detalles del usuario con ID: ' . $id);
+            }
 
             return $this->response->setJSON($usuario);
         } else {
@@ -95,6 +108,12 @@ class Usuarios extends BaseController
             ];
 
             $this->usuarioModel->insert($usuarioData);
+
+            // Registrar acción de agregar usuario
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_user', 'El usuario creó un nuevo usuario: ' . $correoElectronico);
+            }
 
             $data["success"] = true;
             $data["message"] = "Usuario agregado exitosamente.";
@@ -143,6 +162,12 @@ class Usuarios extends BaseController
             $updated = $this->usuarioModel->editarUsuario($usuarioId, $usuarioData);
 
             if ($updated) {
+                // Registrar acción de editar usuario
+                $usuarioSesion = session()->get('usuario');
+                if ($usuarioSesion) {
+                    registrarAccion($usuarioSesion['id'], 'edit_user', 'El usuario editó los detalles del usuario con ID: ' . $usuarioId);
+                }
+
                 $data["success"] = true;
                 $data["message"] = "Usuario actualizado exitosamente.";
             } else {
@@ -166,6 +191,12 @@ class Usuarios extends BaseController
             $deleted = $this->usuarioModel->borrarUsuario($usuarioId);
 
             if ($deleted) {
+                // Registrar acción de borrar usuario
+                $usuarioSesion = session()->get('usuario');
+                if ($usuarioSesion) {
+                    registrarAccion($usuarioSesion['id'], 'delete_user', 'El usuario eliminó el usuario con ID: ' . $usuarioId);
+                }
+
                 $data["success"] = true;
                 $data["message"] = "Usuario eliminado exitosamente.";
             } else {

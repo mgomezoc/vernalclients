@@ -68,17 +68,24 @@ class ClientesController extends BaseController
     public function obtenerClientes()
     {
         $clienteModel = new ClienteModel();
+        $postData = json_decode($this->request->getBody(), true);
+
+        $limit = $postData['limit'] ?? 10;
+        $offset = $postData['offset'] ?? 0;
         $filtros = [
-            'tipo' => $this->request->getPost('tipo'),
-            'sucursal' => $this->request->getPost('sucursal'),
-            'estatus' => $this->request->getPost('estatus'),
-            'periodo' => $this->request->getPost('periodo')
+            'tipo' => $postData['tipo'] ?? '',
+            'sucursal' => $postData['sucursal'] ?? '',
+            'estatus' => $postData['estatus'] ?? '',
+            'periodo' => $postData['periodo'] ?? ''
         ];
 
-        $clientes = $clienteModel->obtenerClientesFiltrados($filtros);
+        $result = $clienteModel->obtenerClientesPaginados($limit, $offset, $filtros);
 
-        return $this->response->setJSON($clientes);
+        return $this->response->setJSON($result);
     }
+
+
+
 
     public function obtenerClientesRecepcion()
     {
@@ -398,7 +405,6 @@ class ClientesController extends BaseController
             'meet_url' => $meet_url,
             'fecha_ultima_actualizacion' => date('Y-m-d H:i:s')
         ];
-
 
         if ($clienteModel->update($idCliente, $data)) {
             return $this->response->setJSON(['success' => true, 'message' => 'Información del cliente actualizada correctamente.']);

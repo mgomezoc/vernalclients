@@ -61,9 +61,11 @@ $(function () {
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
         method: 'POST',
+        dataType: 'json',
         search: true,
         showRefresh: true,
         pagination: true,
+        sidePagination: 'server',
         pageSize: 50,
         showColumns: true,
         iconsPrefix: 'fa-duotone',
@@ -77,6 +79,11 @@ $(function () {
             detailOpen: 'fa-circle-plus',
             detailClose: 'fa-circle-minus'
         },
+        queryParams: function (params) {
+            let filtros = $('#filtrosClientes').serializeObject();
+            const data = $.extend({}, params, filtros);
+            return JSON.stringify(data);
+        },
         onLoadSuccess: function () {
             $('[data-toggle="tooltip"]').tooltip();
         }
@@ -86,6 +93,13 @@ $(function () {
         $('#filtrosClientes')[0].reset();
         $('#filtrosClientes .select2').val(null).trigger('change');
         $('#filtroPeriodo').flatpickr().clear();
+
+        // Re-inicializar Flatpickr después de limpiar los filtros
+        $('#filtroPeriodo').flatpickr({
+            mode: 'range',
+            dateFormat: 'Y-m-d'
+        });
+
         $tablaClientes.bootstrapTable('refresh', {
             url: urls.obtener,
             method: 'POST'
@@ -94,22 +108,7 @@ $(function () {
 
     $('#filtrosClientes').on('submit', function (e) {
         e.preventDefault();
-
-        let filtros = $(this).serialize();
-
-        $.ajax({
-            url: baseUrl + 'clientes/obtener-clientes',
-            method: 'POST',
-            data: filtros,
-            dataType: 'json',
-            success: function (response) {
-                $tablaClientes.bootstrapTable('load', response);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Error al obtener clientes:', textStatus, errorThrown);
-                alert('Hubo un error al obtener los clientes. Por favor, inténtelo de nuevo.');
-            }
-        });
+        $tablaClientes.bootstrapTable('refresh');
     });
 
     $('#btnAgregarCliente').on('click', function () {

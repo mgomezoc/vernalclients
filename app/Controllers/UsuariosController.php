@@ -6,13 +6,26 @@ use App\Models\UsuarioModel;
 
 class Usuarios extends BaseController
 {
+    protected $usuarioModel;
+
+    public function __construct()
+    {
+        helper('auditoria'); // Cargar el helper de auditoría
+
+        $this->usuarioModel = new UsuarioModel();
+    }
+
     public function index()
     {
-        // Cargar el modelo de usuarios
-        $model = new UsuarioModel();
-
+        exit("test");
         // Obtener todos los usuarios desde la base de datos
-        $data['usuarios'] = $model->findAll();
+        $data['usuarios'] = $this->usuarioModel->findAll();
+
+        // Registrar acción de visualización de lista de usuarios
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_users', 'El usuario visualizó la lista de usuarios.');
+        }
 
         // Cargar la vista para mostrar la lista de usuarios
         return "x"; //view('usuarios/index', $data);
@@ -36,11 +49,14 @@ class Usuarios extends BaseController
             'contrasena' => password_hash($this->request->getPost('contrasena'), PASSWORD_DEFAULT),
         ];
 
-        // Cargar el modelo de usuarios
-        $model = new UsuarioModel();
-
         // Insertar los datos en la base de datos
-        $model->insert($data);
+        $this->usuarioModel->insert($data);
+
+        // Registrar acción de creación de usuario
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'create_user', 'El usuario creó un nuevo usuario: ' . $data['correo_electronico']);
+        }
 
         // Redirigir a la página de lista de usuarios
         return redirect()->to('/usuarios');
