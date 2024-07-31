@@ -3,12 +3,37 @@
  *
  */
 
+const urls = {
+    obtener: baseUrl + 'clientes/asignados-obtener'
+};
+
+let $tablaClientesAsignados;
+let tplAccionesTabla = '';
+
 $(function () {
-    $('#tablaClientes').bootstrapTable({
-        url: baseUrl + 'clientes/asignados-obtener',
+    setActiveMenu('clientes');
+    tplAccionesTabla = $('#tplAccionesTabla').html();
+
+    // Inicializar Select2 en los filtros y modales
+    $('.select2').select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5'
+    });
+
+    // Inicializar Flatpickr en el filtro de período
+    $('#filtroPeriodo').flatpickr({
+        mode: 'range',
+        dateFormat: 'Y-m-d'
+    });
+
+    // Inicializar la tabla de clientes con Bootstrap Table
+    $tablaClientesAsignados = $('#tablaClientes').bootstrapTable({
+        url: urls.obtener,
+        method: 'POST',
         search: true,
         showRefresh: true,
         pagination: true,
+        sidePagination: 'server',
         pageSize: 50,
         iconsPrefix: 'fa-duotone',
         icons: {
@@ -20,10 +45,43 @@ $(function () {
             columns: 'fa-th-list',
             detailOpen: 'fa-circle-plus',
             detailClose: 'fa-circle-minus'
+        },
+        queryParams: function (params) {
+            let filtros = $('#filtrosClientesAsignados').serializeObject();
+            const data = $.extend({}, params, filtros);
+            return JSON.stringify(data);
+        },
+        onLoadSuccess: function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
+    });
+
+    // Manejar el evento de reinicio de filtros
+    $('#resetFiltrosAsignados').on('click', function () {
+        $('#filtrosClientesAsignados')[0].reset();
+        $('#filtrosClientesAsignados .select2').val(null).trigger('change');
+        $('#filtroPeriodo').flatpickr().clear();
+
+        // Re-inicializar Flatpickr después de limpiar los filtros
+        $('#filtroPeriodo').flatpickr({
+            mode: 'range',
+            dateFormat: 'Y-m-d'
+        });
+
+        $tablaClientesAsignados.bootstrapTable('refresh', {
+            url: urls.obtener,
+            method: 'POST'
+        });
+    });
+
+    // Aplicar filtros en la tabla al enviar el formulario
+    $('#filtrosClientesAsignados').on('submit', function (e) {
+        e.preventDefault();
+        $tablaClientesAsignados.bootstrapTable('refresh');
     });
 });
 
+// Funciones adicionales para gestionar la tabla y los formularios
 function columnaEstatus(value, row) {
     let color = '';
 
@@ -55,5 +113,6 @@ function columnaEstatus(value, row) {
 }
 
 function formatoNombre(value, row, index, field) {
-    return `<a href="${baseUrl}/clientes/${row.id_cliente}" target="_blank">${value}</a>`;
+    const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
+    return tpl;
 }

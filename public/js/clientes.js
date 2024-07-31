@@ -3,12 +3,13 @@
  *
  */
 const urls = {
-    obtener: baseUrl + 'clientes/obtener-clientes',
-    agregar: baseUrl + 'clientes/agregar-cliente',
-    editar: baseUrl + 'clientes/editar-cliente',
-    borrar: baseUrl + 'clientes/eliminar-cliente',
     actualizarEstatus: baseUrl + 'clientes/actualizar-estatus',
-    caso: baseUrl + 'clientes/nuevo-caso'
+    agregar: baseUrl + 'clientes/agregar-cliente',
+    asignar: baseUrl + 'clientes/asignar-abogado',
+    borrar: baseUrl + 'clientes/eliminar-cliente',
+    caso: baseUrl + 'clientes/nuevo-caso',
+    editar: baseUrl + 'clientes/editar-cliente',
+    obtener: baseUrl + 'clientes/obtener-clientes'
 };
 
 let $tablaClientes;
@@ -18,9 +19,10 @@ let tplClienteSlug = '';
 let tplModalEstatus = '';
 let $modalEstatus;
 let tplNuevoCaso = '';
-
 let ProcesosCasos = [];
 let fieldValue = [];
+
+let $modalAsignarAbogado;
 
 $(function () {
     $.validator.addMethod(
@@ -45,6 +47,7 @@ $(function () {
 
     $modalNuevoCliente = $('#modalNuevoCliente');
     $modalEstatus = $('#modalEstatus');
+    $modalAsignarAbogado = $('#modalAsignarAbogado');
 
     $modalNuevoCliente.find('.select2').select2({
         placeholder: 'Seleccione una opción',
@@ -300,6 +303,53 @@ $(function () {
             });
         })
         .validate();
+
+    //ASIGNAR
+    // Enviar formulario para asignar abogado
+    $('#btnAsignarAbogado').on('click', function () {
+        $('#frmAsignarAbogado').trigger('submit');
+    });
+    // Mostrar el modal de asignar abogado
+    $modalAsignarAbogado
+        .on('show.bs.modal', function (e) {
+            const $btn = $(e.relatedTarget);
+            const id_cliente = $btn.data('id');
+            $('#idClienteAsignarAbogado').val(id_cliente);
+        })
+        .on('hide.bs.modal', function () {
+            const $frm = $('#frmAsignarAbogado');
+            $frm.find('input, select').attr('disabled', false);
+            $frm[0].reset();
+            $frm.find('select').trigger('change');
+            $('#btnAsignarAbogado').attr('disabled', false);
+        });
+    //Asignar usuario a abogado
+    $('#frmAsignarAbogado')
+        .on('submit', function (e) {
+            e.preventDefault();
+            const $frm = $(this);
+            const data = $frm.serializeObject();
+
+            if ($frm.valid()) {
+                agregarAbogado(data)
+                    .then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaClientes.bootstrapTable('refresh');
+                            $frm.find('input, select').attr('disabled', true);
+                            $('#btnAsignarAbogado').attr('disabled', true);
+                            $frm.find('select').trigger('change');
+                            $modalAsignarAbogado.modal('hide');
+                        }
+                    })
+                    .catch(function (error) {
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al asignar el abogado.', 'error');
+                    });
+            }
+        })
+        .validate();
 });
 
 function actualizarTablaClientes(filtros) {
@@ -508,5 +558,14 @@ function createCase(clientID, sucursal, processID, id_caso) {
         error: function (error) {
             console.error('Error al crear el caso:', error);
         }
+    });
+}
+
+function agregarAbogado(data) {
+    return $.ajax({
+        type: 'post',
+        url: urls.asignar,
+        data: data,
+        dataType: 'json'
     });
 }

@@ -72,6 +72,7 @@
                             <th data-field="nombre_sucursal">Sucursal</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
                             <th data-field="nombre_estatus" data-formatter="columnaEstatus" data-align="center">Estatus</th>
+                            <th data-field="nombre_usuario_asignado">Asignado</th>
                             <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true" data-visible="false">Creado</th>
                             <th data-field="slug" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
@@ -128,9 +129,61 @@
                     <span>Estatus</span>
                 </a>
             </li>
+            <li>
+                <a href="#modalAsignarAbogado" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
+                    <i class="fa-duotone fa-user-tie me-1"></i>
+                    <span>Asignar</span>
+                </a>
+            </li>
         </ul>
     </div>
 </template>
+
+<!-- Modal Asignar Abogado -->
+<div class="modal fade" id="modalAsignarAbogado" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Asignar Abogado</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="frmAsignarAbogado" action="#" method="post" class="row g-3">
+                        <input type="hidden" name="id_cliente" id="idClienteAsignarAbogado">
+                        <div class="col-md-12">
+                            <label for="abogados" class="form-label">Abogado a asignar:</label>
+                            <select name="id_abogado" id="abogados" class="select2 form-select" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <optgroup label="Abogados">
+                                    <?php foreach ($abogados as $abogado) : ?>
+                                        <option value="<?= esc($abogado['usuario_id']) ?>">
+                                            <?= esc($abogado['usuario_nombre'] . " " . $abogado['usuario_apellido_paterno']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                                <optgroup label="Paralegal">
+                                    <?php foreach ($paralegales as $paralegal) : ?>
+                                        <option value="<?= esc($paralegal['id']) ?>">
+                                            <?= esc($paralegal['nombre'] . " " . $paralegal['apellido_paterno']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="clienteSlug"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="btnAsignarAbogado" type="button" class="btn btn-primary">Asignar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- MODAL CAMBIO ESTATUS -->
 <div class="modal fade" id="modalEstatus" tabindex="-1">

@@ -17,9 +17,14 @@ class ClientesController extends BaseController
     public function index()
     {
         $data["title"] = "Clientes";
+
+        $abogadoModel = new AbogadoModel();
+        $usuarioModel = new UsuarioModel();
         $sucursalModel = new SucursalModel();
         $estatusModel = new ClienteEstatusModel();
 
+        $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
+        $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
         $data['sucursales'] = $sucursalModel->obtenerTodas();
         $data['estatus'] = $estatusModel->obtenerTodosEstatus();
 
@@ -514,24 +519,33 @@ class ClientesController extends BaseController
     public function clientesAsignados()
     {
         $data["title"] = "Clientes Asignados";
-        $abogadoModel = new AbogadoModel();
+
+        // Obtener datos del usuario (abogado) desde la sesión
         $usuario = session("usuario");
         $idAbogado = $usuario["id"];
 
-        $clienteModel = new ClienteModel();
-        $data['clientes'] = $clienteModel->obtenerClientesAsignados($idAbogado);
+        // Cargar modelos
+        $sucursalModel = new SucursalModel();
+        $estatusModel = new ClienteEstatusModel();
 
+        // Obtener datos necesarios
+        $data['sucursales'] = $sucursalModel->obtenerTodas();
+        $data['estatus'] = $estatusModel->obtenerTodosEstatus();
+
+        // Renderizar la vista de clientes asignados
         $data['renderBody'] = $this->render("clientes/clientes_asignados", $data);
 
+        // Incluir estilos necesarios
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
 
+        // Incluir scripts necesarios
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
-        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
+        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_asignados.js") . "'></script>";
@@ -539,13 +553,26 @@ class ClientesController extends BaseController
         return $this->render('shared/layout', $data);
     }
 
-    function obtenerClientesAsignados()
+
+    public function obtenerClientesAsignados()
     {
         $usuario = session("usuario");
         $idAbogado = $usuario["id"];
-        $clienteModel = new ClienteModel();
-        $clientes = $clienteModel->obtenerClientesAsignados($idAbogado);
 
-        return $this->response->setJSON($clientes);
+        $clienteModel = new ClienteModel();
+        $postData = json_decode($this->request->getBody(), true);
+
+        $limit = $postData['limit'] ?? 10;
+        $offset = $postData['offset'] ?? 0;
+        $filtros = [
+            'tipo' => $postData['tipo'] ?? '',
+            'sucursal' => $postData['sucursal'] ?? '',
+            'estatus' => $postData['estatus'] ?? '',
+            'periodo' => $postData['periodo'] ?? ''
+        ];
+
+        $result = $clienteModel->obtenerClientesAsignadosPaginados($idAbogado, $limit, $offset, $filtros);
+
+        return $this->response->setJSON($result);
     }
 }

@@ -147,10 +147,24 @@ class ClienteModel extends Model
     public function obtenerClientesPaginados($limit, $offset, $filtros)
     {
         $builder = $this->db->table($this->table);
-        $builder->join('sucursales', 'sucursales.id = clientes.sucursal');
-        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
-        $builder->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
 
+        // Ajuste de las uniones con las tablas involucradas
+        $builder->join('sucursales', 'sucursales.id = clientes.sucursal', 'left');
+        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus', 'left');
+        $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente', 'left');
+        $builder->join('usuarios', 'usuarios.id = cliente_abogado.id_usuario', 'left');
+
+        // Selección de los campos con el alias correcto
+        $builder->select('clientes.*, 
+                     sucursales.nombre as nombre_sucursal, 
+                     clientes_estatus.nombre as nombre_estatus, 
+                     clientes_estatus.descripcion as descripcion_estatus, 
+                     clientes.fecha_ultima_actualizacion, 
+                     clientes.tipo_consulta, 
+                     clientes.meet_url,
+                     usuarios.nombre as nombre_usuario_asignado');
+
+        // Aplicación de filtros
         if (!empty($filtros['tipo'])) {
             $builder->where('clientes.tipo_consulta', $filtros['tipo']);
         }
@@ -178,11 +192,64 @@ class ClienteModel extends Model
             }
         }
 
+        // Ordenar y limitar los resultados
+        $builder->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
+        $builder->limit($limit, $offset);
+
+        // Obtener los resultados
+        $result = $builder->get()->getResultArray();
+
+        // Contar el total de registros que cumplen con los filtros (sin paginación)
+        $countQuery = clone $builder;
+        $countQuery->select("COUNT(*) as total");
+        $total = $countQuery->get()->getRow()->total;
+
+        return [
+            'total' => $total,
+            'rows' => $result
+        ];
+    }
+
+
+
+    public function obtenerClientesAsignadosPaginados($idUsuario, $limit, $offset, $filtros)
+    {
+        $builder = $this->db->table($this->table);
+        $builder->join('sucursales', 'sucursales.id = clientes.sucursal');
+        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
+        $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente');
+        $builder->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
+        $builder->where('cliente_abogado.id_usuario', $idUsuario);
+
+        // Aplicar filtros
+        if (!empty($filtros['tipo'])) {
+            $builder->where('clientes.tipo_consulta', $filtros['tipo']);
+        }
+
+        if (!empty($filtros['sucursal'])) {
+            $builder->where('clientes.sucursal', $filtros['sucursal']);
+        }
+
+        if (!empty($filtros['estatus'])) {
+            $builder->where('clientes.estatus', $filtros['estatus']);
+        }
+
+        if (!empty($filtros['periodo'])) {
+            $periodo = explode(' to ', $filtros['periodo']);
+            if (count($periodo) === 2) {
+                $fechaInicio = date('Y-m-d', strtotime($periodo[0]));
+                $fechaFin = date('Y-m-d', strtotime($periodo[1]));
+                $builder->where('clientes.fecha_creado >=', $fechaInicio);
+                $builder->where('clientes.fecha_creado <=', $fechaFin);
+            }
+        }
+
         $builder->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         $builder->limit($limit, $offset);
 
         $result = $builder->get()->getResultArray();
 
+        // Obtener el total de registros para la paginación
         $countQuery = clone $builder;
         $countQuery->select("COUNT(*) as total");
         $total = $countQuery->get()->getRow()->total;

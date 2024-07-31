@@ -84,7 +84,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,R
     $routes->get('obtener-abogado', 'ClientesController::obtenerClientesAbogado');
     $routes->post('nuevo-caso', 'ClientesController::nuevoCaso');
     $routes->get('asignados', 'ClientesController::clientesAsignados');
-    $routes->get('asignados-obtener', 'ClientesController::obtenerClientesAsignados');
+    $routes->post('asignados-obtener', 'ClientesController::obtenerClientesAsignados');
 });
 
 $routes->group('clientes', ['filter' => 'SessionAdmin:CALL'], function ($routes) {
