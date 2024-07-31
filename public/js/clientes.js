@@ -16,6 +16,9 @@ let tplAccionesTabla = '';
 let tplClienteSlug = '';
 let tplModalEstatus = '';
 let $modalEstatus;
+let tplNuevoCaso = '';
+
+let ProcesosCasos = [];
 
 $(function () {
     $.validator.addMethod(
@@ -39,6 +42,7 @@ $(function () {
     tplAccionesTabla = $('#tplAccionesTabla').html();
     tplClienteSlug = $('#tplClienteSlug').html();
     tplModalEstatus = $('#tplModalEstatus').html();
+    tplNuevoCaso = $('#tplNuevoCaso').html();
 
     $modalNuevoCliente = $('#modalNuevoCliente');
     $modalEstatus = $('#modalEstatus');
@@ -86,6 +90,31 @@ $(function () {
         },
         onLoadSuccess: function () {
             $('[data-toggle="tooltip"]').tooltip();
+        },
+        detailView: true,
+        onExpandRow: function (index, row, $detail) {
+            $detail.html('...cargando');
+            row.ProcesosCasos = ProcesosCasos;
+            row.consultaOnline = row.tipo_consulta == 'online';
+            console.log(row);
+            const renderData = Handlebars.compile(tplNuevoCaso)(row);
+            $detail.html(renderData);
+
+            $detail
+                .find('.cbTiposCaso')
+                .on('change', function () {
+                    const $cb = $(this);
+                    const $input = $($cb.data('target'));
+                    const costo = $cb.find('option:selected').data('costo');
+
+                    $input.val(costo);
+                })
+                .select2({
+                    placeholder: 'Seleccione una opción',
+                    theme: 'bootstrap-5'
+                });
+
+            $('.flatpickr').flatpickr();
         }
     });
 
@@ -222,6 +251,8 @@ $(function () {
         mode: 'range',
         dateFormat: 'Y-m-d'
     });
+
+    caseProcesses();
 });
 
 function actualizarTablaClientes(filtros) {
@@ -344,5 +375,20 @@ function actualizarEstatusCliente(data) {
         url: urls.actualizarEstatus,
         data: data,
         dataType: 'json'
+    });
+}
+
+function caseProcesses() {
+    $.ajax({
+        url: `${baseUrl}api/caseProcesses`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            ProcesosCasos = response.data;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al cargar caseProcesses: ' + error);
+        }
     });
 }
