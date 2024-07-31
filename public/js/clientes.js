@@ -178,7 +178,7 @@ $(function () {
             },
             messages: {
                 telefono: {
-                    required: 'Este campo es obligatorio',
+                    required: 'Este campo es obligatorio.',
                     validarTelefonoInternacional: 'Introduce un número de teléfono válido.'
                 }
             }
@@ -209,7 +209,7 @@ $(function () {
 
         actualizarEstatus(data).then(function (r) {
             if (!r.success) {
-                swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al reactivar el usuario.', 'error');
             } else {
                 $tablaClientes.bootstrapTable('refresh');
             }
@@ -241,7 +241,7 @@ $(function () {
                 $tablaClientes.bootstrapTable('refresh');
                 $modalEstatus.modal('hide');
             } else {
-                swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
             }
         });
     });
@@ -262,40 +262,42 @@ $(function () {
             const $btn = $(this);
             const $frm = $($btn.data('target'));
 
-            if ($frm.valid()) {
-                const formData = $frm.serializeObject();
-                const estatus = $btn.data('tipo');
-
-                formData.estatus = estatus;
-                formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
-
-                let procesos_adicionales = [];
-                $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
-                    const $option = $(option);
-                    procesos_adicionales.push({
-                        id: $option.val(),
-                        label: $option.text()
-                    });
-
-                    fieldValue.push($option.text());
-                });
-
-                formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
-
-                console.log(formData);
-
-                nuevoCaso(formData).then(function (r) {
-                    console.log(r);
-                    if (!r.success) {
-                        swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
-                    } else {
-                        swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
-                        $tablaClientes.bootstrapTable('refresh');
-                        const id_caso = r.crearCaso;
-                        createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
-                    }
-                });
+            if (!$frm.valid()) {
+                return false;
             }
+
+            const formData = $frm.serializeObject();
+            const estatus = $btn.data('tipo');
+
+            formData.estatus = estatus;
+            formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
+
+            let procesos_adicionales = [];
+            $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
+                const $option = $(option);
+                procesos_adicionales.push({
+                    id: $option.val(),
+                    label: $option.text()
+                });
+
+                fieldValue.push($option.text());
+            });
+
+            formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
+
+            console.log(formData);
+
+            nuevoCaso(formData).then(function (r) {
+                console.log(r);
+                if (!r.success) {
+                    swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
+                } else {
+                    swal.fire('¡Listo!', 'Se ha actualizado correctamente la información.', 'success');
+                    $tablaClientes.bootstrapTable('refresh');
+                    const id_caso = r.crearCaso;
+                    createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
+                }
+            });
         })
         .validate();
 });
@@ -495,7 +497,7 @@ function createCase(clientID, sucursal, processID, id_caso) {
         data: JSON.stringify(caseData),
         dataType: 'json',
         success: function (r) {
-            console.log('Case created successfully:', r);
+            console.log('Caso creado exitosamente:', r);
             actualizarCaseID(id_caso, r.caseID);
             addCaseParty(r.caseID, clientID);
             updateCustomField(r.caseID, 1, {
@@ -504,7 +506,7 @@ function createCase(clientID, sucursal, processID, id_caso) {
             });
         },
         error: function (error) {
-            console.error('Error creating case:', error);
+            console.error('Error al crear el caso:', error);
         }
     });
 }

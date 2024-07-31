@@ -34,8 +34,11 @@ class CasoModel extends Model
     // Obtener casos por ID de cliente
     public function obtenerCasosPorCliente($idCliente)
     {
-        return $this->where('id_cliente', $idCliente)->findAll();
+        return $this->where('id_cliente', $idCliente)
+            ->orderBy('fecha_creacion', 'DESC') // Ordenar por fecha de creación, puedes cambiarlo a fecha_actualizacion si lo prefieres
+            ->findAll();
     }
+
 
     public function actualizarCaseID($id_caso, $caseID)
     {
