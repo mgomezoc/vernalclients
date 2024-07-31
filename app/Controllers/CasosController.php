@@ -11,6 +11,11 @@ class CasosController extends Controller
 {
     use ResponseTrait;
 
+    public function __construct()
+    {
+        helper('auditoria'); // Cargar el helper de auditoría
+    }
+
     public function actualizarCaseID()
     {
         $request = \Config\Services::request();
@@ -27,6 +32,12 @@ class CasosController extends Controller
 
         // Intentar actualizar el caseID
         if ($casoModel->actualizarCaseID($idCaso, $caseID)) {
+            // Registrar acción de actualización de CaseID
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'update_caseID', "Actualizó el CaseID del caso con ID: $idCaso a $caseID.");
+            }
+
             return $this->respondUpdated(['message' => 'CaseID actualizado correctamente.']);
         } else {
             return $this->failServerError('No se pudo actualizar el CaseID.');
@@ -49,6 +60,12 @@ class CasosController extends Controller
 
         // Intenta actualizar el estatus del caso
         if ($casoModel->actualizarEstatusCaso($idCaso, $nuevoEstatus)) {
+            // Registrar acción de actualización de estatus
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'update_case_status', "Actualizó el estatus del caso con ID: $idCaso a $nuevoEstatus.");
+            }
+
             // Si la actualización se realizó correctamente, devuelve un mensaje de éxito
             return $this->response->setJSON(['success' => true, 'message' => 'Estatus actualizado correctamente.']);
         } else {
@@ -63,6 +80,12 @@ class CasosController extends Controller
 
         $comentariosModel = new ComentarioCasoModel();
         $comentarios = $comentariosModel->obtenerComentariosPorCaso($idCaso);
+
+        // Registrar acción de visualización de comentarios
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_case_comments', "Visualizó los comentarios del caso con ID: $idCaso.");
+        }
 
         return $this->response->setJSON(['success' => true, 'data' => $comentarios]);
     }
@@ -82,6 +105,12 @@ class CasosController extends Controller
         ];
 
         if ($comentariosModel->agregarComentario($data)) {
+            // Registrar acción de agregar comentario
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'add_case_comment', "Agregó un comentario al caso con ID: $id_caso.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Se creó el comentario correctamente.';
         } else {
@@ -99,12 +128,18 @@ class CasosController extends Controller
 
         // Obtener todos los datos de POST excepto 'id_caso'
         $postData = $this->request->getPost();
-        unset($postData['id_caso']);  // Asegurarte de no incluir el id_caso en los datos a actualizar
+        unset($postData['id_caso']);  // Asegúrate de no incluir el id_caso en los datos a actualizar
 
         // Incluir la fecha de actualización
         $postData['fecha_actualizacion'] = date('Y-m-d H:i:s');
 
         if ($casoModel->editarCaso($idCaso, $postData)) {
+            // Registrar acción de edición de caso
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'edit_case', "Editó el caso con ID: $idCaso.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Se actualizó el caso correctamente.';
         } else {

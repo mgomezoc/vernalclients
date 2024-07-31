@@ -33,6 +33,7 @@ class ClientesController extends BaseController
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
+        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes.js") . "'></script>";
@@ -235,8 +236,6 @@ class ClientesController extends BaseController
         $proceso = $this->request->getPost('proceso');
         $fecha_corte = $this->request->getPost('fecha_corte');
 
-
-
         if ($estatus == "4") {
             $casoModel = new CasoModel();
 
@@ -253,6 +252,7 @@ class ClientesController extends BaseController
                 'fecha_actualizacion' => date('Y-m-d H:i:s')
             ];
 
+
             $crearCaso = $casoModel->crearCaso($data);
 
             $response['data'] = $data;
@@ -262,7 +262,6 @@ class ClientesController extends BaseController
         $clienteModel = new ClienteModel();
 
         $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
-
 
         $response['success'] = true;
         $response['estatus'] = $estatus;

@@ -7,7 +7,8 @@ const urls = {
     agregar: baseUrl + 'clientes/agregar-cliente',
     editar: baseUrl + 'clientes/editar-cliente',
     borrar: baseUrl + 'clientes/eliminar-cliente',
-    actualizarEstatus: baseUrl + 'clientes/actualizar-estatus'
+    actualizarEstatus: baseUrl + 'clientes/actualizar-estatus',
+    caso: baseUrl + 'clientes/nuevo-caso'
 };
 
 let $tablaClientes;
@@ -19,15 +20,13 @@ let $modalEstatus;
 let tplNuevoCaso = '';
 
 let ProcesosCasos = [];
+let fieldValue = [];
 
 $(function () {
     $.validator.addMethod(
         'validarTelefonoInternacional',
         function (value, element) {
-            return (
-                this.optional(element) ||
-                /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value)
-            );
+            return this.optional(element) || /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value);
         },
         'Por favor, introduce un número de teléfono válido.'
     );
@@ -220,7 +219,7 @@ $(function () {
     $modalEstatus.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
+        const cliente = $tablaClientes.bootstrapTable('getData').find((cliente) => cliente.id_cliente == id_cliente);
 
         const renderData = Handlebars.compile(tplModalEstatus)(cliente);
 
@@ -253,6 +252,52 @@ $(function () {
     });
 
     caseProcesses();
+
+    $(document).on('submit', '.frmNuevoCaso', function (e) {
+        e.preventDefault();
+    });
+
+    $(document)
+        .on('click', '.btnNuevoCaso', function (e) {
+            const $btn = $(this);
+            const $frm = $($btn.data('target'));
+
+            if ($frm.valid()) {
+                const formData = $frm.serializeObject();
+                const estatus = $btn.data('tipo');
+
+                formData.estatus = estatus;
+                formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
+
+                let procesos_adicionales = [];
+                $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
+                    const $option = $(option);
+                    procesos_adicionales.push({
+                        id: $option.val(),
+                        label: $option.text()
+                    });
+
+                    fieldValue.push($option.text());
+                });
+
+                formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
+
+                console.log(formData);
+
+                nuevoCaso(formData).then(function (r) {
+                    console.log(r);
+                    if (!r.success) {
+                        swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                    } else {
+                        swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
+                        $tablaClientes.bootstrapTable('refresh');
+                        const id_caso = r.crearCaso;
+                        createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
+                    }
+                });
+            }
+        })
+        .validate();
 });
 
 function actualizarTablaClientes(filtros) {
@@ -389,6 +434,77 @@ function caseProcesses() {
         },
         error: function (xhr, status, error) {
             console.error('Error al cargar caseProcesses: ' + error);
+        }
+    });
+}
+
+function nuevoCaso(data) {
+    return $.ajax({
+        type: 'post',
+        url: urls.caso,
+        data: data,
+        dataType: 'json'
+    });
+}
+
+function createCase(clientID, sucursal, processID, id_caso) {
+    const sucursalToLocationIDMap = {
+        1: 1,
+        2: 0,
+        4: 2,
+        5: 3
+    };
+
+    const lawFirmLocationID = sucursalToLocationIDMap[sucursal] !== undefined ? sucursalToLocationIDMap[sucursal] : 1;
+
+    var caseData = {
+        autoGenerateCaseNumber: true,
+        clientID: clientID,
+        caseID: 0,
+        applicationText: '',
+        caseCategoryID: null,
+        caseName: 'Intake',
+        caseNumber: `CN-${clientID}-${processID}`,
+        //"creationDate": "2024-03-26T18:46:47.217Z",
+        denialText: null,
+        expirationText: null,
+        externalCaseID: null,
+        externalCaseNumber: null,
+        filingTypeID: null,
+        physicalDocumentLocationID: null,
+        processID: processID,
+        areaOfPracticeID: 1,
+        processingText: null,
+        statusChangeComment: null,
+        //"statusChangeDate": "2024-03-26T18:46:47.217Z",
+        statusID: 0,
+        //"updateDate": "2024-03-26T18:46:47.217Z",
+        incidentText: null,
+        statuteOfLimitationText: null,
+        incidentLocation: null,
+        note: null,
+        case_Client: clientID,
+        lawFirmLocationID: lawFirmLocationID,
+        mainPartyID: clientID
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/createCase`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(caseData),
+        dataType: 'json',
+        success: function (r) {
+            console.log('Case created successfully:', r);
+            actualizarCaseID(id_caso, r.caseID);
+            addCaseParty(r.caseID, clientID);
+            updateCustomField(r.caseID, 1, {
+                fieldValue: fieldValue.join(' --- '),
+                description: 'Procesos Adicionales'
+            });
+        },
+        error: function (error) {
+            console.error('Error creating case:', error);
         }
     });
 }
