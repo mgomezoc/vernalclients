@@ -7,9 +7,53 @@
     </div>
 
     <div class="card card-body">
+        <!-- Filtros -->
+        <form id="filtrosClientesRecepcion" class="row g-3 mb-3 animate__animated animate__fadeIn">
+            <div class="col-md-3 position-relative">
+                <label for="filtroPeriodoRecepcion" class="form-label">Periodo</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <input type="text" id="filtroPeriodoRecepcion" name="periodo" class="form-control" placeholder="Seleccionar periodo">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="filtroSucursalRecepcion" class="form-label">Sucursal</label>
+                <select id="filtroSucursalRecepcion" name="sucursal" class="form-select select2">
+                    <option value="">Seleccionar sucursal</option>
+                    <?php foreach ($sucursales as $sucursal) : ?>
+                        <option value="<?= esc($sucursal['id']) ?>">
+                            <?= esc($sucursal['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filtroEstatusRecepcion" class="form-label">Estatus</label>
+                <select id="filtroEstatusRecepcion" name="estatus" class="form-select select2">
+                    <option value="">Seleccionar estatus</option>
+                    <?php foreach ($estatus as $estado) : ?>
+                        <option value="<?= esc($estado['id_cliente_estatus']) ?>">
+                            <?= esc($estado['nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-azul animate__animated animate__fadeIn">
+                    <i class="fa fa-search me-2"></i>Aplicar filtros
+                </button>
+                <button type="button" id="resetFiltrosRecepcion" class="btn btn-secondary ms-2 animate__animated animate__fadeIn">
+                    <i class="fa fa-redo me-2"></i>Limpiar
+                </button>
+            </div>
+        </form>
+
+        <!-- Tabla de Clientes -->
         <div class="section-table">
             <div class="table-responsive">
-                <table id="tablaClientes" class="table table-striped table-sm table-linklaw">
+                <table id="tablaClientesRecepcion" class="table table-striped table-sm table-linklaw">
                     <thead>
                         <tr>
                             <th data-field="id_cliente">ID</th>

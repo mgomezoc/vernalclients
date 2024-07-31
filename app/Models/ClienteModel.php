@@ -160,7 +160,12 @@ class ClienteModel extends Model
         }
 
         if (!empty($filtros['estatus'])) {
-            $builder->where('clientes.estatus', $filtros['estatus']);
+            // Si el filtro de estatus es un array, usar whereIn
+            if (is_array($filtros['estatus'])) {
+                $builder->whereIn('clientes.estatus', $filtros['estatus']);
+            } else {
+                $builder->where('clientes.estatus', $filtros['estatus']);
+            }
         }
 
         if (!empty($filtros['periodo'])) {

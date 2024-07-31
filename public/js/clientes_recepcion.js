@@ -1,5 +1,5 @@
 /**
- * CLIENTES
+ * CLIENTES RECEPCIÓN
  *
  */
 const urls = {
@@ -10,11 +10,10 @@ const urls = {
     casos_cliente: baseUrl + 'clientes/casos-cliente'
 };
 
-let $tablaClientes;
+let $tablaClientesRecepcion;
 let $modalAsignarAbogado;
 let $modalCobrar;
 let tplAccionesTabla = '';
-let tplEditarCliente = '';
 let tplCobroCliente = '';
 
 $(function () {
@@ -24,12 +23,73 @@ $(function () {
     $modalAsignarAbogado = $('#modalAsignarAbogado');
     $modalCobrar = $('#modalCobrar');
 
-    $modalAsignarAbogado.find('.select2').select2({
+    // Inicializar Select2 en los filtros y modales
+    $('.select2').select2({
         placeholder: 'Seleccione una opción',
-        dropdownParent: $modalAsignarAbogado,
         theme: 'bootstrap-5'
     });
 
+    // Inicializar Flatpickr en el filtro de período
+    $('#filtroPeriodoRecepcion').flatpickr({
+        mode: 'range',
+        dateFormat: 'Y-m-d'
+    });
+
+    // Inicializar la tabla de clientes con Bootstrap Table
+    $tablaClientesRecepcion = $('#tablaClientesRecepcion').bootstrapTable({
+        url: urls.obtener,
+        method: 'POST',
+        search: true,
+        showRefresh: true,
+        pagination: true,
+        sidePagination: 'server',
+        pageSize: 50,
+        iconsPrefix: 'fa-duotone',
+        icons: {
+            paginationSwitchDown: 'fa-caret-square-down',
+            paginationSwitchUp: 'fa-caret-square-up',
+            refresh: 'fa-sync',
+            toggleOff: 'fa-toggle-off',
+            toggleOn: 'fa-toggle-on',
+            columns: 'fa-th-list',
+            detailOpen: 'fa-circle-plus',
+            detailClose: 'fa-circle-minus'
+        },
+        queryParams: function (params) {
+            let filtros = $('#filtrosClientesRecepcion').serializeObject();
+            const data = $.extend({}, params, filtros);
+            return JSON.stringify(data);
+        },
+        onLoadSuccess: function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    });
+
+    // Manejar el evento de reinicio de filtros
+    $('#resetFiltrosRecepcion').on('click', function () {
+        $('#filtrosClientesRecepcion')[0].reset();
+        $('#filtrosClientesRecepcion .select2').val(null).trigger('change');
+        $('#filtroPeriodoRecepcion').flatpickr().clear();
+
+        // Re-inicializar Flatpickr después de limpiar los filtros
+        $('#filtroPeriodoRecepcion').flatpickr({
+            mode: 'range',
+            dateFormat: 'Y-m-d'
+        });
+
+        $tablaClientesRecepcion.bootstrapTable('refresh', {
+            url: urls.obtener,
+            method: 'POST'
+        });
+    });
+
+    // Aplicar filtros en la tabla al enviar el formulario
+    $('#filtrosClientesRecepcion').on('submit', function (e) {
+        e.preventDefault();
+        $tablaClientesRecepcion.bootstrapTable('refresh');
+    });
+
+    // Mostrar el modal de asignar abogado
     $modalAsignarAbogado
         .on('show.bs.modal', function (e) {
             const $btn = $(e.relatedTarget);
@@ -44,10 +104,11 @@ $(function () {
             $('#btnAsignarAbogado').attr('disabled', false);
         });
 
+    // Mostrar el modal de cobrar y cargar los casos del cliente
     $modalCobrar.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const clientes = $tablaClientes.bootstrapTable('getData');
+        const clientes = $tablaClientesRecepcion.bootstrapTable('getData');
         const cliente = clientes.find((cliente) => cliente.id_cliente == id_cliente);
 
         obtenerCasosPorCliente(id_cliente).then(function (r) {
@@ -61,33 +122,14 @@ $(function () {
                 });
             cliente.casos = casos;
 
+            console.log({ cliente });
+
             const renderData = Handlebars.compile(tplCobroCliente)(cliente);
             $('#modalCobrar .modal-body').html(renderData);
-
-            console.log(cliente);
         });
     });
 
-    $tablaClientes = $('#tablaClientes').bootstrapTable({
-        url: urls.obtener,
-        method: 'GET',
-        search: true,
-        showRefresh: true,
-        pagination: true,
-        pageSize: 50,
-        iconsPrefix: 'fa-duotone',
-        icons: {
-            paginationSwitchDown: 'fa-caret-square-down',
-            paginationSwitchUp: 'fa-caret-square-up',
-            refresh: 'fa-sync',
-            toggleOff: 'fa-toggle-off',
-            toggleOn: 'fa-toggle-on',
-            columns: 'fa-th-list',
-            detailOpen: 'fa-circle-plus',
-            detailClose: 'fa-circle-minus'
-        }
-    });
-
+    // Enviar formulario para asignar abogado
     $('#btnAsignarAbogado').on('click', function () {
         $('#frmAsignarAbogado').trigger('submit');
     });
@@ -105,7 +147,7 @@ $(function () {
                             swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
                         } else {
                             swal.fire('¡Listo!', resultado.message, 'success');
-                            $tablaClientes.bootstrapTable('refresh');
+                            $tablaClientesRecepcion.bootstrapTable('refresh');
                             $frm.find('input, select').attr('disabled', true);
                             $('#btnAsignarAbogado').attr('disabled', true);
                             $frm.find('select').trigger('change');
@@ -120,12 +162,11 @@ $(function () {
         .validate();
 });
 
+// Funciones adicionales para gestionar la tabla y los formularios
 function accionesTablaUsuarios(value, row, index, field) {
     row.esIntake = row.estatus == '2';
     row.esViable = row.estatus == '4';
     row.esPorAsignar = row.estatus == '8';
-
-    console.log(row);
 
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
     return renderData;

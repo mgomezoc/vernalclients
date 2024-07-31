@@ -44,27 +44,40 @@ class ClientesController extends BaseController
     public function recepcion()
     {
         $data["title"] = "Clientes";
-        $abogadoModel = new AbogadoModel();
-        $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
-        $usuarioModel = new UsuarioModel();
-        $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
 
+        // Cargar modelos
+        $abogadoModel = new AbogadoModel();
+        $usuarioModel = new UsuarioModel();
+        $sucursalModel = new SucursalModel();
+        $estatusModel = new ClienteEstatusModel();
+
+        // Obtener datos necesarios
+        $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
+        $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
+        $data['sucursales'] = $sucursalModel->obtenerTodas();
+        $data['estatus'] = $estatusModel->obtenerTodosEstatus();
+
+        // Renderizar la vista de recepción
         $data['renderBody'] = $this->render("clientes/recepcion", $data);
 
+        // Incluir estilos necesarios
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
+        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
 
+        // Incluir scripts necesarios
         $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
         $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_recepcion.js") . "'></script>";
 
-
         return $this->render('shared/layout', $data);
     }
+
 
     public function obtenerClientes()
     {
@@ -96,14 +109,23 @@ class ClientesController extends BaseController
     public function obtenerClientesRecepcion()
     {
         $clienteModel = new ClienteModel();
-        $clientesIntake = $clienteModel->obtenerTodosClientesConEstatus(2);
-        $clientesViable = $clienteModel->obtenerTodosClientesConEstatus(4);
-        $clientesPorAsignar = $clienteModel->obtenerTodosClientesConEstatus(8);
+        $postData = json_decode($this->request->getBody(), true);
 
-        $clientes = array_merge($clientesIntake, $clientesViable, $clientesPorAsignar);
+        $limit = $postData['limit'] ?? 10;
+        $offset = $postData['offset'] ?? 0;
+        $filtros = [
+            'tipo' => $postData['tipo'] ?? '',
+            'sucursal' => $postData['sucursal'] ?? '',
+            'estatus' => $postData['estatus'] !== '' ? $postData['estatus'] : [2, 4, 8], // Si 'estatus' está vacío, usar [2, 4, 8]
+            'periodo' => $postData['periodo'] ?? ''
+        ];
 
-        return $this->response->setJSON($clientes);
+        $result = $clienteModel->obtenerClientesPaginados($limit, $offset, $filtros);
+
+        return $this->response->setJSON($result);
     }
+
+
 
     public function obtenerClientesAbogado()
     {

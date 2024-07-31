@@ -75,7 +75,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,R
     $routes->post('actualizar-estatus', 'ClientesController::actualizarEstatus');
     $routes->post('actualizarCliente', 'ClientesController::actualizarCliente');
     $routes->get('recepcion', 'ClientesController::recepcion');
-    $routes->get('obtener-recepcion', 'ClientesController::obtenerClientesRecepcion');
+    $routes->post('obtener-recepcion', 'ClientesController::obtenerClientesRecepcion');
     $routes->post('asignar-abogado', 'ClientesController::asignarAbogado');
     $routes->get('(:num)', 'ClientesController::verCliente/$1');
     $routes->post('casos-cliente', 'ClientesController::obtenerCasosPorCliente');
