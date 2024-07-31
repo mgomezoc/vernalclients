@@ -82,10 +82,15 @@ class ClientesController extends BaseController
 
         $result = $clienteModel->obtenerClientesPaginados($limit, $offset, $filtros);
 
+        // Agregar lógica para determinar si puede crear un caso
+        $estatusPermitidos = [2, 3, 8]; // Intake, Asignado, Por Asignar
+
+        foreach ($result['rows'] as &$cliente) {
+            $cliente['puedeCrearCaso'] = in_array($cliente['estatus'], $estatusPermitidos);
+        }
+
         return $this->response->setJSON($result);
     }
-
-
 
 
     public function obtenerClientesRecepcion()
