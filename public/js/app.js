@@ -70,7 +70,7 @@ function mostrarConfirmacion(mensaje, confirmCallback, ...params) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí',
         cancelButtonText: 'Cancelar'
-    }).then(result => {
+    }).then((result) => {
         if (result.isConfirmed) {
             if (typeof confirmCallback === 'function') {
                 confirmCallback(...params); // Llamamos al callback con los parámetros
@@ -92,6 +92,7 @@ function showSweetAlert(type, message) {
         }
     });
 }
+
 function ajaxCall(options) {
     return $.ajax({
         ...options,
@@ -127,21 +128,13 @@ function handleSessionExpired() {
 function handleError(status, xhr, textStatus, errorThrown) {
     switch (status) {
         case 400:
-            swal.fire(
-                'Solicitud Incorrecta',
-                'La solicitud no pudo ser procesada. Por favor, verifica los datos ingresados.',
-                'error'
-            );
+            swal.fire('Solicitud Incorrecta', 'La solicitud no pudo ser procesada. Por favor, verifica los datos ingresados.', 'error');
             break;
         case 404:
             swal.fire('No Encontrado', 'El recurso solicitado no se encontró. Por favor, verifica la URL.', 'error');
             break;
         case 500:
-            swal.fire(
-                'Error del Servidor',
-                'Ocurrió un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.',
-                'error'
-            );
+            swal.fire('Error del Servidor', 'Ocurrió un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.', 'error');
             break;
         default:
             swal.fire('Error', `Ocurrió un error: ${textStatus}. Por favor, inténtalo de nuevo más tarde.`, 'error');

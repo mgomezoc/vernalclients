@@ -18,7 +18,7 @@ $(function () {
     $('#formulario_admision').html(renderData);
 
     $('.btnEncuesta').on('click', function () {
-        swal.fire('¡Listo!', 'Se ha enviado la encuesta', 'success');
+        swal.fire('¡Listo!', 'Se ha enviado la encuesta.', 'success');
     });
 
     $('.btnCerrarCaso').on('click', function (e) {
@@ -33,9 +33,9 @@ $(function () {
 
         actualizarEstatus(data).then(function (r) {
             if (!r.success) {
-                swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
             } else {
-                swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
+                swal.fire('¡Listo!', 'Se ha actualizado correctamente la información.', 'success');
                 $btn.remove();
             }
         });

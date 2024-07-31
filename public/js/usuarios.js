@@ -1,6 +1,7 @@
 /**
  * USUARIOS
  */
+
 const urls = {
     obtenerUsuarios: 'usuarios/obtener-usuarios',
     agregarUsuario: 'usuarios/agregar-usuario',
@@ -22,7 +23,7 @@ $(function () {
 
     $modalAgregarUsuario.find('.select2').select2({
         placeholder: 'Seleccione una opción',
-        dropdownParent: $('#modalAgregarUsuario'),
+        dropdownParent: $modalAgregarUsuario,
         theme: 'bootstrap-5'
     });
 
@@ -133,12 +134,12 @@ $(function () {
         mostrarConfirmacion('¿Seguro que deseas borrar este usuario?', eliminarUsuario, id);
     });
 
-    // Convierte a minúsculas el texto en el input #email cada vez que se escribe algo
+    // Convertir el texto del input #email a minúsculas mientras se escribe
     $('#email').on('input', function () {
         this.value = this.value.toLowerCase();
     });
 
-    // Aplica el mismo comportamiento al input de correo electrónico del formulario de editar usuario
+    // Aplicar el mismo comportamiento al input de correo electrónico en el formulario de editar usuario
     $(document).on('input', 'input[name="correo_electronico"]', function () {
         this.value = this.value.toLowerCase();
     });
@@ -146,25 +147,19 @@ $(function () {
 
 function accionesTablaUsuarios(value, row, index, field) {
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
-
     return renderData;
 }
 
-function formatoPerfiles(value, row, index, field) {
-    switch (value) {
-        case '1':
-            return 'CALL';
-        case '2':
-            return 'RECEPTION';
-        case '3':
-            return 'PARALEGAL';
-        case '4':
-            return 'ADMIN';
-        case '5':
-            return 'MARKETING';
-        case '6':
-            return 'ATTORNEY';
-    }
+function formatoPerfiles(value) {
+    const perfiles = {
+        1: 'CALL',
+        2: 'RECEPTION',
+        3: 'PARALEGAL',
+        4: 'ADMIN',
+        5: 'MARKETING',
+        6: 'ATTORNEY'
+    };
+    return perfiles[value] || 'DESCONOCIDO';
 }
 
 function agregarUsuario(data) {
@@ -198,10 +193,5 @@ function eliminarUsuario(id) {
 }
 
 function encontrarUsuarioPorId(usuarios, id) {
-    for (const usuario of usuarios) {
-        if (usuario.id === id) {
-            return usuario;
-        }
-    }
-    return null;
+    return usuarios.find((usuario) => usuario.id === id) || null;
 }

@@ -5,163 +5,45 @@
  */
 
 const tiposVisa = [
-    {
-        Propósito: 'Atletas, artistas, animadores',
-        'Tipo de Visa': 'P'
-    },
-    {
-        Propósito: 'Trabajador australiano – especialidad profesional',
-        'Tipo de Visa': 'E-3'
-    },
-    {
-        Propósito: 'Tarjeta de Cruce de Frontera: México',
-        'Tipo de Visa': 'BCC'
-    },
-    {
-        Propósito: 'Visitantes de negocios',
-        'Tipo de Visa': 'B-1'
-    },
-    {
-        Propósito: 'Tripulación (en servicio a bordo de un barco o un avión en los Estados Unidos)',
-        'Tipo de Visa': 'D'
-    },
-    {
-        Propósito: 'Diplomáticos y funcionarios de un gobierno extranjero',
-        'Tipo de Visa': 'A'
-    },
-    {
-        Propósito: 'Empleados domésticos o niñeras (deben ir acompañando a un empleador extranjero)',
-        'Tipo de Visa': 'B-1'
-    },
-    {
-        Propósito: 'Empleados de una organización internacional designada y OTAN',
-        'Tipo de Visa': 'G1-G5, NATO'
-    },
-    {
-        Propósito: 'Visitantes de Intercambio',
-        'Tipo de Visa': 'J'
-    },
-    {
-        Propósito: 'Visitantes de intercambio - au pairs',
-        'Tipo de Visa': 'J-1'
-    },
-    {
-        Propósito: 'Visitantes de intercambio – hijos (menores de 21 años) o cónyuge del titular de una visa J-1',
-        'Tipo de Visa': 'J-2'
-    },
-    {
-        Propósito: 'Visitantes de intercambio – profesores, investigadores, maestros',
-        'Tipo de Visa': 'J-1'
-    },
-    {
-        Propósito: 'Visitantes de intercambio – intercambio cultural',
-        'Tipo de Visa': 'J, Q'
-    },
-    {
-        Propósito: 'Prometido(a)',
-        'Tipo de Visa': 'K-1'
-    },
-    {
-        Propósito: 'Personal militar y extranjero emplazados en los Estados Unidos',
-        'Tipo de Visa': 'A-2, NATO1-6'
-    },
-    {
-        Propósito:
-            'Ciudadanos extranjeros con habilidad extraordinaria en las ciencias, las artes, educación, negocios o atletismo',
-        'Tipo de Visa': 'O-1'
-    },
-    {
-        Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Chile',
-        'Tipo de Visa': 'H-1B1'
-    },
-    {
-        Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Singapur',
-        'Tipo de Visa': 'H-1B1'
-    },
-    {
-        Propósito: 'Representante de información de medios de comunicación (medios de comunicación, periodistas)',
-        'Tipo de Visa': 'I'
-    },
-    {
-        Propósito: 'Transferencia de empleados de una compañía',
-        'Tipo de Visa': 'L'
-    },
-    {
-        Propósito: 'Tratamiento Médico',
-        'Tipo de Visa': 'B-2'
-    },
-    {
-        Propósito: 'Trabajadores profesionalesTLCAN (NAFTA): México, Canadá',
-        'Tipo de Visa': 'TN/TD'
-    },
-    {
-        Propósito: 'Enfermeras que viajan a áreas con escasez de profesionales de la salud',
-        'Tipo de Visa': 'H-1C'
-    },
-    {
-        Propósito: 'Médicos',
-        'Tipo de Visa': 'J-1, H-1B'
-    },
-    {
-        Propósito: 'Trabajadores religiosos',
-        'Tipo de Visa': 'R'
-    },
-    {
-        Propósito: 'Ocupaciones especializadas en campos que requieren un alto conocimiento especializado',
-        'Tipo de Visa': 'H-1B'
-    },
-    {
-        Propósito: 'Estudiantes – estudiantes académicos y de idioma',
-        'Tipo de Visa': 'F-1'
-    },
-    {
-        Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa F-1',
-        'Tipo de Visa': 'F-2'
-    },
-    {
-        Propósito: 'Estudiantes - vocacional',
-        'Tipo de Visa': 'M-1'
-    },
-    {
-        Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa M-1',
-        'Tipo de Visa': 'M-2'
-    },
-    {
-        Propósito: 'Trabajadores agrícolas temporales – estacionales',
-        'Tipo de Visa': 'H-2A'
-    },
-    {
-        Propósito: 'Trabajadores temporales – no agrícolas',
-        'Tipo de Visa': 'H-2B'
-    },
-    {
-        Propósito: 'Visitantes por turismo, vacaciones, placer',
-        'Tipo de Visa': 'B-2'
-    },
-    {
-        Propósito: 'Entrenamiento en un programa sin fines de empleo',
-        'Tipo de Visa': 'H-3'
-    },
-    {
-        Propósito: 'Inversionistas',
-        'Tipo de Visa': 'E-2'
-    },
-    {
-        Propósito: 'Comerciantes',
-        'Tipo de Visa': 'E-1'
-    },
-    {
-        Propósito: 'En tránsito en los Estados Unidos',
-        'Tipo de Visa': 'C'
-    },
-    {
-        Propósito: 'Víctimas del tráfico de personas',
-        'Tipo de Visa': 'T-1'
-    },
-    {
-        Propósito: 'Renovaciones de visa en los Estados Unidos - A, G, y OTAN',
-        'Tipo de Visa': 'A1-2, G1-4, NATO1-6'
-    }
+    { Propósito: 'Atletas, artistas, animadores', 'Tipo de Visa': 'P' },
+    { Propósito: 'Trabajador australiano – especialidad profesional', 'Tipo de Visa': 'E-3' },
+    { Propósito: 'Tarjeta de Cruce de Frontera: México', 'Tipo de Visa': 'BCC' },
+    { Propósito: 'Visitantes de negocios', 'Tipo de Visa': 'B-1' },
+    { Propósito: 'Tripulación (en servicio a bordo de un barco o un avión en los Estados Unidos)', 'Tipo de Visa': 'D' },
+    { Propósito: 'Diplomáticos y funcionarios de un gobierno extranjero', 'Tipo de Visa': 'A' },
+    { Propósito: 'Empleados domésticos o niñeras (deben ir acompañando a un empleador extranjero)', 'Tipo de Visa': 'B-1' },
+    { Propósito: 'Empleados de una organización internacional designada y OTAN', 'Tipo de Visa': 'G1-G5, NATO' },
+    { Propósito: 'Visitantes de intercambio', 'Tipo de Visa': 'J' },
+    { Propósito: 'Visitantes de intercambio - au pairs', 'Tipo de Visa': 'J-1' },
+    { Propósito: 'Visitantes de intercambio – hijos (menores de 21 años) o cónyuge del titular de una visa J-1', 'Tipo de Visa': 'J-2' },
+    { Propósito: 'Visitantes de intercambio – profesores, investigadores, maestros', 'Tipo de Visa': 'J-1' },
+    { Propósito: 'Visitantes de intercambio – intercambio cultural', 'Tipo de Visa': 'J, Q' },
+    { Propósito: 'Prometido(a)', 'Tipo de Visa': 'K-1' },
+    { Propósito: 'Personal militar y extranjero emplazados en los Estados Unidos', 'Tipo de Visa': 'A-2, NATO1-6' },
+    { Propósito: 'Ciudadanos extranjeros con habilidad extraordinaria en las ciencias, las artes, educación, negocios o atletismo', 'Tipo de Visa': 'O-1' },
+    { Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Chile', 'Tipo de Visa': 'H-1B1' },
+    { Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Singapur', 'Tipo de Visa': 'H-1B1' },
+    { Propósito: 'Representante de información de medios de comunicación (medios de comunicación, periodistas)', 'Tipo de Visa': 'I' },
+    { Propósito: 'Transferencia de empleados de una compañía', 'Tipo de Visa': 'L' },
+    { Propósito: 'Tratamiento médico', 'Tipo de Visa': 'B-2' },
+    { Propósito: 'Trabajadores profesionales TLCAN (NAFTA): México, Canadá', 'Tipo de Visa': 'TN/TD' },
+    { Propósito: 'Enfermeras que viajan a áreas con escasez de profesionales de la salud', 'Tipo de Visa': 'H-1C' },
+    { Propósito: 'Médicos', 'Tipo de Visa': 'J-1, H-1B' },
+    { Propósito: 'Trabajadores religiosos', 'Tipo de Visa': 'R' },
+    { Propósito: 'Ocupaciones especializadas en campos que requieren un alto conocimiento especializado', 'Tipo de Visa': 'H-1B' },
+    { Propósito: 'Estudiantes – estudiantes académicos y de idioma', 'Tipo de Visa': 'F-1' },
+    { Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa F-1', 'Tipo de Visa': 'F-2' },
+    { Propósito: 'Estudiantes - vocacional', 'Tipo de Visa': 'M-1' },
+    { Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa M-1', 'Tipo de Visa': 'M-2' },
+    { Propósito: 'Trabajadores agrícolas temporales – estacionales', 'Tipo de Visa': 'H-2A' },
+    { Propósito: 'Trabajadores temporales – no agrícolas', 'Tipo de Visa': 'H-2B' },
+    { Propósito: 'Visitantes por turismo, vacaciones, placer', 'Tipo de Visa': 'B-2' },
+    { Propósito: 'Entrenamiento en un programa sin fines de empleo', 'Tipo de Visa': 'H-3' },
+    { Propósito: 'Inversionistas', 'Tipo de Visa': 'E-2' },
+    { Propósito: 'Comerciantes', 'Tipo de Visa': 'E-1' },
+    { Propósito: 'En tránsito en los Estados Unidos', 'Tipo de Visa': 'C' },
+    { Propósito: 'Víctimas del tráfico de personas', 'Tipo de Visa': 'T-1' },
+    { Propósito: 'Renovaciones de visa en los Estados Unidos - A, G, y OTAN', 'Tipo de Visa': 'A1-2, G1-4, NATO1-6' }
 ];
 
 const Parentescos = [
@@ -201,25 +83,14 @@ const EstatusMigratorio = [
 
 $(function () {
     Parentescos.forEach(function (option) {
-        $('.cbParentescos').append(
-            $('<option>', {
-                value: option.label,
-                text: option.label
-            })
-        );
+        $('.cbParentescos').append($('<option>', { value: option.label, text: option.label }));
     });
 
     EstatusMigratorio.forEach(function (option) {
-        $('.cbEstatusMigratorio').append(
-            $('<option>', {
-                value: option.label,
-                text: option.label
-            })
-        );
+        $('.cbEstatusMigratorio').append($('<option>', { value: option.label, text: option.label }));
     });
 
     cargarPaises();
-
     cargarSucursales();
 
     $('.select2').select2({
@@ -241,13 +112,7 @@ $(function () {
             if (!data.id) {
                 return data.text;
             }
-            var $option = $(
-                '<span>' +
-                    data.id +
-                    ' </span><small class="text-muted ms-2">' +
-                    data.element.dataset.proposito +
-                    '</small>'
-            );
+            var $option = $('<span>' + data.id + ' </span><small class="text-muted ms-2">' + data.element.dataset.proposito + '</small>');
             return $option;
         }
     });
@@ -264,12 +129,7 @@ $(function () {
         type: 'GET',
         success: function (data) {
             data.forEach(function (country) {
-                $('#cbNacionalidad').append(
-                    $('<option>', {
-                        value: country.translations.spa.common,
-                        text: country.translations.spa.common
-                    })
-                );
+                $('#cbNacionalidad').append($('<option>', { value: country.translations.spa.common, text: country.translations.spa.common }));
             });
 
             $('#cbNacionalidad').select2({
@@ -430,11 +290,7 @@ function esMenorDeEdad(fechaString) {
     var edad = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60 * 24 * 365.25));
 
     // Comprobamos si la edad es menor de 21 años
-    if (edad < 21) {
-        return true;
-    } else {
-        return false;
-    }
+    return edad < 21;
 }
 
 function guardarIntake(data) {
@@ -474,25 +330,9 @@ function createCase(clientID, lawFirmLocationID) {
         caseCategoryID: null,
         caseName: 'Intake',
         caseNumber: `CONSULTA CN-${clientID}-001`,
-        //"creationDate": "2024-03-26T18:46:47.217Z",
-        denialText: null,
-        expirationText: null,
-        externalCaseID: null,
-        externalCaseNumber: null,
-        filingTypeID: null,
-        physicalDocumentLocationID: null,
+        statusID: 0,
         processID: 167,
         areaOfPracticeID: 1,
-        processingText: null,
-        statusChangeComment: null,
-        //"statusChangeDate": "2024-03-26T18:46:47.217Z",
-        statusID: 0,
-        //"updateDate": "2024-03-26T18:46:47.217Z",
-        incidentText: null,
-        statuteOfLimitationText: null,
-        incidentLocation: null,
-        note: null,
-        case_Client: clientID,
         lawFirmLocationID: lawFirmLocationID,
         mainPartyID: clientID
     };
@@ -513,26 +353,15 @@ function createCase(clientID, lawFirmLocationID) {
     });
 }
 
-function addCaseParty(caseID, clientID, clientName) {
+function addCaseParty(caseID, clientID) {
     var partyData = {
         clientID: clientID,
         caseID: caseID,
-        clientName: clientName,
         clientTypeID: 0,
         isMainParty: true,
         roleID: 8,
-        addressID: null,
-        address: '',
-        signatoryID: null,
-        signatory: '',
-        clientType: {
-            typeID: 0,
-            name: 'Individual'
-        },
-        role: {
-            roleID: 8,
-            name: 'Beneficiary'
-        }
+        clientType: { typeID: 0, name: 'Individual' },
+        role: { roleID: 8, name: 'Beneficiary' }
     };
 
     return $.ajax({
@@ -550,7 +379,7 @@ function addCaseParty(caseID, clientID, clientName) {
     });
 }
 
-//GeneralAPI
+// GeneralAPI
 function cargarPaises() {
     $.ajax({
         url: `${baseUrl}api/worldCountries`,
@@ -563,20 +392,10 @@ function cargarPaises() {
                 var $select = $(this);
                 $select.empty();
 
-                $select.append(
-                    $('<option>', {
-                        value: '',
-                        text: 'Seleccione un país'
-                    })
-                );
+                $select.append($('<option>', { value: '', text: 'Seleccione un país' }));
 
                 $.each(response, function (i, country) {
-                    $select.append(
-                        $('<option>', {
-                            value: country.name,
-                            text: country.name
-                        })
-                    );
+                    $select.append($('<option>', { value: country.name, text: country.name }));
                 });
 
                 $select.select2({
@@ -601,22 +420,12 @@ function cargarSucursales() {
             var $select = $('#cbSucursales');
             $select.empty();
 
-            $select.append(
-                $('<option>', {
-                    value: '',
-                    text: 'Seleccione una sucursal'
-                })
-            );
+            $select.append($('<option>', { value: '', text: 'Seleccione una sucursal' }));
 
             const data = response.totalCount > 0 ? response.data : [];
 
             $.each(data, function (i, option) {
-                $select.append(
-                    $('<option>', {
-                        value: option.lawFirmLocationID,
-                        text: option.name
-                    })
-                );
+                $select.append($('<option>', { value: option.lawFirmLocationID, text: option.name }));
             });
 
             $select.select2({
@@ -626,16 +435,13 @@ function cargarSucursales() {
             });
         },
         error: function (xhr, status, error) {
-            console.error('Error al cargar los países: ' + error);
+            console.error('Error al cargar las sucursales: ' + error);
         }
     });
 }
 
 function actualizarClientID(id_cliente, clientID) {
-    const data = {
-        id_cliente: id_cliente,
-        clientID: clientID
-    };
+    const data = { id_cliente: id_cliente, clientID: clientID };
 
     return $.ajax({
         type: 'post',

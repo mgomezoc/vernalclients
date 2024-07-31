@@ -3,7 +3,7 @@
    ========================================================================== */
 
 $(function () {
-    $("#frmEncuesta").on("submit", function (e) {
+    $('#frmEncuesta').on('submit', function (e) {
         e.preventDefault();
 
         const $frm = $(this);
@@ -13,9 +13,9 @@ $(function () {
 
         guardarRespuestaEncuesta(formData).then(function (r) {
             if (!r.success) {
-                swal.fire("Advertencia!", "Ocurrio algun error, vuelve a intentarlo.", "warning")
+                swal.fire('¡Advertencia!', 'Ocurrió algún error, vuelve a intentarlo.', 'warning');
             } else {
-                swal.fire("¡Listo!", "Gracias por enviar tus comentarios", "success");
+                swal.fire('¡Listo!', 'Gracias por enviar tus comentarios.', 'success');
                 $frm[0].reset();
             }
         });
@@ -40,7 +40,7 @@ $(function () {
 
 // Espera a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function () {
-    // Obtiene elementos HTML que se utilizarán
+    // Obtiene los elementos HTML que se utilizarán
     const rangeInput = document.getElementById('pregunta1');
     const outputSpan = document.getElementById('valorPregunta1');
 
@@ -74,14 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Puedes agregar más lógica aquí para manejar otros elementos de la encuesta si es necesario
 });
 
-
-
 function guardarRespuestaEncuesta(data) {
     return $.ajax({
-        type: "post",
+        type: 'post',
         url: `${baseUrl}encuesta/guardarRespuestaEncuesta`,
         data: data,
-        dataType: "json",
+        dataType: 'json',
         success: function (response) {
             console.log(response);
         },

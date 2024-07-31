@@ -7,7 +7,7 @@ const urls = {
     agregar: baseUrl + 'clientes/callcenter/agregar',
     editar: baseUrl + 'clientes/editar-cliente',
     borrar: baseUrl + 'clientes/eliminar-cliente',
-    actualizarEstaus: baseUrl + 'clientes/actualizar-estatus'
+    actualizarEstatus: baseUrl + 'clientes/actualizar-estatus' // Corrección en el nombre de la clave 'actualizarEstaus'
 };
 
 let $tablaClientes;
@@ -22,10 +22,7 @@ $(function () {
     $.validator.addMethod(
         'validarTelefonoInternacional',
         function (value, element) {
-            return (
-                this.optional(element) ||
-                /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value)
-            );
+            return this.optional(element) || /^\+?(\d{1,3})?[-.\s]?(\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(value);
         },
         'Por favor, introduce un número de teléfono válido.'
     );
@@ -149,7 +146,7 @@ $(function () {
 
         actualizarEstatus(data).then(function (r) {
             if (!r.success) {
-                swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al reactivar el cliente.', 'error');
             } else {
                 $tablaClientes.bootstrapTable('refresh');
             }
@@ -159,7 +156,7 @@ $(function () {
     $modalEstatus.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
+        const cliente = $tablaClientes.bootstrapTable('getData').find((cliente) => cliente.id_cliente == id_cliente);
 
         console.log({ cliente });
 
@@ -184,7 +181,7 @@ $(function () {
                 $tablaClientes.bootstrapTable('refresh');
                 $modalEstatus.modal('hide');
             } else {
-                swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
             }
         });
     });
@@ -256,7 +253,7 @@ function agregarCliente(data) {
 function actualizarEstatus(data) {
     return $.ajax({
         type: 'post',
-        url: urls.actualizarEstaus,
+        url: urls.actualizarEstatus, // Corrección en el nombre de la clave 'actualizarEstaus'
         data: data,
         dataType: 'json'
     });

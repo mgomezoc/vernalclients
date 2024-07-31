@@ -47,18 +47,15 @@ $(function () {
     $modalCobrar.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const Clientes = $tablaClientes.bootstrapTable('getData');
-        const cliente = Clientes.find(cliente => cliente.id_cliente == id_cliente);
+        const clientes = $tablaClientes.bootstrapTable('getData');
+        const cliente = clientes.find((cliente) => cliente.id_cliente == id_cliente);
 
         obtenerCasosPorCliente(id_cliente).then(function (r) {
             const casos = r.casos
-                .filter(caso => caso.pagado == '0')
-                .map(caso => {
-                    const muestraCasoAPI = caso.caseID !== '0';
-                    const casoPagado = caso.pagado == '1';
-
-                    caso.muestraCasoAPI = muestraCasoAPI;
-                    caso.casoPagado = casoPagado;
+                .filter((caso) => caso.pagado == '0')
+                .map((caso) => {
+                    caso.muestraCasoAPI = caso.caseID !== '0';
+                    caso.casoPagado = caso.pagado == '1';
 
                     return caso;
                 });
@@ -116,7 +113,7 @@ $(function () {
                         }
                     })
                     .catch(function (error) {
-                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al asignar el abogado.', 'error');
                     });
             }
         })
@@ -153,30 +150,6 @@ function obtenerCasosPorCliente(id_cliente) {
 }
 
 function formatoNombre(value, row, index, field) {
-    const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
-    return tpl;
-}
-
-function agregarAbogado(data) {
-    return $.ajax({
-        type: 'post',
-        url: urls.asignar,
-        data: data,
-        dataType: 'json'
-    });
-}
-
-function obtenerCasosPorCliente(id_cliente) {
-    return $.ajax({
-        type: 'post',
-        url: urls.casos_cliente,
-        data: { id_cliente },
-        dataType: 'json'
-    });
-}
-
-function formatoNombre(value, row, index, field) {
-    console.log(row);
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
     return tpl;
 }
