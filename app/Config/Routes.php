@@ -144,6 +144,13 @@ $routes->group('api', ['namespace' => '\App\Controllers'], function ($routes) {
     $routes->put('updateCustomField/(:num)/(:num)', 'ApiController::updateCustomField/$1/$2');
 });
 
+//AUDITORIA
+$routes->group('auditoria', ['filter' => 'SessionAdmin:ADMIN'], function ($routes) {
+    $routes->get('/', 'AuditoriaController::index');
+    $routes->post('obtener', 'AuditoriaController::obtenerAuditoria');
+});
+
+
 $routes->get('/buscar', 'BusquedaController::buscar');
 
 /*

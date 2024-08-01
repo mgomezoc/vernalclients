@@ -33,6 +33,11 @@ class Profiles extends BaseConfig
                 'url' => 'reportes',
                 'label' => 'Reportes',
             ],
+            'auditoria' => [  // Nueva sección agregada
+                'icon' => 'fa-duotone fa-clipboard-list-check',
+                'url' => 'auditoria',
+                'label' => 'Auditoría',
+            ],
         ],
         'CALL' => [
             'clientes' => [
