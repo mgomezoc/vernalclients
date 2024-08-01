@@ -183,36 +183,6 @@ function accionesTablaUsuarios(value, row, index, field) {
     return renderData;
 }
 
-function columnaEstatus(value, row) {
-    let color = '';
-
-    switch (row.estatus) {
-        case '1':
-            color = 'text-bg-secondary';
-            break;
-        case '2':
-            color = 'text-bg-light';
-            break;
-        case '3':
-            color = 'text-bg-primary';
-            break;
-        case '4':
-            color = 'text-bg-success';
-            break;
-        case '5':
-            color = 'text-bg-danger';
-            break;
-        case '6':
-            color = 'text-bg-info';
-            break;
-        default:
-            color = 'text-bg-dark';
-            break;
-    }
-
-    return `<span class="badge ${color}">${value}</span>`;
-}
-
 function agregarAbogado(data) {
     return $.ajax({
         type: 'post',

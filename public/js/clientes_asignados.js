@@ -81,37 +81,6 @@ $(function () {
     });
 });
 
-// Funciones adicionales para gestionar la tabla y los formularios
-function columnaEstatus(value, row) {
-    let color = '';
-
-    switch (row.estatus) {
-        case '1':
-            color = 'text-bg-secondary';
-            break;
-        case '2':
-            color = 'text-bg-light';
-            break;
-        case '3':
-            color = 'text-bg-primary';
-            break;
-        case '4':
-            color = 'text-bg-success';
-            break;
-        case '5':
-            color = 'text-bg-danger';
-            break;
-        case '6':
-            color = 'text-bg-info';
-            break;
-        default:
-            color = 'text-bg-dark';
-            break;
-    }
-
-    return `<span class="badge ${color}">${value}</span>`;
-}
-
 function formatoNombre(value, row, index, field) {
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}">${value}</a>`;
     return tpl;

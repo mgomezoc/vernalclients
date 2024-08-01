@@ -142,3 +142,21 @@ function handleError(status, xhr, textStatus, errorThrown) {
     }
     console.error('Error en la llamada Ajax:', textStatus, errorThrown);
 }
+
+function columnaEstatus(value, row) {
+    const estatusClasses = {
+        1: 'text-bg-secondary', // prospecto - neutral
+        2: 'text-bg-warning', // intake - esperando acción
+        3: 'text-bg-primary', // asignado - en progreso
+        4: 'text-bg-success', // elegible - aprobado
+        5: 'text-bg-danger', // no elegible - rechazado
+        6: 'text-bg-info', // activo - en acción
+        7: 'text-bg-secondary', // inactivo - estado neutro, no activo
+        8: 'text-bg-dark' // por asignar - esperando asignación
+    };
+
+    const defaultClass = 'text-bg-dark';
+    const color = estatusClasses[row.estatus] || defaultClass;
+
+    return `<span class="badge ${color}" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
+}

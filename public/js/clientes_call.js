@@ -192,24 +192,6 @@ function formatoNombre(value, row, index, field) {
     return tpl;
 }
 
-function columnaEstatus(value, row) {
-    const estatusClasses = {
-        1: 'text-bg-secondary', // prospecto
-        2: 'text-bg-light', // intake
-        3: 'text-bg-primary', // asignado
-        4: 'text-bg-success', // elegible
-        5: 'text-bg-danger', // no elegible
-        6: 'text-bg-info', // activo
-        7: 'text-bg-warning', // inactivo
-        8: 'text-bg-dark' // por asignar
-    };
-
-    const defaultClass = 'text-bg-dark';
-    const color = estatusClasses[row.estatus] || defaultClass;
-
-    return `<span class="badge ${color}" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
-}
-
 function accionesTablaUsuarios(value, row, index, field) {
     switch (row.estatus) {
         case '1':
