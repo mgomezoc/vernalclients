@@ -14,6 +14,11 @@ use App\Models\UsuarioModel;
 
 class ClientesController extends BaseController
 {
+    public function __construct()
+    {
+        helper('auditoria'); // Cargar el helper de auditoría para registrar acciones
+    }
+
     public function index()
     {
         $data["title"] = "Clientes";
@@ -27,6 +32,12 @@ class ClientesController extends BaseController
         $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
         $data['sucursales'] = $sucursalModel->obtenerTodas();
         $data['estatus'] = $estatusModel->obtenerTodosEstatus();
+
+        // Registrar acción de visualización de clientes
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_clients', 'El usuario visualizó la lista de clientes.');
+        }
 
         $data['renderBody'] = $this->render("clientes/index", $data);
 
@@ -61,6 +72,12 @@ class ClientesController extends BaseController
         $data['paralegales'] = $usuarioModel->getUsuariosPorPerfiles([3]);
         $data['sucursales'] = $sucursalModel->obtenerTodas();
         $data['estatus'] = $estatusModel->obtenerTodosEstatus();
+
+        // Registrar acción de visualización de clientes en recepción
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_clients_reception', 'El usuario visualizó la lista de clientes en recepción.');
+        }
 
         // Renderizar la vista de recepción
         $data['renderBody'] = $this->render("clientes/recepcion", $data);
@@ -142,6 +159,11 @@ class ClientesController extends BaseController
         $clienteModel = new ClienteModel();
         $clientes = $clienteModel->obtenerTodosClientesAbogado($idAbogado);
 
+        // Registrar acción de visualización de clientes asignados al abogado
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_assigned_clients', 'El abogado visualizó la lista de clientes asignados.');
+        }
+
         return $this->response->setJSON($clientes);
     }
 
@@ -164,6 +186,12 @@ class ClientesController extends BaseController
             ];
 
             if ($clienteAbogadoModel->guardarRelacion($data)) {
+                // Registrar acción de asignación de abogado
+                $usuario = session()->get('usuario');
+                if ($usuario) {
+                    registrarAccion($usuario['id'], 'assign_lawyer', "El usuario asignó al abogado ID $idAbogado al cliente ID $idCliente.");
+                }
+
                 $response['success'] = true;
                 $response['message'] = 'Se actualizó correctamente el estatus del cliente y se asignó el abogado.';
             } else {
@@ -203,6 +231,12 @@ class ClientesController extends BaseController
         ];
 
         if ($clienteModel->insert($data)) {
+            // Registrar acción de creación de cliente
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_client', "El usuario creó un nuevo cliente con nombre $nombre.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Se creó correctamente el cliente.';
             $response['slug'] = $slug;
@@ -236,7 +270,6 @@ class ClientesController extends BaseController
         $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
         $data['tiposCasos'] = $tiposCasosModel->obtenerTodos();
 
-
         $data['renderBody'] = $this->render("clientes/abogado", $data);
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
@@ -251,7 +284,6 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_abogado.js") . "'></script>";
-
 
         return $this->render('shared/layout', $data);
     }
@@ -284,7 +316,6 @@ class ClientesController extends BaseController
                 'fecha_actualizacion' => date('Y-m-d H:i:s')
             ];
 
-
             $crearCaso = $casoModel->crearCaso($data);
 
             $response['data'] = $data;
@@ -294,6 +325,15 @@ class ClientesController extends BaseController
         $clienteModel = new ClienteModel();
 
         $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
+
+        // Registrar acción de actualización de estatus y creación de caso si aplica
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $id_cliente a $estatus.");
+            if (isset($crearCaso) && $crearCaso) {
+                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso para el cliente ID $id_cliente con el estatus $estatus.");
+            }
+        }
 
         $response['success'] = true;
         $response['estatus'] = $estatus;
@@ -320,7 +360,6 @@ class ClientesController extends BaseController
         $sucursalModel = new SucursalModel();
         $data['sucursales'] = $sucursalModel->obtenerTodas();
 
-
         $data["title"] = "Cliente";
         $data['cliente'] = $cliente;
         $data['casos'] = $casos;
@@ -333,6 +372,12 @@ class ClientesController extends BaseController
 
         $data['scripts'] = "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/cliente.js") . "'></script>";
+
+        // Registrar acción de visualización de un cliente específico
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_client', "El usuario visualizó la información del cliente ID $idCliente.");
+        }
 
         return $this->render('shared/layout', $data);
     }
@@ -368,6 +413,12 @@ class ClientesController extends BaseController
         ];
 
         if ($casoModel->crearCaso($data)) {
+            // Registrar acción de creación de caso
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_case', "El usuario creó un nuevo caso para el cliente ID $idCliente.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Se creó el caso correctamente.';
         } else {
@@ -386,10 +437,14 @@ class ClientesController extends BaseController
         $nuevoClientID = $this->request->getPost('clientID');
 
         if ($clienteModel->actualizarClientID($idCliente, $nuevoClientID)) {
-            // La actualización fue exitosa.
+            // Registrar acción de actualización de ClientID
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'update_client_id', "El usuario actualizó el ClientID del cliente ID $idCliente.");
+            }
+
             return $this->response->setJSON(['success' => true, 'message' => 'ClientID actualizado correctamente.']);
         } else {
-            // Hubo un error al actualizar.
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el ClientID.']);
         }
     }
@@ -411,6 +466,12 @@ class ClientesController extends BaseController
         ];
 
         if ($clienteModel->update($idCliente, $data)) {
+            // Registrar acción de actualización de estatus
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $idCliente a $estatus.");
+            }
+
             return $this->response->setJSON(['success' => true, 'message' => 'Estatus actualizado correctamente.']);
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el estatus.']);
@@ -438,11 +499,18 @@ class ClientesController extends BaseController
         ];
 
         if ($clienteModel->update($idCliente, $data)) {
+            // Registrar acción de actualización de cliente
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'update_client_info', "El usuario actualizó la información del cliente ID $idCliente.");
+            }
+
             return $this->response->setJSON(['success' => true, 'message' => 'Información del cliente actualizada correctamente.']);
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar la información del cliente.']);
         }
     }
+
     //CALL CENTER
     public function callcenter()
     {
@@ -455,6 +523,11 @@ class ClientesController extends BaseController
         $data['sucursales'] = $sucursalModel->obtenerTodas();
         $data['estatus'] = $estatus;
 
+        // Registrar acción de visualización de clientes del call center
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_callcenter_clients', 'El usuario visualizó la lista de clientes en el call center.');
+        }
 
         $data['renderBody'] = $this->render("clientes/call_center", $data);
 
@@ -468,7 +541,6 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_call.js") . "'></script>";
-
 
         return $this->render('shared/layout', $data);
     }
@@ -505,6 +577,12 @@ class ClientesController extends BaseController
         ];
 
         if ($clienteModel->insert($data)) {
+            // Registrar acción de creación de cliente en call center
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_client_callcenter', "El usuario creó un nuevo cliente en el call center con nombre $nombre.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Se creó correctamente el cliente.';
             $response['slug'] = $slug;
@@ -531,6 +609,11 @@ class ClientesController extends BaseController
         // Obtener datos necesarios
         $data['sucursales'] = $sucursalModel->obtenerTodas();
         $data['estatus'] = $estatusModel->obtenerTodosEstatus();
+
+        // Registrar acción de visualización de clientes asignados
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_assigned_clients', 'El abogado visualizó la lista de clientes asignados.');
+        }
 
         // Renderizar la vista de clientes asignados
         $data['renderBody'] = $this->render("clientes/clientes_asignados", $data);

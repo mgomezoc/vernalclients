@@ -153,23 +153,25 @@
                         <input type="hidden" name="id_cliente" id="idClienteAsignarAbogado">
                         <div class="col-md-12">
                             <label for="abogados" class="form-label">Abogado a asignar:</label>
-                            <select name="id_abogado" id="abogados" class="select2 form-select" required>
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <optgroup label="Abogados">
-                                    <?php foreach ($abogados as $abogado) : ?>
-                                        <option value="<?= esc($abogado['usuario_id']) ?>">
-                                            <?= esc($abogado['usuario_nombre'] . " " . $abogado['usuario_apellido_paterno']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </optgroup>
-                                <optgroup label="Paralegal">
-                                    <?php foreach ($paralegales as $paralegal) : ?>
-                                        <option value="<?= esc($paralegal['id']) ?>">
-                                            <?= esc($paralegal['nombre'] . " " . $paralegal['apellido_paterno']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </optgroup>
-                            </select>
+                            <div class="d-flex flex-column-reverse">
+                                <select name="id_abogado" id="abogados" class="select2 form-select" required>
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <optgroup label="Abogados">
+                                        <?php foreach ($abogados as $abogado) : ?>
+                                            <option value="<?= esc($abogado['usuario_id']) ?>">
+                                                <?= esc($abogado['usuario_nombre'] . " " . $abogado['usuario_apellido_paterno']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                    <optgroup label="Paralegal">
+                                        <?php foreach ($paralegales as $paralegal) : ?>
+                                            <option value="<?= esc($paralegal['id']) ?>">
+                                                <?= esc($paralegal['nombre'] . " " . $paralegal['apellido_paterno']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <div id="clienteSlug"></div>
