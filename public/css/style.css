@@ -428,6 +428,35 @@ label.error {
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
 }
+.descripcion-container {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.descripcion-section {
+  margin-bottom: 15px;
+}
+.descripcion-section h6 {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+.descripcion-section p {
+  margin-bottom: 10px;
+  color: #555;
+}
+.descripcion-section ul {
+  padding-left: 15px;
+}
+.descripcion-section ul li {
+  color: #555;
+}
+.descripcion-section ul li i {
+  color: #007bff;
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */

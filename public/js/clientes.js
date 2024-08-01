@@ -25,6 +25,50 @@ let fieldValue = [];
 let $modalAsignarAbogado;
 
 $(function () {
+    // Información sobre cada estatus
+    const estatusInfo = {
+        1: {
+            descripcion: 'Los clientes comienzan en este estatus cuando se crean con la información mínima requerida y se les envía el formulario de admisión.',
+            rolResponsable: 'CALL o ADMIN',
+            transicionesPermitidas: ['2', '7']
+        },
+        2: {
+            descripcion: 'Este estatus indica que el cliente ha llenado el formulario de admisión y ahora está esperando ser asignado a un abogado.',
+            rolResponsable: 'RECEPTION',
+            transicionesPermitidas: ['3', '7', '8']
+        },
+        3: {
+            descripcion: 'El cliente ha sido asignado a un abogado y está esperando que el abogado determine si su caso es elegible o no.',
+            rolResponsable: 'ATTORNEY (Abogado)',
+            transicionesPermitidas: ['4', '5', '7', '8']
+        },
+        4: {
+            descripcion: 'El abogado ha determinado que el caso del cliente es elegible para proceder.',
+            rolResponsable: 'ATTORNEY',
+            transicionesPermitidas: ['6', '7']
+        },
+        5: {
+            descripcion: 'El abogado ha determinado que el caso del cliente no es elegible para proceder.',
+            rolResponsable: 'ATTORNEY',
+            transicionesPermitidas: ['7', '1']
+        },
+        6: {
+            descripcion: 'El cliente está activo y se están llevando a cabo acciones para su caso.',
+            rolResponsable: 'ATTORNEY o ADMIN',
+            transicionesPermitidas: ['7', '3']
+        },
+        7: {
+            descripcion: 'El cliente está inactivo, lo que podría significar que el caso se ha cerrado o no requiere acción inmediata.',
+            rolResponsable: 'ATTORNEY o ADMIN',
+            transicionesPermitidas: ['6', '2', '1']
+        },
+        8: {
+            descripcion: 'El cliente está esperando ser asignado a un abogado, generalmente para consultas online.',
+            rolResponsable: 'RECEPTION',
+            transicionesPermitidas: ['3', '2', '7']
+        }
+    };
+
     $.validator.addMethod(
         'validarTelefonoInternacional',
         function (value, element) {
@@ -109,6 +153,40 @@ $(function () {
 
         // Llamar la función de validación con el estatus actual
         validarTransicionEstatus(parseInt(cliente.estatus, 10));
+    });
+
+    // Al cambiar el estatus en el modal, actualizar la descripción y las transiciones permitidas
+    $modalEstatus.on('change', '#cbEstatus', function () {
+        const estatusSeleccionado = $(this).val();
+        const info = estatusInfo[estatusSeleccionado];
+
+        if (info) {
+            $('#descripcionEstatus').html(`
+                <div class="descripcion-container">
+                    <div class="descripcion-section">
+                        <h6><i class="fa-solid fa-info-circle me-2"></i>Descripción</h6>
+                        <p>${info.descripcion}</p>
+                    </div>
+                    <div class="descripcion-section">
+                        <h6><i class="fa-solid fa-user-shield me-2"></i>Rol Responsable</h6>
+                        <p>${info.rolResponsable}</p>
+                    </div>
+                    <div class="descripcion-section">
+                        <h6><i class="fa-solid fa-arrows-alt-v me-2"></i>Transiciones Permitidas</h6>
+                        <ul class="list-unstyled mb-0">
+                            ${info.transicionesPermitidas
+                                .map(
+                                    (estatus) =>
+                                        `<li><i class="fa-solid fa-arrow-right me-2"></i>${$('#cbEstatus option[value="' + estatus + '"]').text()}</li>`
+                                )
+                                .join('')}
+                        </ul>
+                    </div>
+                </div>
+            `);
+        } else {
+            $('#descripcionEstatus').html('');
+        }
     });
 
     $tablaClientes = $('#tablaClientes').bootstrapTable({

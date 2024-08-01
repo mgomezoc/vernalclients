@@ -218,8 +218,8 @@
                 </select>
                 <div id="ayudaEstatus" class="form-text">Estatus actual: {{nombre_estatus}}</div>
             </div>
-            <div class="mb-3">
-                <div id=" ayudaTipoConsulta" class="form-text">Tipo de consulta actual: {{tipo_consulta}}</div>
+            <div id="descripcionEstatus" class="mb-3">
+                <!-- Aquí se cargará la descripción dinámica del estatus -->
             </div>
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">Cambiar estatus</button>
@@ -227,6 +227,7 @@
         </fieldset>
     </form>
 </template>
+
 
 
 <!-- MODAL NUEVO CLIENTE -->
