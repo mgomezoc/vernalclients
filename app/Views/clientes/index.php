@@ -211,7 +211,9 @@
                 <select name="estatus" id="cbEstatus" class="form-control select2" aria-describedby="ayudaEstatus">
                     <option value="">Selecciona un estatus</option>
                     <?php foreach ($estatus as $estado) : ?>
-                        <option value="<?= $estado['id_cliente_estatus'] ?>"><?= $estado['nombre'] ?></option>
+                        <option value="<?= esc($estado['id_cliente_estatus']) ?>">
+                            <?= esc($estado['nombre']) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
                 <div id="ayudaEstatus" class="form-text">Estatus actual: {{nombre_estatus}}</div>
@@ -225,6 +227,7 @@
         </fieldset>
     </form>
 </template>
+
 
 <!-- MODAL NUEVO CLIENTE -->
 <div class="modal fade" id="modalNuevoCliente" tabindex="-1">

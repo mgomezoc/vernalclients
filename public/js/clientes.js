@@ -64,6 +64,53 @@ $(function () {
         $('#btnAgregarCliente').attr('disabled', false);
     });
 
+    // Validación de transición de estatus
+    function validarTransicionEstatus(estatusActual) {
+        const transicionesPermitidas = {
+            1: [2, 7], // Prospecto -> Intake, Inactivo
+            2: [3, 7, 8], // Intake -> Asignado, Inactivo, Por Asignar
+            3: [4, 5, 7, 8], // Asignado -> Elegible, No Elegible, Inactivo, Por Asignar
+            4: [6, 7], // Elegible -> Activo, Inactivo
+            5: [1, 7], // No Elegible -> Prospecto, Inactivo
+            6: [3, 7], // Activo -> Asignado, Inactivo
+            7: [1, 2, 6], // Inactivo -> Prospecto, Intake, Activo
+            8: [2, 3, 7] // Por Asignar -> Intake, Asignado, Inactivo
+        };
+
+        // Obtener el select de estatus
+        const $estatusSelect = $('#cbEstatus');
+        const opcionesPermitidas = transicionesPermitidas[estatusActual] || [];
+
+        // Deshabilitar o eliminar opciones no permitidas
+        $estatusSelect.find('option').each(function () {
+            const valor = parseInt($(this).val(), 10);
+
+            if (!opcionesPermitidas.includes(valor)) {
+                $(this).attr('disabled', 'disabled');
+            } else {
+                $(this).removeAttr('disabled');
+            }
+        });
+    }
+
+    // Evento para mostrar el modal de cambio de estatus
+    $modalEstatus.on('show.bs.modal', function (e) {
+        const $btn = $(e.relatedTarget);
+        const id_cliente = $btn.data('id');
+        const cliente = $tablaClientes.bootstrapTable('getData').find((cliente) => cliente.id_cliente == id_cliente);
+
+        const renderData = Handlebars.compile(tplModalEstatus)(cliente);
+        $('#containerFormCambioEstatus').html(renderData);
+
+        $('#containerFormCambioEstatus .select2').select2({
+            placeholder: 'Seleccione una opción',
+            theme: 'bootstrap-5'
+        });
+
+        // Llamar la función de validación con el estatus actual
+        validarTransicionEstatus(parseInt(cliente.estatus, 10));
+    });
+
     $tablaClientes = $('#tablaClientes').bootstrapTable({
         url: urls.obtener,
         method: 'POST',
@@ -232,6 +279,9 @@ $(function () {
             placeholder: 'Seleccione una opción',
             theme: 'bootstrap-5'
         });
+
+        // Validar transiciones de estatus
+        validarTransicionEstatus(parseInt(cliente.estatus, 10));
     });
 
     $(document).on('submit', '.frmCambioEstatus', function (e) {

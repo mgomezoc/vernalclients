@@ -106,6 +106,10 @@ textarea {
   border-color: var(--negro);
   color: #fff;
 }
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--disabled,
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-disabled='true'] {
+  color: #c1cbd5 !important;
+}
 body {
   font-size: 16px;
   font-family: 'Raleway', sans-serif;
