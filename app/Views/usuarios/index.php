@@ -103,17 +103,15 @@
             </div>
             <div class="col-md-4">
               <label for="profile" class="form-label">Perfil</label>
-              <div class="d-flex flex-column-reverse">
-                <select name="perfil" id="profile" class="select2 form-select" required>
-                  <option value="">Selecciona una opción</option>
-                  <option value="1">CALL</option>
-                  <option value="2">RECEPTION</option>
-                  <option value="3">PARALEGAL</option>
-                  <option value="4">ADMIN</option>
-                  <option value="5">MARKETING</option>
-                  <option value="6">ATTORNEY</option>
-                </select>
-              </div>
+              <select name="perfil" id="comboPerfiles" class="select2 form-select" required>
+                <option value="">Selecciona una opción</option>
+                <option value="1">CALL</option>
+                <option value="2">RECEPTION</option>
+                <option value="3">PARALEGAL</option>
+                <option value="4">ADMIN</option>
+                <option value="5">MARKETING</option>
+                <option value="6">ATTORNEY</option>
+              </select>
             </div>
             <div class="col-12">
               <div class="row g-5">

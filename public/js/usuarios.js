@@ -21,10 +21,26 @@ $(function () {
     tplEditarUsuario = $('#tplEditarUsuario').html();
     $modalAgregarUsuario = $('#modalAgregarUsuario');
 
-    $modalAgregarUsuario.find('.select2').select2({
-        placeholder: 'Seleccione una opción',
-        dropdownParent: $modalAgregarUsuario,
-        theme: 'bootstrap-5'
+    // Inicializar Select2 y configurar jQuery Validate para trabajar con Select2
+    $modalAgregarUsuario.on('show.bs.modal', function () {
+        $('#comboPerfiles')
+            .select2({
+                placeholder: 'Seleccione una opción',
+                dropdownParent: $modalAgregarUsuario,
+                theme: 'bootstrap-5'
+            })
+            .on('change', function () {
+                $(this).valid(); // Hacer que jQuery Validate valide el campo Select2 cuando cambia
+            });
+    });
+
+    // Limpiar el formulario cuando se oculta el modal
+    $modalAgregarUsuario.on('hidden.bs.modal', function () {
+        const $frm = $('#frmAgregarUsuario');
+        $frm[0].reset(); // Resetear el formulario
+        $frm.find('select').val(null).trigger('change'); // Resetear los campos Select2
+        $frm.validate().resetForm(); // Limpiar los mensajes de error de jQuery Validate
+        $frm.find('.is-invalid').removeClass('is-invalid'); // Remover las clases de error
     });
 
     $tablaUsuarios = $('#tablaUsuarios').bootstrapTable({
@@ -53,10 +69,14 @@ $(function () {
             $detail.html(renderData);
             const $comboPerfiles = $detail.find('.cbPerfiles');
             $comboPerfiles.find(`option[value=${row.perfil}]`).prop('selected', true);
-            $comboPerfiles.select2({
-                placeholder: 'Seleccione una opción',
-                theme: 'bootstrap-5'
-            });
+            $comboPerfiles
+                .select2({
+                    placeholder: 'Seleccione una opción',
+                    theme: 'bootstrap-5'
+                })
+                .on('change', function () {
+                    $(this).valid(); // Hacer que jQuery Validate valide el campo Select2 cuando cambia
+                });
             $detail.find('.frmEditarUsuario').validate();
         }
     });
@@ -67,6 +87,13 @@ $(function () {
 
     $('#frmAgregarUsuario').validate({
         rules: {
+            nombre: {
+                required: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
             contrasena: {
                 required: true,
                 minlength: 5
@@ -74,9 +101,19 @@ $(function () {
             confirmarPassword: {
                 required: true,
                 equalTo: '#password'
+            },
+            perfil: {
+                required: true
             }
         },
         messages: {
+            nombre: {
+                required: 'Este campo es obligatorio'
+            },
+            email: {
+                required: 'Este campo es obligatorio',
+                email: 'Por favor, introduce una dirección de correo válida'
+            },
             contrasena: {
                 required: 'Este campo es obligatorio',
                 minlength: 'La contraseña debe tener al menos 5 caracteres'
@@ -84,6 +121,16 @@ $(function () {
             confirmarPassword: {
                 required: 'Este campo es obligatorio',
                 equalTo: 'Las contraseñas no coinciden'
+            },
+            perfil: {
+                required: 'Este campo es obligatorio'
+            }
+        },
+        errorPlacement: function (error, element) {
+            if (element.hasClass('select2-hidden-accessible')) {
+                error.insertAfter(element.next('span')); // Coloca el mensaje de error después del contenedor Select2
+            } else {
+                error.insertAfter(element);
             }
         },
         submitHandler: function (form) {
@@ -98,8 +145,6 @@ $(function () {
                         swal.fire('¡Listo!', resultado.message, 'success');
                         $tablaUsuarios.bootstrapTable('refresh');
                         $modalAgregarUsuario.modal('hide');
-                        form.reset();
-                        $frm.find('select').trigger('change');
                     }
                 })
                 .catch(function (error) {
