@@ -324,7 +324,21 @@ $(function () {
 
     $(document).on('click', '#btnCopiarSlug', function () {
         const url = $('#linkSlug').prop('href');
-        copyToClipboard(url);
+
+        if (navigator.clipboard && window.isSecureContext) {
+            // Verificamos si navigator.clipboard está disponible y si estamos en un contexto seguro
+            navigator.clipboard
+                .writeText(url)
+                .then(function () {
+                    console.log('URL copiada al portapapeles');
+                })
+                .catch(function (err) {
+                    console.error('No se pudo copiar la URL: ', err);
+                });
+        } else {
+            // Fallback en caso de que navigator.clipboard no esté disponible o si no estamos en un contexto seguro
+            fallbackCopyToClipboard(url);
+        }
     });
 
     $(document).on('click', '.btnReactivar', function (e) {
@@ -494,33 +508,23 @@ function formatoNombre(value, row, index, field) {
 }
 
 function accionesTablaUsuarios(value, row, index, field) {
-    switch (row.estatus) {
-        case '1':
-            row.esProspecto = true;
-            break;
-        case '2':
-            row.esIntake = true;
-            break;
-        case '3':
-            row.esAsignado = true;
-            break;
-        case '4':
-            row.esViable = true;
-            break;
-        case '5':
-            row.esNoViable = true;
-            break;
-        case '7':
-            row.estaInactivo = true;
-            break;
-        default:
-            break;
-    }
+    // Mapa de estados con sus propiedades correspondientes
+    const estados = {
+        1: { esProspecto: true },
+        2: { esIntake: true, puedeAsignar: true },
+        3: { esAsignado: true, puedeAsignar: true },
+        4: { esViable: true },
+        5: { esNoViable: true },
+        7: { estaInactivo: true },
+        8: { puedeAsignar: true }
+    };
+
+    // Asignamos las propiedades al objeto row si el estatus existe en el mapa
+    Object.assign(row, estados[row.estatus] || { puedeAsignar: false });
 
     row.baseUrl = baseUrl;
 
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
-
     return renderData;
 }
 
@@ -558,16 +562,28 @@ function copyToClipboard(text) {
 }
 
 function fallbackCopyToClipboard(text) {
-    var textArea = document.createElement('textarea');
+    const textArea = document.createElement('textarea');
     textArea.value = text;
 
-    document.body.appendChild(textArea);
+    // Asegúrate de que el textarea no esté visible en la pantalla
+    textArea.style.position = 'fixed';
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.width = '1px';
+    textArea.style.height = '1px';
+    textArea.style.padding = '0';
+    textArea.style.border = 'none';
+    textArea.style.outline = 'none';
+    textArea.style.boxShadow = 'none';
+    textArea.style.background = 'transparent';
 
+    document.body.appendChild(textArea);
+    textArea.focus();
     textArea.select();
 
     try {
-        var successful = document.execCommand('copy');
-        var message = successful ? 'Texto copiado al portapapeles' : 'Error al copiar el texto';
+        const successful = document.execCommand('copy');
+        const message = successful ? 'Texto copiado al portapapeles' : 'Error al copiar el texto';
         console.log(message);
     } catch (err) {
         console.error('No se pudo copiar el texto: ', err);

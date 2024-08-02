@@ -158,5 +158,5 @@ function columnaEstatus(value, row) {
     const defaultClass = 'text-bg-dark';
     const color = estatusClasses[row.estatus] || defaultClass;
 
-    return `<span class="badge ${color}" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
+    return `<span class="badge ${color} badge-min-width" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
 }

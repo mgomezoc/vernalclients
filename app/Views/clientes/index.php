@@ -129,12 +129,14 @@
                     <span>Estatus</span>
                 </a>
             </li>
-            <li>
-                <a href="#modalAsignarAbogado" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
-                    <i class="fa-duotone fa-user-tie me-1"></i>
-                    <span>Asignar</span>
-                </a>
-            </li>
+            {{#if puedeAsignar}}
+                <li>
+                    <a href="#modalAsignarAbogado" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalAsignarAbogado" data-id="{{id_cliente}}" title="Asignar a un abogado">
+                        <i class="fa-duotone fa-user-tie me-1"></i>
+                        <span>Asignar</span>
+                    </a>
+                </li>
+            {{/if}}
         </ul>
     </div>
 </template>
@@ -172,9 +174,6 @@
                                     </optgroup>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div id="clienteSlug"></div>
                         </div>
                     </form>
                 </div>

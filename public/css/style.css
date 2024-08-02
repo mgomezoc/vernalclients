@@ -306,6 +306,11 @@ body {
 .svg-inline--fa {
   animation: fadeIn 0.2s linear;
 }
+.badge-min-width {
+  min-width: 100px;
+  text-align: center;
+  display: inline-block;
+}
 label.error {
   color: #c10d00;
   display: inline-block;

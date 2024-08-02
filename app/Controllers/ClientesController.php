@@ -100,7 +100,6 @@ class ClientesController extends BaseController
         return $this->render('shared/layout', $data);
     }
 
-
     public function obtenerClientes()
     {
         $clienteModel = new ClienteModel();
@@ -127,7 +126,6 @@ class ClientesController extends BaseController
         return $this->response->setJSON($result);
     }
 
-
     public function obtenerClientesRecepcion()
     {
         $clienteModel = new ClienteModel();
@@ -146,8 +144,6 @@ class ClientesController extends BaseController
 
         return $this->response->setJSON($result);
     }
-
-
 
     public function obtenerClientesAbogado()
     {
@@ -254,8 +250,6 @@ class ClientesController extends BaseController
         $usuarioModel = new UsuarioModel();
         return $usuarioModel->find($idAbogado);
     }
-
-
 
     public function insertarCliente()
     {
@@ -421,6 +415,9 @@ class ClientesController extends BaseController
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
 
         $data['scripts'] = "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/cliente.js") . "'></script>";
 
         // Registrar acción de visualización de un cliente específico

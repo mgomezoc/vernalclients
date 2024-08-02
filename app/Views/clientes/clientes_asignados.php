@@ -1,8 +1,8 @@
 <section class="section">
     <div class="section-header">
         <h1 class="section-title">
-            <i class="fa-solid fa-people-simple"></i>
-            <span>Clientes Asignados</span>
+            <i class="fa-solid fa-solid fa-book me-2"></i>
+            <span>Bitácora Clientes</span>
         </h1>
     </div>
 
@@ -69,7 +69,7 @@
                             <th data-field="nombre_sucursal">Sucursal</th>
                             <th data-field="tipo_consulta">Tipo</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
-                            <th data-field="nombre_estatus" data-formatter="columnaEstatus">Estatus</th>
+                            <th data-field="nombre_estatus" data-formatter="columnaEstatus" data-align="center">Estatus</th>
                             <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true">Creado</th>
                         </tr>
