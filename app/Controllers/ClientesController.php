@@ -174,37 +174,87 @@ class ClientesController extends BaseController
 
         $idCliente = $this->request->getPost('id_cliente');
         $idAbogado = $this->request->getPost('id_abogado');
-        $nuevoEstatus = 3;
+        $nuevoEstatus = 3; // Establecer el estatus como "Asignado"
 
-        if ($clienteModel->actualizarEstatusCliente($idCliente, $nuevoEstatus)) {
-            // Si se actualizó el estatus del cliente, procedemos a guardar la relación
-            $data = [
-                'id_cliente' => $idCliente,
-                'id_usuario' => $idAbogado,
-                'fecha_asignacion' => date('Y-m-d H:i:s'),
-                'estatus_relacion' => 1
-            ];
+        // Validar que el cliente y el abogado/usuario existan
+        $cliente = $clienteModel->find($idCliente);
+        $abogado = $this->obtenerUsuarioPorId($idAbogado); // Método que busca al abogado/usuario por ID
 
-            if ($clienteAbogadoModel->guardarRelacion($data)) {
-                // Registrar acción de asignación de abogado
-                $usuario = session()->get('usuario');
-                if ($usuario) {
-                    registrarAccion($usuario['id'], 'assign_lawyer', "El usuario asignó al abogado ID $idAbogado al cliente ID $idCliente.");
-                }
-
-                $response['success'] = true;
-                $response['message'] = 'Se actualizó correctamente el estatus del cliente y se asignó el abogado.';
-            } else {
-                $response['success'] = false;
-                $response['message'] = 'Ocurrió un error al asignar el abogado al cliente.';
-            }
-        } else {
-            $response['success'] = false;
-            $response['message'] = 'Ocurrió un error al actualizar el estatus del cliente.';
+        if (!$cliente) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Cliente no encontrado.'
+            ]);
         }
 
-        return $this->response->setJSON($response);
+        if (!$abogado) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Abogado o usuario no encontrado.'
+            ]);
+        }
+
+        // Iniciar la transacción para asegurar atomicidad
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        // Eliminar todas las relaciones previas del cliente
+        $clienteAbogadoModel->where('id_cliente', $idCliente)->delete();
+
+        // Asignar la nueva relación
+        $data = [
+            'id_cliente' => $idCliente,
+            'id_usuario' => $idAbogado,
+            'fecha_asignacion' => date('Y-m-d H:i:s'),
+            'estatus_relacion' => 1
+        ];
+
+        if ($clienteAbogadoModel->insert($data)) {
+            // Actualizar el estatus del cliente
+            $clienteModel->actualizarEstatusCliente($idCliente, $nuevoEstatus);
+
+            // Completar la transacción
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                // Error en la transacción, revertir
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Ocurrió un error durante la asignación. Por favor, intente de nuevo.'
+                ]);
+            }
+
+            // Registrar acción de asignación de abogado
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'assign_lawyer', "El usuario asignó al abogado ID $idAbogado al cliente ID $idCliente.");
+            }
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Se actualizó correctamente el estatus del cliente y se asignó el abogado.'
+            ]);
+        } else {
+            // Error al guardar la nueva relación
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Ocurrió un error al asignar el abogado al cliente.'
+            ]);
+        }
     }
+
+    /**
+     * Función auxiliar para obtener un usuario (abogado) por ID
+     *
+     * @param int $idAbogado
+     * @return array|null
+     */
+    private function obtenerUsuarioPorId($idAbogado)
+    {
+        $usuarioModel = new UsuarioModel();
+        return $usuarioModel->find($idAbogado);
+    }
+
 
 
     public function insertarCliente()
