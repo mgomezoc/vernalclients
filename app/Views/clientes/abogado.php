@@ -1,8 +1,8 @@
 <section class="section">
     <div class="section-header">
         <h1 class="section-title">
-            <i class="fa-solid fa-people-simple"></i>
-            <span>Clientes Asignados</span>
+            <i class="fa-solid fa-briefcase me-2"></i>
+            <span>Prospectos</span>
         </h1>
     </div>
 
@@ -49,7 +49,7 @@
                     <form id="frmAsignarAbogado" action="#" method="post" class="row g-5">
                         <input type="hidden" name="id_cliente" id="idClienteAsignarAbogado">
                         <div class="col-md-12">
-                            <label for="abogados" class="form-label">Abogado a asignar:</label>
+                            <label for="abogados" class="form-label">Abogado a Asignar:</label>
                             <div class="d-flex flex-column-reverse">
                                 <select name="id_abogado" id="abogados" class="select2 form-select" required>
                                     <option value="">Seleccionar Abogado</option>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="cbTiposCaso-{{id_cliente}}" class="form-label">
-                            <span>Proceso principal del caso</span>
+                            <span>Proceso Principal del Caso</span>
                             <b class="text-danger ms-1">*</b>
                         </label>
                         <div class="d-flex flex-column-reverse">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="cbTiposCasoAdicionales-{{id_cliente}}" class="form-label">Procesos adicionales</label>
+                        <label for="cbTiposCasoAdicionales-{{id_cliente}}" class="form-label">Procesos Adicionales</label>
                         <div class="d-flex flex-column-reverse">
                             <select name="procesos_adicionales" id="cbTiposCasoAdicionales-{{id_cliente}}" class="cbTiposCaso form-control select2" data-target="#costo-{{id_cliente}}" multiple>
                                 {{#each ProcesosCasos}}
@@ -126,7 +126,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="fecha_corte-{{id_cliente}}" class="form-label">Fecha de corte</label>
+                            <label for="fecha_corte-{{id_cliente}}" class="form-label">Fecha de Corte</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fa-duotone fa-calendar-lines-pen"></i>
@@ -152,11 +152,11 @@
                 <div class="col-md-4">
                     <div class="card consulta-online-card mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">Consulta en línea</h5>
+                            <h5 class="card-title">Consulta en Línea</h5>
                             <p class="card-text"><strong>Meet URL:</strong></p>
                             <p class="card-text text-break"><a href="{{meet_url}}" target="_blank">{{meet_url}}</a></p>
                             <div class="text-center">
-                                <img src="<?= base_url('img/google-meet.png') ?>" alt="google meet" class="img-fluid google-meet-img">
+                                <img src="<?= base_url('img/google-meet.png') ?>" alt="Google Meet" class="img-fluid google-meet-img">
                             </div>
                         </div>
                     </div>
@@ -165,7 +165,6 @@
         </div>
     </div>
 </template>
-
 
 <script>
     const abogados = <?= json_encode($abogados) ?>;

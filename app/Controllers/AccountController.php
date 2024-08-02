@@ -55,7 +55,7 @@ class AccountController extends Controller
             return redirect()->to(site_url('/'));
         } else {
             // Registrar intento de inicio de sesión fallido
-            registrarAccion(0, 'login_failed', 'Intento de inicio de sesión fallido para el correo: ' . $correoElectronico);
+            registrarAccion(null, 'login_failed', 'Intento de inicio de sesión fallido para el correo: ' . $correoElectronico);
 
             return redirect()->to(site_url('login'))->with('error', 'Invalid email or password.');
         }

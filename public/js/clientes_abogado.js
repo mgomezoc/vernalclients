@@ -69,7 +69,7 @@ $(function () {
         onExpandRow: function (index, row, $detail) {
             $detail.html('...cargando');
             row.ProcesosCasos = ProcesosCasos;
-            row.consultaOnline = row.tipo_consulta == 'online';
+            row.consultaOnline = row.tipo_consulta === 'online';
             console.log(row);
             const renderData = Handlebars.compile(tplNuevoCaso)(row);
             $detail.html(renderData);
@@ -117,7 +117,7 @@ $(function () {
                         }
                     })
                     .catch(function (error) {
-                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el usuario.', 'error');
+                        swal.fire('¡Oops! Algo salió mal.', 'Hubo un problema al agregar el abogado.', 'error');
                     });
             }
         })
@@ -158,9 +158,9 @@ $(function () {
                 nuevoCaso(formData).then(function (r) {
                     console.log(r);
                     if (!r.success) {
-                        swal.fire('¡Oops! Algo salía mal.', r.message, 'error');
+                        swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
-                        swal.fire('¡Listo!', 'Se ha actualizado correctamente la informacion.', 'success');
+                        swal.fire('¡Listo!', 'La información se ha actualizado correctamente.', 'success');
                         $tablaClientes.bootstrapTable('refresh');
                         const id_caso = r.crearCaso;
                         createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
@@ -309,11 +309,11 @@ function createCase(clientID, sucursal, processID, id_caso) {
             addCaseParty(r.caseID, clientID);
             updateCustomField(r.caseID, 1, {
                 fieldValue: fieldValue.join(' --- '),
-                description: 'Procesos Adicionales'
+                description: 'Procesos adicionales'
             });
         },
         error: function (error) {
-            console.error('Error creating case:', error);
+            console.error('Error al crear el caso:', error);
         }
     });
 }
@@ -347,10 +347,10 @@ function addCaseParty(caseID, clientID, clientName) {
         data: JSON.stringify(partyData),
         dataType: 'json',
         success: function (data) {
-            console.log('Party created successfully:', data);
+            console.log('Parte creada con éxito:', data);
         },
         error: function (error) {
-            console.error('Error creating case:', error);
+            console.error('Error al crear la parte del caso:', error);
         }
     });
 }

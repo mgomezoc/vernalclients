@@ -69,10 +69,12 @@
                                         <i class="fa-regular fa-comment-lines me-1"></i>
                                         <span>Comentarios</span>
                                     </button>
-                                    <a href="https://www.eimmigration.com/VFMLaw/Cases/<?= $caso['caseID'] ?>/#!/GeneralInfo" class="btn btn-link" target="_blank">
-                                        <span>Ver en eimmigration</span>
-                                        <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
-                                    </a>
+                                    <?php if ($caso['caseID'] != "0") : ?>
+                                        <a href="https://www.eimmigration.com/VFMLaw/Cases/<?= $caso['caseID'] ?>/#!/GeneralInfo" class="btn btn-link" target="_blank">
+                                            <span>Ver en eimmigration</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="col-md-4">
