@@ -12,6 +12,7 @@ class Sucursales extends BaseController
     public function __construct()
     {
         $this->sucursalModel = new SucursalModel();
+        helper('auditoria'); // Cargar el helper de auditoría para registrar acciones
     }
 
     public function index()
@@ -31,6 +32,12 @@ class Sucursales extends BaseController
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/sucursales.js") . "'></script>";
+
+        // Registrar acción de visualización de sucursales
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_branches', 'El usuario visualizó la lista de sucursales.');
+        }
 
         return $this->render('shared/layout', $data);
     }
@@ -64,6 +71,12 @@ class Sucursales extends BaseController
             $data["success"] = true;
             $data["message"] = "Sucursal agregada exitosamente.";
             $data["id"] = $insertedId;
+
+            // Registrar acción de agregar sucursal
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_branch', "El usuario agregó una nueva sucursal con ID {$insertedId}.");
+            }
         } else {
             $data["success"] = false;
             $data["message"] = "No se pudo agregar la sucursal.";
@@ -95,6 +108,12 @@ class Sucursales extends BaseController
         if ($updated) {
             $data["success"] = true;
             $data["message"] = "Sucursal actualizada exitosamente.";
+
+            // Registrar acción de editar sucursal
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'edit_branch', "El usuario editó la sucursal con ID {$id}.");
+            }
         } else {
             $data["success"] = false;
             $data["message"] = "No se pudo actualizar la sucursal.";
@@ -114,6 +133,12 @@ class Sucursales extends BaseController
             if ($deleted) {
                 $data["success"] = true;
                 $data["message"] = "Sucursal eliminada exitosamente.";
+
+                // Registrar acción de eliminar sucursal
+                $usuario = session()->get('usuario');
+                if ($usuario) {
+                    registrarAccion($usuario['id'], 'delete_branch', "El usuario eliminó la sucursal con ID {$sucursalId}.");
+                }
             } else {
                 $data["success"] = false;
                 $data["message"] = "No se pudo eliminar la sucursal.";
@@ -124,5 +149,20 @@ class Sucursales extends BaseController
         }
 
         return $this->response->setJSON($data);
+    }
+
+    public function verificarNombreSucursal()
+    {
+        $nombre = $this->request->getPost('nombre');
+        $id = $this->request->getPost('id');
+
+        $sucursal = $this->sucursalModel->where('nombre', $nombre);
+
+        if ($id) {
+            $sucursal->where('id !=', $id);
+        }
+
+        $exists = $sucursal->first();
+        return $this->response->setJSON(empty($exists));
     }
 }

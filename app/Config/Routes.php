@@ -56,6 +56,7 @@ $routes->group('sucursales', ['filter' => 'SessionAdmin:ADMIN'], function ($rout
     $routes->post('agregar-sucursal', 'Sucursales::agregarSucursal', ['as' => 'sucursales.agregar']);
     $routes->post('editar-sucursal', 'Sucursales::editarSucursal', ['as' => 'sucursales.editar']);
     $routes->post('eliminar-sucursal', 'Sucursales::eliminarSucursal', ['as' => 'sucursales.eliminar']);
+    $routes->post('verificar-nombre-sucursal', 'Sucursales::verificarNombreSucursal');
 });
 
 // Abogados

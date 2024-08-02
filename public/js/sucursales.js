@@ -43,7 +43,75 @@ $(function () {
             const sucursal = encontrarSucursalPorId(sucursales, row.id);
             const renderData = Handlebars.compile(tplEditarSucursal)(sucursal);
             $detail.html(renderData);
-            $detail.find('.frmEditarSucursal').validate();
+
+            // Validaciones al editar sucursal
+            $detail.find('.frmEditarSucursal').validate({
+                rules: {
+                    nombre: {
+                        required: true,
+                        minlength: 3,
+                        remote: {
+                            url: `${baseUrl}sucursales/verificar-nombre-sucursal`,
+                            type: 'post',
+                            data: {
+                                nombre: function () {
+                                    return $('#nombre').val();
+                                },
+                                id: function () {
+                                    return $('[name="id"]').val();
+                                }
+                            }
+                        }
+                    },
+                    direccion: {
+                        required: true,
+                        minlength: 5
+                    },
+                    telefono: {
+                        required: false,
+                        digits: true,
+                        rangelength: [10, 10]
+                    },
+                    url_google_maps: {
+                        required: true,
+                        url: true
+                    }
+                },
+                messages: {
+                    nombre: {
+                        required: 'Este campo es obligatorio.',
+                        minlength: 'El nombre debe tener al menos 3 caracteres.',
+                        remote: 'Ya existe una sucursal con este nombre.'
+                    },
+                    direccion: {
+                        required: 'Este campo es obligatorio.',
+                        minlength: 'La dirección debe tener al menos 5 caracteres.'
+                    },
+                    telefono: {
+                        digits: 'Solo se permiten números.',
+                        rangelength: 'El teléfono debe tener 10 dígitos.'
+                    },
+                    url_google_maps: {
+                        required: 'Este campo es obligatorio.',
+                        url: 'Debe ser una URL válida.'
+                    }
+                },
+                submitHandler: function (form) {
+                    const $frm = $(form);
+                    const data = $frm.serializeObject();
+
+                    editarSucursal(data).then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaSucursales.bootstrapTable('refresh');
+                        }
+                    });
+
+                    return false;
+                }
+            });
         }
     });
 
@@ -51,11 +119,21 @@ $(function () {
         $('#frmAgregarSucursal').trigger('submit');
     });
 
+    // Validación de formulario para agregar nueva sucursal
     $('#frmAgregarSucursal').validate({
         rules: {
             nombre: {
                 required: true,
-                minlength: 3
+                minlength: 3,
+                remote: {
+                    url: `${baseUrl}sucursales/verificar-nombre-sucursal`,
+                    type: 'post',
+                    data: {
+                        nombre: function () {
+                            return $('#nombre').val();
+                        }
+                    }
+                }
             },
             direccion: {
                 required: true,
@@ -73,20 +151,21 @@ $(function () {
         },
         messages: {
             nombre: {
-                required: 'Este campo es obligatorio',
-                minlength: 'El nombre debe tener al menos 3 caracteres'
+                required: 'Este campo es obligatorio.',
+                minlength: 'El nombre debe tener al menos 3 caracteres.',
+                remote: 'Ya existe una sucursal con este nombre.'
             },
             direccion: {
-                required: 'Este campo es obligatorio',
-                minlength: 'La dirección debe tener al menos 5 caracteres'
+                required: 'Este campo es obligatorio.',
+                minlength: 'La dirección debe tener al menos 5 caracteres.'
             },
             telefono: {
-                digits: 'Solo se permiten números',
-                rangelength: 'El teléfono debe tener 10 dígitos'
+                digits: 'Solo se permiten números.',
+                rangelength: 'El teléfono debe tener 10 dígitos.'
             },
             url_google_maps: {
-                required: 'Este campo es obligatorio',
-                url: 'Debe ser una URL válida'
+                required: 'Este campo es obligatorio.',
+                url: 'Debe ser una URL válida.'
             }
         },
         submitHandler: function (form) {
@@ -102,6 +181,7 @@ $(function () {
                         $tablaSucursales.bootstrapTable('refresh');
                         $modalNuevaSucursal.modal('hide');
                         form.reset();
+                        $('#frmAgregarSucursal').find('.form-control').trigger('blur');
                     }
                 })
                 .catch(function (error) {
@@ -110,25 +190,6 @@ $(function () {
 
             return false;
         }
-    });
-
-    $(document).on('submit', '.frmEditarSucursal', function (e) {
-        e.preventDefault();
-        const $frm = $(this);
-        const data = $frm.serializeObject();
-
-        if ($frm.valid()) {
-            editarSucursal(data).then(function (resultado) {
-                if (!resultado.success) {
-                    swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
-                } else {
-                    swal.fire('¡Listo!', resultado.message, 'success');
-                    $tablaSucursales.bootstrapTable('refresh');
-                }
-            });
-        }
-
-        return false;
     });
 
     $(document).on('click', '.btnEliminarSucursal', function () {
@@ -179,10 +240,5 @@ function eliminarSucursal(id) {
 }
 
 function encontrarSucursalPorId(sucursales, id) {
-    for (const sucursal of sucursales) {
-        if (sucursal.id === id) {
-            return sucursal;
-        }
-    }
-    return null;
+    return sucursales.find((sucursal) => sucursal.id === id) || null;
 }
