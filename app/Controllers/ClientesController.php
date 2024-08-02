@@ -327,6 +327,7 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdn.tiny.cloud/1/lgne58fzalclyqjnrrlhyf213sqo6ospps8licbovphva1bx/tinymce/7/tinymce.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/clientes_abogado.js") . "'></script>";
 
         return $this->render('shared/layout', $data);

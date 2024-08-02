@@ -515,6 +515,7 @@ function accionesTablaUsuarios(value, row, index, field) {
         3: { esAsignado: true, puedeAsignar: true },
         4: { esViable: true },
         5: { esNoViable: true },
+        6: { puedeAsignar: true },
         7: { estaInactivo: true },
         8: { puedeAsignar: true }
     };

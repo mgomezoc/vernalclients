@@ -19,6 +19,29 @@ let tplNuevoCaso = '';
 let fieldValue = [];
 let ProcesosCasos = [];
 
+// Inicializar TinyMCE
+function initializeTinyMCE(selector) {
+    tinymce.init({
+        selector: selector,
+        plugins: 'autolink link lists code',
+        toolbar:
+            'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link removeformat | code',
+        menubar: false,
+        setup: function (editor) {
+            editor.on('change', function () {
+                tinymce.triggerSave();
+            });
+        }
+    });
+}
+
+// Destruir TinyMCE
+function destroyTinyMCE(selector) {
+    if (tinymce.get(selector)) {
+        tinymce.get(selector).remove();
+    }
+}
+
 $(function () {
     setActiveMenu('clientes');
     tplAccionesTabla = $('#tplAccionesTabla').html();
@@ -67,12 +90,20 @@ $(function () {
             detailClose: 'fa-circle-minus'
         },
         onExpandRow: function (index, row, $detail) {
+            const textareaId = `textarea-${row.id_cliente}`;
+
+            // Asegurarse de que el textarea no esté inicializado antes de crear uno nuevo
+            destroyTinyMCE(textareaId);
+
             $detail.html('...cargando');
             row.ProcesosCasos = ProcesosCasos;
             row.consultaOnline = row.tipo_consulta === 'online';
-            console.log(row);
+
             const renderData = Handlebars.compile(tplNuevoCaso)(row);
             $detail.html(renderData);
+
+            // Inicializar TinyMCE para el nuevo textarea
+            initializeTinyMCE(`#${textareaId}`);
 
             $detail
                 .find('.cbTiposCaso')
@@ -89,6 +120,11 @@ $(function () {
                 });
 
             $('.flatpickr').flatpickr();
+        },
+        onCollapseRow: function (index, row) {
+            // Destruir TinyMCE antes de colapsar la fila
+            const textareaId = `textarea-${row.id_cliente}`;
+            destroyTinyMCE(textareaId);
         }
     });
 
@@ -153,10 +189,7 @@ $(function () {
 
                 formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
 
-                console.log(formData);
-
                 nuevoCaso(formData).then(function (r) {
-                    console.log(r);
                     if (!r.success) {
                         swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
@@ -179,7 +212,6 @@ $(function () {
 
 function accionesTablaUsuarios(value, row, index, field) {
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
-
     return renderData;
 }
 
@@ -236,7 +268,6 @@ function fallbackCopyToClipboard(text) {
 }
 
 function formatoNombre(value, row, index, field) {
-    console.log(row);
     const tpl = `<a href="${baseUrl}/clientes/${row.id_cliente}" target="_blank">${value}</a>`;
     return tpl;
 }
@@ -247,7 +278,6 @@ function caseProcesses() {
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-            console.log(response);
             ProcesosCasos = response.data;
         },
         error: function (xhr, status, error) {
@@ -274,25 +304,8 @@ function createCase(clientID, sucursal, processID, id_caso) {
         caseCategoryID: null,
         caseName: 'Intake',
         caseNumber: `CN-${clientID}-${processID}`,
-        //"creationDate": "2024-03-26T18:46:47.217Z",
-        denialText: null,
-        expirationText: null,
-        externalCaseID: null,
-        externalCaseNumber: null,
-        filingTypeID: null,
-        physicalDocumentLocationID: null,
         processID: processID,
         areaOfPracticeID: 1,
-        processingText: null,
-        statusChangeComment: null,
-        //"statusChangeDate": "2024-03-26T18:46:47.217Z",
-        statusID: 0,
-        //"updateDate": "2024-03-26T18:46:47.217Z",
-        incidentText: null,
-        statuteOfLimitationText: null,
-        incidentLocation: null,
-        note: null,
-        case_Client: clientID,
         lawFirmLocationID: lawFirmLocationID,
         mainPartyID: clientID
     };
@@ -304,7 +317,6 @@ function createCase(clientID, sucursal, processID, id_caso) {
         data: JSON.stringify(caseData),
         dataType: 'json',
         success: function (r) {
-            console.log('Case created successfully:', r);
             actualizarCaseID(id_caso, r.caseID);
             addCaseParty(r.caseID, clientID);
             updateCustomField(r.caseID, 1, {
@@ -325,19 +337,7 @@ function addCaseParty(caseID, clientID, clientName) {
         clientName: '',
         clientTypeID: 0,
         isMainParty: true,
-        roleID: 8,
-        addressID: null,
-        address: '',
-        signatoryID: null,
-        signatory: '',
-        clientType: {
-            typeID: 0,
-            name: 'Individual'
-        },
-        role: {
-            roleID: 8,
-            name: 'Beneficiary'
-        }
+        roleID: 8
     };
 
     return $.ajax({
