@@ -2,7 +2,7 @@
     <?php if (empty($casos)) : ?>
         <div class="text-center">
             <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-            <dotlottie-player src="https://lottie.host/2dd14c8c-49f9-463b-8f96-d5cd15939761/9YecvAjtkr.json" background="transparent" speed="1" style="width: 300px; height: 300px;margin:0 auto" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/2dd14c8c-49f9-463b-8f96-d5cd15939761/9YecvAjtkr.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin: 0 auto;" loop autoplay></dotlottie-player>
             <p class="mt-3">No existen registros.</p>
         </div>
     <?php else : ?>
@@ -18,13 +18,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="caso-item">
-                                            <div class="caso-label">Proceso Principal</div>
+                                            <div class="caso-label">Proceso principal</div>
                                             <div class="caso-text"><?= $caso['proceso'] ?></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="caso-item">
-                                            <div class="caso-label">Procesos Adicionales</div>
+                                            <div class="caso-label">Procesos adicionales</div>
                                             <?php $procesos_adicionales = json_decode($caso['procesos_adicionales'], true); ?>
                                             <ul class="caso-text">
                                                 <?php if (!empty($procesos_adicionales)) : ?>
@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="caso-item">
-                                            <div class="caso-label">Última Actualización</div>
+                                            <div class="caso-label">Última actualización</div>
                                             <div class="caso-text"><?= $caso['fecha_actualizacion'] ?></div>
                                         </div>
                                         <div class="caso-item">
@@ -120,6 +120,5 @@
                 </div>
             <?php endforeach; ?>
         </div>
-
     <?php endif; ?>
 </div>

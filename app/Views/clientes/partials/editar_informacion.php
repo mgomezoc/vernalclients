@@ -19,7 +19,7 @@
             </select>
         </div>
         <div class="col-md-6">
-            <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
+            <label for="tipo_consulta" class="form-label">Tipo de consulta</label>
             <input type="text" name="tipo_consulta" id="tipo_consulta" value="<?= $cliente['tipo_consulta'] ?>" class="form-control" readonly>
         </div>
         <?php if ($cliente['tipo_consulta'] == 'online') : ?>
@@ -29,7 +29,7 @@
             </div>
         <?php endif; ?>
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
         </div>
     </form>
 </div>

@@ -19,7 +19,7 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
                 <i class="fa-solid fa-square-list me-1"></i>
-                <span>Formulario de Admisión</span>
+                <span>Formulario de admisión</span>
             </button>
         </li>
         <?php
@@ -36,7 +36,7 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-tab-pane" type="button" role="tab" aria-controls="edit-tab-pane" aria-selected="false">
                 <i class="fa-solid fa-edit me-1"></i>
-                <span>Editar Información</span>
+                <span>Editar información</span>
             </button>
         </li>
     </ul>
@@ -80,7 +80,7 @@
                             <div>
                                 <button class="btn btn-primary">
                                     <i class="fa-regular fa-comment-lines me-1"></i>
-                                    <span>Agregar Comentario</span>
+                                    <span>Agregar comentario</span>
                                 </button>
                             </div>
                         </form>
@@ -156,7 +156,7 @@
                     <div class="data-text">{{segunda_nacionalidad}}</div>
                 </div>
                 <div class="data-cell">
-                    <div class="data-label">Nombre Completo</div>
+                    <div class="data-label">Nombre completo</div>
                     <div class="data-text">{{beneficiario_nombre}}</div>
                 </div>
                 <div class="data-cell">
@@ -164,15 +164,15 @@
                     <div class="data-text">{{beneficiario_genero}}</div>
                 </div>
                 <div class="data-cell">
-                    <div class="data-label">Fecha de Nacimiento</div>
+                    <div class="data-label">Fecha de nacimiento</div>
                     <div class="data-text">{{beneficiario_fecha_nacimiento}}</div>
                 </div>
                 <div class="data-cell">
-                    <div class="data-label">Ciudad y País de Nacimiento</div>
+                    <div class="data-label">Ciudad y país de nacimiento</div>
                     <div class="data-text">{{beneficiario_ciudad_pais}}</div>
                 </div>
                 <div class="data-cell">
-                    <div class="data-label">Calle y Número</div>
+                    <div class="data-label">Calle y número</div>
                     <div class="data-text">{{direccion_calle_numero}}</div>
                 </div>
                 <div class="data-cell">
@@ -184,7 +184,7 @@
                     <div class="data-text">{{direccion_pais}}</div>
                 </div>
                 <div class="data-cell">
-                    <div class="data-label">Código Postal</div>
+                    <div class="data-label">Código postal</div>
                     <div class="data-text">{{direccion_cp}}</div>
                 </div>
                 <div class="data-cell">
@@ -209,12 +209,12 @@
             <h5>PREGUNTAS DE INMIGRACIÓN PARA EL (LA) BENEFICIARIO(A):</h5>
             <div class="data">
                 <div class="data-cell">
-                    <div class="data-label">¿Cómo entró a EEUU?</div>
+                    <div class="data-label">¿Cómo entró a EE.UU.?</div>
                     <div class="data-text">{{como_entro_eeuu}}</div>
                 </div>
                 {{#if tipo_visa}}
                     <div class="data-cell">
-                        <div class="data-label">Si entró con visa, cuál es el tipo de visa</div>
+                        <div class="data-label">Si entró con visa, ¿cuál es el tipo de visa?</div>
                         <div class="data-text">{{tipo_visa}}</div>
                     </div>
                 {{/if}}
@@ -232,7 +232,7 @@
                 </div>
                 {{#if solicitud_migratoria_explicacion}}
                     <div class="data-cell">
-                        <div class="data-label">Si es así, explique quién, cuándo, y los resultados</div>
+                        <div class="data-label">Si es así, explique quién, cuándo y los resultados</div>
                         <div class="data-text">{{solicitud_migratoria_explicacion}}</div>
                     </div>
                 {{/if}}
@@ -268,39 +268,39 @@
                 </div>
                 {{#if victima_crimen_info}}
                     <div class="data-cell">
-                        <div class="data-label">Lugar, fecha, y tipo de delito</div>
+                        <div class="data-label">Lugar, fecha y tipo de delito</div>
                         <div class="data-text">{{victima_crimen_info}}</div>
                     </div>
                 {{/if}}
                 {{#if cometido_crimen}}
                     <div class="data-cell">
-                        <div class="data-label">¿En el contexto de migración ha cometido algún crimen en Estados Unidos, alguna vez a usted le han tomado?</div>
+                        <div class="data-label">¿En el contexto de migración ha cometido algún crimen en Estados Unidos, alguna vez lo han detenido?</div>
                         <div class="data-text">{{cometido_crimen}}</div>
                     </div>
                 {{/if}}
                 <div class="data-cell">
-                    <div class="data-label">¿Alguna vez ha sido arrestado por CUALQUIER crimen?</div>
+                    <div class="data-label">¿Alguna vez ha sido arrestado por cualquier crimen?</div>
                     <div class="data-text">{{arrestado}}</div>
                 </div>
                 {{#if arrestado_fecha_cargo}}
                     <div class="data-cell">
-                        <div class="data-label">Fecha y Cargo</div>
+                        <div class="data-label">Fecha y cargo</div>
                         <div class="data-text">{{arrestado_fecha_cargo}}</div>
                     </div>
                 {{/if}}
                 {{#if arrestado_explicacion}}
                     <div class="data-cell">
-                        <div class="data-label">Si es más de un arresto, por favor explique</div>
+                        <div class="data-label">Si ha sido más de un arresto, por favor explique</div>
                         <div class="data-text">{{arrestado_explicacion}}</div>
                     </div>
                 {{/if}}
             </div>
         </div>
         <div class="acordeon">
-            <h5>Información del Peticionario:</h5>
+            <h5>Información del peticionario:</h5>
             <div class="data">
                 <div class="data-cell">
-                    <div class="data-label">Nombre Completo</div>
+                    <div class="data-label">Nombre completo</div>
                     <div class="data-text">{{peticionario_nombre}}</div>
                 </div>
                 <div class="data-cell">
