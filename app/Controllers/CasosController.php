@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\CasoModel;
+use App\Models\ClienteModel;
 use App\Models\ComentarioCasoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\API\ResponseTrait;
@@ -47,6 +48,7 @@ class CasosController extends Controller
     public function actualizarEstatus()
     {
         $casoModel = new CasoModel();
+        $clienteModel = new ClienteModel();  // Asegúrate de tener este modelo cargado
 
         // Obtén los datos del formulario o solicitud
         $idCaso = $this->request->getPost('id_caso');
@@ -66,6 +68,21 @@ class CasosController extends Controller
                 registrarAccion($usuario['id'], 'update_case_status', "Actualizó el estatus del caso con ID: $idCaso a $nuevoEstatus.");
             }
 
+            // Si el nuevo estatus es igual a 4, actualizar el estatus del cliente a 6 (Activo)
+            if ($nuevoEstatus == 4) {
+                // Obtener el ID del cliente relacionado con el caso
+                $caso = $casoModel->find($idCaso);
+                if ($caso) {
+                    $idCliente = $caso['id_cliente'];
+                    // Actualizar el estatus del cliente a 6 (Activo)
+                    $clienteModel->update($idCliente, ['estatus' => 6]);
+                    // Registrar la acción de actualización de estatus del cliente
+                    if ($usuario) {
+                        registrarAccion($usuario['id'], 'update_client_status', "Actualizó el estatus del cliente ID: $idCliente a 6 (Activo) debido al cierre del caso ID: $idCaso.");
+                    }
+                }
+            }
+
             // Si la actualización se realizó correctamente, devuelve un mensaje de éxito
             return $this->response->setJSON(['success' => true, 'message' => 'Estatus actualizado correctamente.']);
         } else {
@@ -73,6 +90,7 @@ class CasosController extends Controller
             return $this->response->setJSON(['success' => false, 'message' => 'No se pudo actualizar el estatus del caso.']);
         }
     }
+
 
     public function obtenerComentarios()
     {

@@ -10,7 +10,7 @@
             <?php else : ?>
                 <div class="casos">
                     <?php foreach ($casos as $index => $caso) : ?>
-                        <div class="accordion-item mb-5" style="border: 1px solid #dee2e6; border-radius: 0.25rem;">
+                        <div class="accordion-item mb-3" style="border: 1px solid #dee2e6; border-radius: 0.25rem;">
                             <h2 class="accordion-header" id="heading<?= $index ?>">
                                 <button class="accordion-button <?= $index == 0 ? '' : 'collapsed' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $index ?>" aria-expanded="<?= $index == 0 ? 'true' : 'false' ?>" aria-controls="collapse<?= $index ?>" style="background-color: #007bff; color: #ffffff;">
                                     <i class="fa-solid fa-briefcase me-2"></i> CASO #<?= $caso['id_caso'] ?> - <?= htmlspecialchars($caso['proceso']) ?>
@@ -82,25 +82,27 @@
                                                 <?php endif; ?>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <?php if ($caso['pagado'] == "0") : ?>
-                                                <div class="text-center">
-                                                    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
-                                                    <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o"></stripe-buy-button>
-                                                </div>
-                                            <?php else : ?>
-                                                <div class="text-center mt-3">
-                                                    <div class="alert alert-success" role="alert">
-                                                        <i class="fa-solid fa-check-circle me-1"></i>
-                                                        <?php if ($caso['forma_pago'] == "1") : ?>
-                                                            <span>Caso pagado en línea.</span>
-                                                        <?php else : ?>
-                                                            <span>Caso pagado en oficina.</span>
-                                                        <?php endif; ?>
+                                        <?php if ($perfil == "RECEPTION" || $perfil == "ADMIN") : ?>
+                                            <div class="col-md-4">
+                                                <?php if ($caso['pagado'] == "0") : ?>
+                                                    <div class="text-center">
+                                                        <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+                                                        <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o"></stripe-buy-button>
                                                     </div>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
+                                                <?php else : ?>
+                                                    <div class="text-center mt-3">
+                                                        <div class="alert alert-success" role="alert">
+                                                            <i class="fa-solid fa-check-circle me-1"></i>
+                                                            <?php if ($caso['forma_pago'] == "1") : ?>
+                                                                <span>Caso pagado en línea.</span>
+                                                            <?php else : ?>
+                                                                <span>Caso pagado en oficina.</span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">

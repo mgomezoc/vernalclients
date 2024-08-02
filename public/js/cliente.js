@@ -30,21 +30,31 @@ $(function () {
     $('.btnCerrarCaso').on('click', async function (e) {
         e.preventDefault();
         const $btn = $(this);
-        const id_caso = $btn.data('id');
+        const idCaso = $btn.data('id');
 
-        try {
-            const data = { id_caso, nuevo_estatus: 4 };
-            const r = await actualizarEstatus(data);
+        // Mostrar confirmación al usuario antes de cerrar el caso
+        mostrarConfirmacion('¿Estás seguro de que deseas cerrar este caso? Esta acción no se puede deshacer.', async function () {
+            try {
+                // Preparar los datos para la actualización del estatus
+                const data = { id_caso: idCaso, nuevo_estatus: 4 };
 
-            if (!r.success) {
-                showSweetAlert('error', r.message);
-            } else {
-                showSweetAlert('success', 'Se ha actualizado correctamente la información.');
-                $btn.remove();
+                // Intentar actualizar el estatus del caso
+                const response = await actualizarEstatus(data);
+
+                if (!response.success) {
+                    // Mostrar error si la actualización falló
+                    showSweetAlert('error', response.message || 'No se pudo actualizar el estatus del caso.');
+                } else {
+                    // Mostrar éxito si la actualización fue correcta
+                    showSweetAlert('success', 'El caso se ha cerrado correctamente.');
+                    $btn.remove(); // Eliminar el botón de cerrar caso después de la acción
+                }
+            } catch (error) {
+                // Manejo de errores inesperados
+                console.error('Error al cerrar el caso:', error);
+                showSweetAlert('error', 'Ocurrió un error inesperado al cerrar el caso. Por favor, intenta nuevamente.');
             }
-        } catch (error) {
-            showSweetAlert('error', 'Ocurrió un error al actualizar el estatus.');
-        }
+        });
     });
 
     // Evento para mostrar comentarios

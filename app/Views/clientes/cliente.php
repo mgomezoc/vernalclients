@@ -49,7 +49,7 @@
         <!-- Casos -->
         <?php if (in_array($perfil, $perfilesPermitidos)) : ?>
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <?= view('clientes/partials/casos', compact('casos')) ?>
+                <?= view('clientes/partials/casos', compact('casos', 'perfil')) ?>
             </div>
         <?php endif; ?>
 
@@ -107,8 +107,11 @@
                             <i class="fa-light fa-message-lines"></i>
                         </div>
                         <div class="flex-grow-1 ms-3">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{nombre_usuario}}</strong>
+                                <div class="text-muted small">{{fecha_creacion}}</div>
+                            </div>
                             <p class="mb-1">{{comentario}}</p>
-                            <div class="text-muted small mt-1">{{fecha_creacion}}</div>
                         </div>
                     </div>
                 </div>
@@ -120,6 +123,7 @@
         </div>
     </div>
 </template>
+
 
 <template id="tplFormulario">
     <div id="formulario_admision">

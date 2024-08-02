@@ -27,14 +27,17 @@ class ComentarioCasoModel extends Model
     protected $skipValidation     = false;
 
     /**
-     * Obtiene todos los comentarios de un caso específico.
+     * Obtiene todos los comentarios de un caso específico junto con el nombre del usuario que los creó.
      *
      * @param int $idCaso ID del caso
      * @return array
      */
     public function obtenerComentariosPorCaso($idCaso)
     {
-        return $this->where('id_caso', $idCaso)->findAll();
+        return $this->select('comentarios_caso.*, usuarios.nombre AS nombre_usuario')
+            ->join('usuarios', 'comentarios_caso.id_usuario = usuarios.id', 'left')
+            ->where('comentarios_caso.id_caso', $idCaso)
+            ->findAll();
     }
 
     /**
