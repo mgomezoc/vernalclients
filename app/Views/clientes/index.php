@@ -1,7 +1,7 @@
 <section class="section">
     <div class="section-header">
         <h1 class="section-title">
-            <i class="fa-solid fa-people-simple"></i>
+            <i class="fa-solid fa-user-friends me-2"></i>
             <span>Clientes</span>
         </h1>
         <div>

@@ -1,7 +1,7 @@
 <div class="section">
     <div class="section-header">
         <h1 class="section-title">
-            <i class="fa-solid fa-chart-area me-2"></i>
+            <i class="fa-solid fa-chart-line me-2"></i>
             <span>Reportes</span>
         </h1>
     </div>

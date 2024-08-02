@@ -25,6 +25,9 @@ $(function () {
         method: 'GET',
         search: true,
         pagination: true,
+        showColumns: true,
+        showRefresh: true,
+        pageSize: 50,
         detailView: true,
         iconsPrefix: 'fa-duotone',
         icons: {

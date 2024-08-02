@@ -1,6 +1,9 @@
 <section class="section">
     <div class="section-header">
-        <h1 class="section-title"><i class="fa-solid fa-gavel"></i> Abogados</h1>
+        <h1 class="section-title">
+            <i class="fa-solid fa-gavel me-2"></i>
+            <span>Abogados</span>
+        </h1>
         <div>
             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoAbogado">Añadir nuevo</button>
         </div>

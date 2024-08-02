@@ -304,7 +304,7 @@ body {
   text-transform: uppercase;
 }
 .svg-inline--fa {
-  animation: fadeIn 1s ease;
+  animation: fadeIn 0.2s linear;
 }
 label.error {
   color: #c10d00;
