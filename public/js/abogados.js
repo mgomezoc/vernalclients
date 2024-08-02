@@ -24,10 +24,32 @@ $(function () {
     tplInfoUsuario = $('#tplInfoUsuario').html();
     $modalNuevoAbogado = $('#modalNuevoAbogado');
 
-    $('#modalNuevoAbogado .select2').select2({
-        placeholder: 'Seleccione una opción',
-        dropdownParent: $('#modalNuevoAbogado'),
-        theme: 'bootstrap-5'
+    $('#modalNuevoAbogado .select2')
+        .select2({
+            placeholder: 'Seleccione una opción',
+            dropdownParent: $('#modalNuevoAbogado'),
+            theme: 'bootstrap-5'
+        })
+        .on('change', function () {
+            $(this).valid();
+        });
+
+    // Limpiar y resetear el formulario cuando se oculta el modal
+    $modalNuevoAbogado.on('hidden.bs.modal', function () {
+        const $form = $('#frmAgregarAbogado');
+
+        // Resetear el formulario
+        $form[0].reset();
+
+        // Resetear Select2
+        $form.find('select').val('').trigger('change');
+
+        // Limpiar la información del usuario
+        $('#containerInfoUsuario').html('');
+
+        // Limpiar mensajes de error y estado de validación
+        $form.validate().resetForm();
+        $form.find('.is-invalid').removeClass('is-invalid'); // Remover clases de error
     });
 
     $tablaAbogados = $('#tablaAbogados').bootstrapTable({
@@ -35,6 +57,9 @@ $(function () {
         method: 'GET',
         search: true,
         pagination: true,
+        showColumns: true,
+        showRefresh: true,
+        pageSize: 50,
         detailView: true,
         iconsPrefix: 'fa-duotone',
         icons: {
@@ -49,23 +74,70 @@ $(function () {
         },
         onExpandRow: function (index, row, $detail) {
             $detail.html('...cargando');
-            console.log(row);
             const renderData = Handlebars.compile(tplEditarAbogado)(row);
             $detail.html(renderData);
-            $detail.find('.frmEditarAbogado').validate();
-            $detail
+
+            const $formEditar = $detail.find('.frmEditarAbogado');
+
+            // Inicializar Select2 para formularios de edición
+            $formEditar
                 .find('select')
                 .each(function (index, el) {
                     const $combo = $(el);
                     const selected = $combo.data('selected');
-
                     $combo.find(`option[value="${selected}"]`).attr('selected', true);
-                    console.log(index, el, selected);
                 })
                 .select2({
                     placeholder: 'Seleccione una opción',
                     theme: 'bootstrap-5'
                 });
+
+            // Validar formulario de edición
+            $formEditar.validate({
+                rules: {
+                    id_sucursal: {
+                        required: true
+                    },
+                    especialidad: {
+                        required: true
+                    },
+                    telefono: {
+                        required: true,
+                        digits: true,
+                        minlength: 7,
+                        maxlength: 20
+                    }
+                },
+                messages: {
+                    id_sucursal: {
+                        required: 'Seleccione una sucursal.'
+                    },
+                    especialidad: {
+                        required: 'Seleccione una especialidad.'
+                    },
+                    telefono: {
+                        required: 'Ingrese un número de teléfono.',
+                        digits: 'Ingrese solo números.',
+                        minlength: 'El número de teléfono debe tener al menos 7 dígitos.',
+                        maxlength: 'El número de teléfono no debe exceder los 20 dígitos.'
+                    }
+                },
+                submitHandler: function (form) {
+                    const $frm = $(form);
+                    const data = $frm.serializeObject();
+
+                    editarAbogado(data).then(function (resultado) {
+                        if (!resultado.success) {
+                            swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
+                        } else {
+                            swal.fire('¡Listo!', resultado.message, 'success');
+                            $tablaAbogados.bootstrapTable('refresh');
+                        }
+                    });
+
+                    return false;
+                }
+            });
         }
     });
 
@@ -90,7 +162,42 @@ $(function () {
         $('#frmAgregarAbogado').trigger('submit');
     });
 
+    // Validación de formulario de agregar abogado
     $('#frmAgregarAbogado').validate({
+        rules: {
+            id_usuario: {
+                required: true
+            },
+            id_sucursal: {
+                required: true
+            },
+            especialidad: {
+                required: true
+            },
+            telefono: {
+                required: true,
+                digits: true,
+                minlength: 7,
+                maxlength: 20
+            }
+        },
+        messages: {
+            id_usuario: {
+                required: 'Seleccione un usuario.'
+            },
+            id_sucursal: {
+                required: 'Seleccione una sucursal.'
+            },
+            especialidad: {
+                required: 'Seleccione una especialidad.'
+            },
+            telefono: {
+                required: 'Ingrese un número de teléfono.',
+                digits: 'Ingrese solo números.',
+                minlength: 'El número de teléfono debe tener al menos 7 dígitos.',
+                maxlength: 'El número de teléfono no debe exceder los 20 dígitos.'
+            }
+        },
         submitHandler: function (form) {
             const $frm = $(form);
             const data = $frm.serializeObject();
@@ -103,8 +210,6 @@ $(function () {
                         swal.fire('¡Listo!', resultado.message, 'success');
                         $tablaAbogados.bootstrapTable('refresh');
                         $modalNuevoAbogado.modal('hide');
-                        form.reset();
-                        $frm.find('select').trigger('change');
                     }
                 })
                 .catch(function (error) {
@@ -115,33 +220,14 @@ $(function () {
         }
     });
 
-    $(document).on('submit', '.frmEditarAbogado', function (e) {
-        e.preventDefault();
-        const $frm = $(this);
-        const data = $frm.serializeObject();
-
-        if ($frm.valid()) {
-            editarAbogado(data).then(function (resultado) {
-                if (!resultado.success) {
-                    swal.fire('¡Oops! Algo salió mal.', resultado.message, 'error');
-                } else {
-                    swal.fire('¡Listo!', resultado.message, 'success');
-                    $tablaAbogados.bootstrapTable('refresh');
-                }
-            });
-        }
-
-        return false;
-    });
-
     $(document).on('click', '.btnEliminarAbogado', function () {
         const id = $(this).data('id');
         mostrarConfirmacion('¿Seguro que deseas borrar este abogado?', eliminarAbogado, id);
     });
 });
+
 function accionesTablaUsuarios(value, row, index, field) {
     const renderData = Handlebars.compile(tplAccionesTabla)(row);
-
     return renderData;
 }
 

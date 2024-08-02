@@ -9,10 +9,22 @@ use App\Models\UsuarioModel;
 
 class AbogadosController extends BaseController
 {
+    public function __construct()
+    {
+        helper('auditoria'); // Cargar el helper de auditoría para registrar acciones
+    }
+
     public function index()
     {
         $usuarioModel = new UsuarioModel();
-        $data['usuarios'] = $usuarioModel->obtenerUsuariosNoAbogados();
+        $abogadoModel = new AbogadoModel();
+
+        // Obtener IDs de usuarios que ya son abogados
+        $usuariosAbogados = $abogadoModel->select('id_usuario')->findAll();
+        $usuariosAbogadosIds = array_column($usuariosAbogados, 'id_usuario');
+
+        // Obtener usuarios que no son abogados
+        $data['usuarios'] = $usuarioModel->whereNotIn('id', $usuariosAbogadosIds)->findAll();
 
         $sucursalModel = new SucursalModel();
         $data['sucursales'] = $sucursalModel->obtenerTodas();
@@ -39,20 +51,41 @@ class AbogadosController extends BaseController
         $abogadoModel = new AbogadoModel();
         $data = $abogadoModel->obtenerAbogadosConInfo();
 
+        // Registrar acción de visualización de abogados
+        $usuario = session()->get('usuario');
+        if ($usuario) {
+            registrarAccion($usuario['id'], 'view_lawyers', 'El usuario visualizó la lista de abogados.');
+        }
+
         return $this->response->setJSON($data);
     }
 
     public function agregarAbogado()
     {
         $abogadoModel = new AbogadoModel();
+        $idUsuario = $this->request->getVar('id_usuario');
+
+        // Verificar si el usuario ya es abogado
+        $abogadoExistente = $abogadoModel->where('id_usuario', $idUsuario)->first();
+
+        if ($abogadoExistente) {
+            return $this->response->setJSON(['success' => false, 'message' => 'El usuario seleccionado ya está registrado como abogado.']);
+        }
+
         $data = [
-            'id_usuario' => $this->request->getVar('id_usuario'),
+            'id_usuario' => $idUsuario,
             'id_sucursal' => $this->request->getVar('id_sucursal'),
             'especialidad' => $this->request->getVar('especialidad'),
             'telefono' => $this->request->getVar('telefono'),
         ];
 
         if ($abogadoModel->agregarAbogado($data)) {
+            // Registrar acción de creación de abogado
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_lawyer', "El usuario agregó un nuevo abogado con ID de usuario {$data['id_usuario']}.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Abogado agregado exitosamente.';
         } else {
@@ -63,18 +96,35 @@ class AbogadosController extends BaseController
         return $this->response->setJSON($response);
     }
 
+
     public function editarAbogado()
     {
         $id = $this->request->getVar('abogado_id');
+        $idUsuario = $this->request->getVar('id_usuario');
+
+        // Verificar que el usuario existe
+        $usuarioModel = new UsuarioModel();
+        $usuario = $usuarioModel->find($idUsuario);
+
+        if (!$usuario) {
+            return $this->response->setJSON(['success' => false, 'message' => 'El usuario especificado no existe.']);
+        }
+
         $abogadoModel = new AbogadoModel();
         $data = [
-            'id_usuario' => $this->request->getVar('id_usuario'),
+            'id_usuario' => $idUsuario,
             'id_sucursal' => $this->request->getVar('id_sucursal'),
             'especialidad' => $this->request->getVar('especialidad'),
             'telefono' => $this->request->getVar('telefono'),
         ];
 
         if ($abogadoModel->editarAbogado($id, $data)) {
+            // Registrar acción de edición de abogado
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'edit_lawyer', "El usuario editó al abogado con ID $id.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Abogado actualizado exitosamente.';
         } else {
@@ -91,6 +141,12 @@ class AbogadosController extends BaseController
         $id = $this->request->getVar("id");
 
         if ($abogadoModel->eliminarAbogado($id)) {
+            // Registrar acción de eliminación de abogado
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'delete_lawyer', "El usuario eliminó al abogado con ID $id.");
+            }
+
             $response['success'] = true;
             $response['message'] = 'Abogado eliminado exitosamente.';
         } else {

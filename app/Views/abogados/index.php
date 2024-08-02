@@ -33,6 +33,7 @@
         <i class="fa-solid fa-user-xmark"></i>
     </button>
 </template>
+
 <!-- MODAL NUEVO ABOGADO -->
 <div class="modal fade" id="modalNuevoAbogado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
@@ -43,7 +44,7 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form id="frmAgregarAbogado" action="#" method="post" class="row g-5">
+                    <form id="frmAgregarAbogado" action="#" method="post" class="row g-5 needs-validation">
                         <div class="col-md-4">
                             <label for="nuevo_usuario" class="form-label">Usuario</label>
                             <div class="d-flex flex-column-reverse">
@@ -75,16 +76,24 @@
                         </div>
                         <div class="col-md-4">
                             <label for="nuevo_especialidad">Especialidad</label>
-                            <select name="especialidad" id="nuevo_especialidad" class="select2 form-select">
-                                <option value="">Seleccionar Especialidad</option>
-                                <option value="Derecho de Inmigración">Derecho de Inmigración</option>
-                                <option value="Visas y Ciudadanía">Visas y Ciudadanía</option>
-                                <option value="Defensa de Deportación">Defensa de Deportación</option>
-                            </select>
+                            <div class="d-flex flex-column-reverse">
+                                <select name="especialidad" id="nuevo_especialidad" class="select2 form-select" required>
+                                    <option value="">Seleccionar Especialidad</option>
+                                    <option value="Derecho de Inmigración">Derecho de Inmigración</option>
+                                    <option value="Visas y Ciudadanía">Visas y Ciudadanía</option>
+                                    <option value="Defensa de Deportación">Defensa de Deportación</option>
+                                </select>
+                            </div>
+                            <div class="invalid-feedback">
+                                Por favor, seleccione una especialidad válida.
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <label for="nuevo_telefono">Teléfono</label>
-                            <input type="text" id="nuevo_telefono" name="telefono" class="form-control" placeholder="Su teléfono" required>
+                            <input type="text" id="nuevo_telefono" name="telefono" class="form-control" placeholder="Su teléfono" pattern="^[0-9]{7,20}$" required>
+                            <div class="invalid-feedback">
+                                Por favor, ingrese un número de teléfono válido (solo números, entre 7 y 20 dígitos).
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -118,22 +127,12 @@
 
 <template id="tplEditarAbogado">
     <div class="card card-body p-5">
-        <form action="#" method="post" class="frmEditarAbogado row g-5">
+        <form action="#" method="post" class="frmEditarAbogado row g-5 needs-validation">
             <input type="hidden" name="abogado_id" value="{{abogado_id}}">
-            <div class="col-md-4">
-                <label class="form-label">Usuario</label>
-                <select name="id_usuario" class="cbUsuarios form-select" data-selected="{{usuario_id}}" data-target="#containerInfoUsuario-{{abogado_id}}" required>
-                    <option value="">Seleccionar Usuario</option>
-                    <?php foreach ($usuarios as $usuario) : ?>
-                        <option value="<?= esc($usuario['id']) ?>">
-                            <?= esc($usuario['nombre']) ?> <?= esc($usuario['apellido_paterno']) ?> <?= esc($usuario['apellido_materno']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+            <input type="hidden" name="id_usuario" value="{{usuario_id}}">
             <div class="col-md-4">
                 <label class="form-label">Sucursal</label>
-                <select name="id_sucursal" class="form-select" data-selected="{{sucursal_id}}" required>
+                <select name="id_sucursal" class="form-select select2" data-selected="{{sucursal_id}}" required>
                     <option value="">Seleccionar Sucursal</option>
                     <?php foreach ($sucursales as $sucursal) : ?>
                         <option value="<?= esc($sucursal['id']) ?>">
@@ -141,6 +140,9 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <div class="invalid-feedback">
+                    Por favor, seleccione una sucursal válida.
+                </div>
             </div>
             <div class="col-12">
                 <div id="containerInfoUsuario-{{abogado_id}}" class="row g-5">
@@ -164,16 +166,22 @@
             </div>
             <div class="col-md-4">
                 <label for="nuevo_especialidad">Especialidad</label>
-                <select name="especialidad" id="nuevo_especialidad" class="form-select" data-selected="{{especialidad}}">
+                <select name="especialidad" id="nuevo_especialidad" class="form-select select2" data-selected="{{especialidad}}" required>
                     <option value="">Seleccionar Especialidad</option>
                     <option value="Derecho de Inmigración">Derecho de Inmigración</option>
                     <option value="Visas y Ciudadanía">Visas y Ciudadanía</option>
                     <option value="Defensa de Deportación">Defensa de Deportación</option>
                 </select>
+                <div class="invalid-feedback">
+                    Por favor, seleccione una especialidad válida.
+                </div>
             </div>
             <div class="col-md-4">
                 <label for="nuevo_telefono">Teléfono</label>
-                <input type="text" id="nuevo_telefono" name="telefono" class="form-control" placeholder="Su teléfono" value="{{telefono}}" required>
+                <input type="text" id="nuevo_telefono" name="telefono" class="form-control" placeholder="Su teléfono" value="{{telefono}}" pattern="^[0-9]{7,20}$" required>
+                <div class="invalid-feedback">
+                    Por favor, ingrese un número de teléfono válido (solo números, entre 7 y 20 dígitos).
+                </div>
             </div>
             <div class="col-12 mt-5">
                 <button type="submit" class="btn btn-primary">Actualizar información</button>
@@ -181,7 +189,3 @@
         </form>
     </div>
 </template>
-
-<script>
-    const Usuarios = <?= json_encode($usuarios) ?>;
-</script>
