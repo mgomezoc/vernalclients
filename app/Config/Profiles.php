@@ -33,6 +33,11 @@ class Profiles extends BaseConfig
                 'url' => 'reportes',
                 'label' => 'Reportes',
             ],
+            'pagos' => [
+                'icon' => 'fa-solid fa-money-check-alt',
+                'url' => 'pagos_consultas',
+                'label' => 'Pagos',
+            ],
             'auditoria' => [
                 'icon' => 'fa-solid fa-clipboard-check', // Ícono de auditoría para representar revisión y control
                 'url' => 'auditoria',
@@ -75,6 +80,11 @@ class Profiles extends BaseConfig
                 'icon' => 'fa-solid fa-user-check', // Ícono de usuario con marca de verificación para recepción
                 'url' => 'clientes/recepcion',
                 'label' => 'Clientes',
+            ],
+            'pagos' => [
+                'icon' => 'fa-solid fa-money-check-alt',
+                'url' => 'pagos_consultas',
+                'label' => 'Pagos',
             ],
         ],
         'MARKETING' => [

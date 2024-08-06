@@ -34,6 +34,7 @@ $routes->post('salir', 'AccountController::salir');
 // Intake
 $routes->get('intake/(:segment)', 'IntakeController::index/$1');
 $routes->post('intake/guardar', 'IntakeController::guardar');
+$routes->post('intake/actualizarPago/(:num)', 'IntakeController::actualizarPago/$1'); // Nueva ruta para actualizar pago
 
 // Encuestas
 $routes->get('encuesta/(:segment)', 'EncuestaController::index/$1');
@@ -151,6 +152,12 @@ $routes->group('auditoria', ['filter' => 'SessionAdmin:ADMIN'], function ($route
     $routes->post('obtener', 'AuditoriaController::obtenerAuditoria');
 });
 
+// PAGOS CONSULTAS
+$routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,RECEPTION'], function ($routes) {
+    $routes->get('/', 'PagosConsultasController::index', ['as' => 'pagos_consultas.index']);
+    $routes->post('obtener', 'PagosConsultasController::obtenerPagosConsultas', ['as' => 'pagos_consultas.obtener']);
+    $routes->post('marcar_pagado', 'PagosConsultasController::marcar_pagado');
+});
 
 $routes->get('/buscar', 'BusquedaController::buscar');
 

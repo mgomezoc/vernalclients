@@ -246,7 +246,9 @@ $(function () {
                     if (!r.success) {
                         swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
-                        addClient(dataCliente);
+                        const idPago = r.id_pago;
+
+                        addClient(dataCliente, idPago);
 
                         $('#formContainer').hide();
                         $('#mensajeCorrecto').fadeIn();
@@ -302,18 +304,22 @@ function guardarIntake(data) {
     });
 }
 
-function addClient(data) {
-    const lawFirmLocationID = data.lawFirmLocationID;
+function addClient(dataCliente, idPago) {
+    const lawFirmLocationID = dataCliente.lawFirmLocationID;
 
-    return $.ajax({
+    $.ajax({
         url: `${baseUrl}api/addClient`,
         type: 'POST',
-        data: JSON.stringify(data),
+        data: JSON.stringify(dataCliente),
         dataType: 'json',
         contentType: 'application/json',
         success: function (r) {
-            actualizarClientID(data.id_cliente, r.clientID);
-            createCase(r.clientID, lawFirmLocationID);
+            if (r.clientID) {
+                actualizarClientID(dataCliente.id_cliente, r.clientID);
+                createCase(r.clientID, lawFirmLocationID, idPago);
+            } else {
+                swal.fire('¡Oops! Algo salió mal.', 'Error al crear el cliente en eImmigration.', 'error');
+            }
         },
         error: function (error) {
             console.error('Error:', error);
@@ -321,7 +327,7 @@ function addClient(data) {
     });
 }
 
-function createCase(clientID, lawFirmLocationID) {
+function createCase(clientID, lawFirmLocationID, idPago) {
     var caseData = {
         autoGenerateCaseNumber: true,
         clientID: clientID,
@@ -337,15 +343,22 @@ function createCase(clientID, lawFirmLocationID) {
         mainPartyID: clientID
     };
 
-    return $.ajax({
+    $.ajax({
         url: `${baseUrl}api/createCase`,
         type: 'POST',
         contentType: 'application/json-patch+json',
         data: JSON.stringify(caseData),
         dataType: 'json',
         success: function (r) {
-            console.log('Case created successfully:', r);
-            addCaseParty(r.caseID, clientID);
+            if (r.caseID) {
+                addCaseParty(r.caseID, clientID);
+
+                // Actualizar la referencia del pago en pagos_consultas
+                const referencia = `Case ID: ${r.caseID}`;
+                actualizarPagoConsulta(idPago, referencia);
+            } else {
+                swal.fire('¡Oops! Algo salió mal.', 'Error al crear el caso en eImmigration.', 'error');
+            }
         },
         error: function (error) {
             console.error('Error creating case:', error);
@@ -375,6 +388,22 @@ function addCaseParty(caseID, clientID) {
         },
         error: function (error) {
             console.error('Error creating case:', error);
+        }
+    });
+}
+
+function actualizarPagoConsulta(idPago, referencia) {
+    $.ajax({
+        url: `${baseUrl}intake/actualizarPago/${idPago}`,
+        type: 'POST',
+        data: { referencia: referencia },
+        success: function (r) {
+            if (!r.success) {
+                swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
         }
     });
 }
