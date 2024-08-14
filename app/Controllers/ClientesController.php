@@ -8,6 +8,7 @@ use App\Models\CasosTiposModel;
 use App\Models\ClienteAbogadoModel;
 use App\Models\ClienteEstatusModel;
 use App\Models\ClienteModel;
+use App\Models\ComentarioCasoModel;
 use App\Models\FormularioAdmisionModel;
 use App\Models\SucursalModel;
 use App\Models\UsuarioModel;
@@ -725,5 +726,25 @@ class ClientesController extends BaseController
         $data['formulario'] = json_decode($formulario['datos_admision'], true); // Decodifica el JSON
 
         return view('clientes/imprimir_admision', $data);
+    }
+
+    public function imprimirCaso($idCaso)
+    {
+        $casoModel = new CasoModel();
+        $comentarioCasoModel = new ComentarioCasoModel();
+
+        $caso = $casoModel->find($idCaso);
+
+        if (!$caso) {
+            throw new \Exception('No se encontró la información del caso.');
+        }
+
+        // Obtener los comentarios del caso utilizando el modelo `ComentarioCasoModel`
+        $comentarios = $comentarioCasoModel->obtenerComentariosPorCaso($idCaso);
+
+        $data['caso'] = $caso;
+        $data['comentarios'] = $comentarios;
+
+        return view('clientes/imprimir_caso', $data);
     }
 }

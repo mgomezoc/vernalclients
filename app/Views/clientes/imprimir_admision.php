@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imprimir Información de Admisión</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* Estilos Generales */
         body {
             margin: 10px;
-            font-family: 'Georgia', serif;
+            font-family: 'Raleway', sans-serif;
             font-size: 14px;
             color: #333;
             background-color: #f8f9fa;
@@ -114,7 +117,7 @@
             .data-cell,
             .data-cell-full {
                 padding: 6px;
-                border: 1px solid #000;
+                border: 0;
                 margin-bottom: 6px;
                 border-radius: 0;
             }
@@ -178,10 +181,10 @@
                     <div class="data-label">¿Cómo se enteró de nuestro servicio?</div>
                     <div class="data-text"><?= isset($formulario['fuente_informacion']) ? esc($formulario['fuente_informacion']) : 'N/A' ?></div>
                 </div>
-            </div>
-            <div class="data-cell data-cell-full">
-                <div class="data-label">Especifique el motivo de su visita:</div>
-                <div class="data-text"><?= isset($formulario['motivo_visita']) ? esc($formulario['motivo_visita']) : 'N/A' ?></div>
+                <div class="col-md-12 data-cell">
+                    <div class="data-label">Especifique el motivo de su visita:</div>
+                    <div class="data-text"><?= isset($formulario['motivo_visita']) ? esc($formulario['motivo_visita']) : 'N/A' ?></div>
+                </div>
             </div>
 
             <h5>Información del Beneficiario(a):</h5>

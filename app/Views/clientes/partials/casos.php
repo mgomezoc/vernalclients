@@ -112,10 +112,17 @@
                                             <span>Cerrar</span>
                                         </button>
                                     <?php endif; ?>
+
                                     <button class="btnEncuesta btn btn-azul">
                                         <i class="fa-solid fa-paper-plane me-1"></i>
                                         <span>Encuesta</span>
                                     </button>
+
+                                    <a href="<?= site_url('clientes/imprimir_caso/' . $caso['id_caso']) ?>" target="_blank" class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-print me-1"></i>
+                                        <span>Imprimir</span>
+                                    </a>
+
                                     <?php if ($caso['pagado'] == "0") : ?>
                                         <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
                                             <i class="fa-solid fa-receipt me-1"></i>
@@ -127,6 +134,7 @@
                                         </button>
                                     <?php endif; ?>
                                 </div>
+
                             </div>
                         </div>
                     <?php endforeach; ?>
