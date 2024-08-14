@@ -28,7 +28,7 @@ class AccountController extends Controller
         $subject = 'Bienvenido a Vernal Clients';
         $message = "<p>Hola Cesar</p><p>Gracias por registrarte.</p>";
 
-        $emailService->sendEmail($to, $subject, $message);
+        //$emailService->sendEmail($to, $subject, $message);
 
         $data = [];
         echo view('account/login', $data);

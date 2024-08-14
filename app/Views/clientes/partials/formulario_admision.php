@@ -1,5 +1,12 @@
 <div class="card card-body">
     <div class="p-2">
+        <div class="text-end">
+            <a href="<?= site_url('clientes/imprimir/' . $cliente['id_cliente']) ?>" class="btn btn-secondary">
+                <i class="fa-solid fa-print me-1"></i>
+                Imprimir
+            </a>
+        </div>
+        <hr>
         <div id="formulario_admision" class="placeholder-glow">
             <h5>INFORMACIÓN GENERAL:</h5>
             <div class="data">

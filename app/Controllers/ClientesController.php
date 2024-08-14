@@ -706,4 +706,24 @@ class ClientesController extends BaseController
 
         return $this->response->setJSON($result);
     }
+
+    // En ClientesController.php
+    public function imprimir($idCliente)
+    {
+        $clienteModel = new ClienteModel();
+        $formularioAdmisionModel = new FormularioAdmisionModel();
+
+        $cliente = $clienteModel->find($idCliente);
+        $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
+
+        // Verifica si el formulario tiene los datos necesarios
+        if (!$formulario) {
+            throw new \Exception('No se encontró el formulario de admisión para este cliente.');
+        }
+
+        $data['cliente'] = $cliente;
+        $data['formulario'] = json_decode($formulario['datos_admision'], true); // Decodifica el JSON
+
+        return view('clientes/imprimir_admision', $data);
+    }
 }

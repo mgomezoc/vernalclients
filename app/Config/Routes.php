@@ -80,6 +80,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,R
     $routes->post('obtener-recepcion', 'ClientesController::obtenerClientesRecepcion');
     $routes->post('asignar-abogado', 'ClientesController::asignarAbogado');
     $routes->get('(:num)', 'ClientesController::verCliente/$1');
+    $routes->get('imprimir/(:num)', 'ClientesController::imprimir/$1');
     $routes->post('casos-cliente', 'ClientesController::obtenerCasosPorCliente');
     $routes->post('clientid', 'ClientesController::actualizarClientID');
     $routes->get('abogado', 'ClientesController::abogado');
