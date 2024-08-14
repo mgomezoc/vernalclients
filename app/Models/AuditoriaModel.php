@@ -20,14 +20,17 @@ class AuditoriaModel extends Model
         $builder->join('usuarios', 'usuarios.id = auditoria.id_usuario');
         $builder->select('auditoria.*, usuarios.nombre as usuario');
 
+        // Filtro por usuario
         if (!empty($filtros['usuario'])) {
             $builder->where('auditoria.id_usuario', $filtros['usuario']);
         }
 
+        // Filtro por acción
         if (!empty($filtros['accion'])) {
             $builder->like('auditoria.accion', $filtros['accion']);
         }
 
+        // Filtro por período
         if (!empty($filtros['periodo'])) {
             $periodo = explode(' to ', $filtros['periodo']);
             if (count($periodo) === 2) {
@@ -38,11 +41,23 @@ class AuditoriaModel extends Model
             }
         }
 
+        // Filtro por búsqueda general (search)
+        if (!empty($filtros['search'])) {
+            $builder->groupStart();
+            $builder->like('usuarios.nombre', $filtros['search']);
+            $builder->orLike('auditoria.accion', $filtros['search']);
+            $builder->orLike('auditoria.detalle', $filtros['search']);
+            $builder->groupEnd();
+        }
+
+        // Ordenar por fecha y limitar los resultados
         $builder->orderBy('auditoria.fecha', 'desc');
         $builder->limit($limit, $offset);
 
+        // Obtener los resultados paginados
         $result = $builder->get()->getResultArray();
 
+        // Contar el total de registros que cumplen con los filtros (sin paginación)
         $countQuery = clone $builder;
         $countQuery->select("COUNT(*) as total");
         $total = $countQuery->get()->getRow()->total;

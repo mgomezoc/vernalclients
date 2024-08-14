@@ -42,7 +42,8 @@ class AuditoriaController extends BaseController
         $filtros = [
             'usuario' => $postData['usuario'] ?? '',
             'accion'  => $postData['accion'] ?? '',
-            'periodo' => $postData['periodo'] ?? ''
+            'periodo' => $postData['periodo'] ?? '',
+            'search'  => $postData['search'] ?? ''
         ];
 
         $result = $auditoriaModel->obtenerAuditoriaPaginada($limit, $offset, $filtros);
