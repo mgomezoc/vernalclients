@@ -90,8 +90,8 @@
             }
 
             body {
-                margin: 0;
-                padding: 10px;
+                margin: 1cm;
+                padding: 0;
                 font-size: 12px;
                 color: #000;
                 background-color: #fff;
@@ -150,6 +150,14 @@
 
             .page-break {
                 page-break-after: always;
+            }
+
+            .list-group-item {
+                border: 0;
+            }
+
+            p {
+                page-break-inside: avoid;
             }
         }
     </style>
