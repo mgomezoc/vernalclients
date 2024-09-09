@@ -55,7 +55,8 @@
                                                     <?php if (!empty($caso['documentos'])) : ?>
                                                         <?php foreach ($caso['documentos'] as $documento) : ?>
                                                             <li class="list-group-item">
-                                                                <a href="<?= base_url('uploads/casos/' . $documento['nombre_documento']) ?>" target="_blank">
+                                                                <!-- Agregar Fancybox para los documentos -->
+                                                                <a data-fancybox="gallery-<?= $caso['id_caso'] ?>" href="<?= base_url('uploads/casos/' . $documento['nombre_documento']) ?>" data-caption="<?= $documento['nombre_documento'] ?>">
                                                                     <?= $documento['nombre_documento'] ?>
                                                                 </a>
                                                             </li>
@@ -65,6 +66,7 @@
                                                     <?php endif; ?>
                                                 </ul>
                                             </div>
+
 
                                             <div class="row">
                                                 <div class="col-md-6">

@@ -21,6 +21,8 @@ $(function () {
         theme: 'bootstrap-5'
     });
 
+    Fancybox.bind('[data-fancybox]', {});
+
     // Evento para enviar encuesta
     $('.btnEncuesta').on('click', function () {
         showSweetAlert('success', 'Se ha enviado la encuesta.');
