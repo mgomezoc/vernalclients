@@ -21,6 +21,8 @@ $menus = $profileConfig->menus[$perfil] ?? [];
         <?php foreach ($styles as $style): ?>
             <?= $style ?>
         <?php endforeach; ?>
+    <?php else: ?>
+        <?= isset($styles) ? $styles : "" ?>
     <?php endif; ?>
 
     <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url("apple-touch-icon.png") ?>">
@@ -144,6 +146,8 @@ $menus = $profileConfig->menus[$perfil] ?? [];
         <?php foreach ($scripts as $script): ?>
             <?= $script ?>
         <?php endforeach; ?>
+    <?php else: ?>
+        <?= isset($scripts) ? $scripts : "" ?>
     <?php endif; ?>
 </body>
 
