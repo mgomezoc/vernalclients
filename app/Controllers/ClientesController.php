@@ -9,9 +9,11 @@ use App\Models\ClienteAbogadoModel;
 use App\Models\ClienteEstatusModel;
 use App\Models\ClienteModel;
 use App\Models\ComentarioCasoModel;
+use App\Models\DocumentoCasoModel;
 use App\Models\FormularioAdmisionModel;
 use App\Models\SucursalModel;
 use App\Models\UsuarioModel;
+use Exception;
 
 class ClientesController extends BaseController
 {
@@ -310,6 +312,7 @@ class ClientesController extends BaseController
     public function abogado()
     {
         $data["title"] = "Clientes";
+
         $abogadoModel = new AbogadoModel();
         $tiposCasosModel = new CasosTiposModel();
         $data['abogados'] = $abogadoModel->obtenerAbogadosConInfo();
@@ -317,20 +320,27 @@ class ClientesController extends BaseController
 
         $data['renderBody'] = $this->render("clientes/abogado", $data);
 
-        $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
-        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
-        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
-        $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
+        $data["styles"] = [
+            '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">',
+            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">',
+            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">',
+            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">',
+            '<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />'  // Estilo de Dropzone
+        ];
 
-        $data['scripts'] = "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>";
-        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>";
-        $data['scripts'] .= "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
-        $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
-        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>";
-        $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
-        $data['scripts'] .= "<script src='https://cdn.tiny.cloud/1/lgne58fzalclyqjnrrlhyf213sqo6ospps8licbovphva1bx/tinymce/7/tinymce.min.js'></script>";
-        $data['scripts'] .= "<script src='" . base_url("js/clientes_abogado.js") . "'></script>";
+        $data['scripts'] = [
+            "<script src='https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js'></script>",
+            "<script src='https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'></script>",
+            "<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>",
+            "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>",
+            "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>",
+            "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>",
+            "<script src='https://cdn.tiny.cloud/1/lgne58fzalclyqjnrrlhyf213sqo6ospps8licbovphva1bx/tinymce/7/tinymce.min.js'></script>",
+            "<script src='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js'></script>",
+            "<script src='" . base_url("js/clientes_abogado.js") . "'></script>",
+        ];
 
+        // Renderizar la vista final
         return $this->render('shared/layout', $data);
     }
 
@@ -345,9 +355,16 @@ class ClientesController extends BaseController
         $id_tipo_caso = $this->request->getPost('id_tipo_caso');
         $proceso = $this->request->getPost('proceso');
         $fecha_corte = $this->request->getPost('fecha_corte');
+        $documentos = $this->request->getPost('documentos'); // Archivos recibidos
+
+        // Asegurarnos de que documentos sea un array
+        if (!is_array($documentos)) {
+            $documentos = [$documentos]; // Si es un solo archivo, lo convertimos en un array
+        }
 
         if ($estatus == "4") {
             $casoModel = new CasoModel();
+            $documentoCasoModel = new DocumentoCasoModel(); // Modelo para los documentos
 
             $data = [
                 'id_cliente' => $id_cliente,
@@ -362,17 +379,47 @@ class ClientesController extends BaseController
                 'fecha_actualizacion' => date('Y-m-d H:i:s')
             ];
 
+            // Crear caso
             $crearCaso = $casoModel->crearCaso($data);
 
-            $response['data'] = $data;
-            $response['crearCaso'] = $crearCaso;
+            if ($crearCaso) {
+                // Guardar los documentos asociados al caso
+                if (!empty($documentos)) {
+                    foreach ($documentos as $documento) {
+                        // Obtener la extensión del archivo para determinar el tipo
+                        $extension = pathinfo($documento, PATHINFO_EXTENSION);
+                        $mimeType = $this->getMimeTypeByExtension($extension); // Método auxiliar para obtener el mime type
+
+                        if ($mimeType) {
+                            $datosDocumento = [
+                                'id_caso' => $crearCaso,
+                                'nombre_documento' => $documento,
+                                'path_documento' => WRITEPATH . 'uploads/casos/' . $crearCaso . '/' . $documento,
+                                'tipo_documento' => $mimeType,
+                                'fecha_subida' => date('Y-m-d H:i:s'),
+                                'subido_por' => $id_usuario,
+                            ];
+
+                            // Insertar el documento en la base de datos
+                            $documentoCasoModel->insert($datosDocumento);
+                        } else {
+                            // Registrar en log o manejar el error si no se puede identificar el tipo
+                            log_message('error', "Tipo de archivo no permitido para el documento: $documento");
+                        }
+                    }
+                }
+
+                $response['crearCaso'] = $crearCaso;
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'No se pudo crear el caso']);
+            }
         }
 
+        // Actualizar el estatus del cliente
         $clienteModel = new ClienteModel();
-
         $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
 
-        // Registrar acción de actualización de estatus y creación de caso si aplica
+        // Registrar acciones
         $usuario = session()->get('usuario');
         if ($usuario) {
             registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $id_cliente a $estatus.");
@@ -387,6 +434,24 @@ class ClientesController extends BaseController
 
         return $this->response->setJSON($response);
     }
+
+    /**
+     * Método auxiliar para obtener el mime type basado en la extensión del archivo
+     */
+    private function getMimeTypeByExtension($extension)
+    {
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+
+        return isset($mimeTypes[$extension]) ? $mimeTypes[$extension] : null;
+    }
+
 
     public function verCliente($idCliente)
     {
@@ -746,5 +811,26 @@ class ClientesController extends BaseController
         $data['comentarios'] = $comentarios;
 
         return view('clientes/imprimir_caso', $data);
+    }
+    public function subirArchivos($idCliente)
+    {
+        $file = $this->request->getFile('file');
+        if ($file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads', $newName);
+
+            $originalName = $file->getClientName();
+            $safeName = strtolower(str_replace(' ', '-', $originalName));
+            $newFileName = pathinfo($safeName, PATHINFO_FILENAME) . '-' . date('Y-m-d') . '.' . $file->getClientExtension();
+
+            rename(WRITEPATH . 'uploads/' . $newName, FCPATH . 'uploads/casos/' . $newFileName);
+
+            return $this->response->setJSON([
+                'filePath' => base_url('casos/' . $newFileName),
+                'documento' => $newFileName
+            ]);
+        }
+
+        return $this->response->setJSON(['error' => 'Error al subir la imagen.'])->setStatusCode(400);
     }
 }

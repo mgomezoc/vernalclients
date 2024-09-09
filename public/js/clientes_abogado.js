@@ -7,7 +7,8 @@ const urls = {
     asignar: baseUrl + 'clientes/asignar-abogado',
     editar: baseUrl + 'clientes/editar-cliente',
     borrar: baseUrl + 'clientes/eliminar-cliente',
-    caso: baseUrl + 'clientes/nuevo-caso'
+    caso: baseUrl + 'clientes/nuevo-caso',
+    subirArchivo: baseUrl + 'clientes/subir-archivos/' // URL para subir archivos
 };
 
 let $tablaClientes;
@@ -18,6 +19,7 @@ let tplClienteSlug = '';
 let tplNuevoCaso = '';
 let fieldValue = [];
 let ProcesosCasos = [];
+let dropzones = {}; // Guardar referencias de cada instancia de Dropzone
 
 // Inicializar TinyMCE
 function initializeTinyMCE(selector) {
@@ -104,6 +106,9 @@ $(function () {
 
             // Inicializar TinyMCE para el nuevo textarea
             initializeTinyMCE(`#${textareaId}`);
+
+            // Inicializar Dropzone para la carga de archivos
+            initializeDropzone(`archivosCaso-${row.id_cliente}`, row.id_cliente);
 
             $detail
                 .find('.cbTiposCaso')
@@ -209,6 +214,44 @@ $(function () {
 
     caseProcesses();
 });
+
+function initializeDropzone(elementId, id_cliente) {
+    dropzones[id_cliente] = new Dropzone(`#${elementId}`, {
+        url: `${urls.subirArchivo}${id_cliente}`,
+        maxFilesize: 50,
+        acceptedFiles: '.pdf,.doc,.docx,.png,.jpg,.jpeg',
+        addRemoveLinks: true,
+        dictDefaultMessage: 'Arrastra archivos aquí para subirlos',
+        init: function () {
+            this.on('success', function (file, response) {
+                const uniqueId = file.upload.uuid;
+
+                $(`#frmNuevoCaso-${id_cliente}`).append(`<input type="hidden" id="${uniqueId}" name="documentos" value="${response.documento}">`);
+
+                console.log('Archivo subido con éxito:', response);
+            });
+
+            this.on('error', function (file, errorMessage) {
+                console.error('Error al subir el archivo:', errorMessage);
+                Swal.fire({
+                    title: 'Error',
+                    text: `No se pudo subir el archivo ${file.name}. Motivo: ${errorMessage}`,
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            });
+
+            this.on('removedfile', function (file) {
+                const uuid = file.upload.uuid;
+                const uniqueIdPattern = `#frmNuevoCaso-${id_cliente} #${uuid}`;
+
+                $(`${uniqueIdPattern}`).remove();
+
+                console.log('Archivo eliminado:', file.name);
+            });
+        }
+    });
+}
 
 function accionesTablaUsuarios(value, row, index, field) {
     const renderData = Handlebars.compile(tplAccionesTabla)(row);

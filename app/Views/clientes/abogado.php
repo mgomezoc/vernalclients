@@ -94,6 +94,7 @@
                         </label>
                         <textarea name="comentarios" class="form-control tinymce-editor" id="textarea-{{id_cliente}}" cols="30" rows="10" required></textarea>
                     </div>
+
                     <div class="mb-3">
                         <label for="cbTiposCaso-{{id_cliente}}" class="form-label">
                             <span>Proceso Principal del Caso</span>
@@ -107,6 +108,7 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="mb-3">
                         <label for="cbTiposCasoAdicionales-{{id_cliente}}" class="form-label">Procesos Adicionales</label>
                         <div class="d-flex flex-column-reverse">
@@ -117,6 +119,13 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Dropzone para la subida de archivos -->
+                    <div class="mb-3">
+                        <label for="archivosCaso-{{id_cliente}}" class="form-label">Subir Documentos (opcional)</label>
+                        <div class="dropzone" id="archivosCaso-{{id_cliente}}"></div>
+                    </div>
+
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <label for="costo-{{id_cliente}}" class="form-label">Costo</label>
@@ -148,6 +157,8 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Consulta Online, si aplica -->
             {{#if consultaOnline}}
                 <div class="col-md-4">
                     <div class="card consulta-online-card mb-3">
