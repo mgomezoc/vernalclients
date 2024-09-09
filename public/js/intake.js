@@ -258,7 +258,34 @@ $(function () {
 
             return false;
         })
-        .validate();
+        .validate({
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                if (element.hasClass('select2') && element.next('.select2-container').length) {
+                    error.addClass('invalid-feedback').insertAfter(element.next('.select2-container'));
+                } else if (element.is('input[type="checkbox"]') || element.is('input[type="radio"]')) {
+                    error.addClass('invalid-feedback').insertAfter(element.closest('div'));
+                } else {
+                    error.addClass('invalid-feedback').insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                if ($(element).hasClass('select2')) {
+                    $(element).next('.select2-container').find('.select2-selection').addClass(errorClass).removeClass(validClass);
+                } else {
+                    $(element).addClass(errorClass).removeClass(validClass);
+                }
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                if ($(element).hasClass('select2')) {
+                    $(element).next('.select2-container').find('.select2-selection').removeClass(errorClass).addClass(validClass);
+                } else {
+                    $(element).removeClass(errorClass).addClass(validClass);
+                }
+            }
+        });
 
     //SerializeObject
     $.fn.serializeObject = function () {

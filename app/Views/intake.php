@@ -90,6 +90,7 @@
                 </div>
             </div>
         </div>
+
         <div id="formContainer" class="col-md-12">
             <form id="frmIntake" method="post" class="card card-body p-5 mb-5" autocomplete="off">
                 <input type="hidden" name="id_cliente" value="<?= $cliente["id_cliente"] ?>">
@@ -109,7 +110,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="cbSucursales">Sucursal</label>
-                                        <select id="cbSucursales" name="sucursal" class="form-select select2"></select>
+                                        <div class="d-flex flex-column-reverse">
+                                            <select id="cbSucursales" name="sucursal" class="form-select select2" required></select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -118,7 +121,7 @@
                                             <label class="col-sm-6 col-form-label">¿Es su primera consulta aquí?</label>
                                             <div class="col-sm-6">
                                                 <div class="pretty p-default p-curve">
-                                                    <input type="radio" name="es_primera_consulta" class="muestraMasInformacion" data-target="#container-primeraConsulta" value="Si" data-display="0" />
+                                                    <input type="radio" name="es_primera_consulta" class="muestraMasInformacion" data-target="#container-primeraConsulta" value="Si" data-display="0" checked />
                                                     <div class="state p-success-o">
                                                         <label>Si</label>
                                                     </div>
@@ -240,7 +243,7 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-curve">
-                                                <input type="radio" name="posee_a_number" class="muestraMasInformacion" data-target="#container-a_number" value="No" data-display="0" />
+                                                <input type="radio" name="posee_a_number" class="muestraMasInformacion" data-target="#container-a_number" value="No" data-display="0" checked />
                                                 <div class="state p-primary-o">
                                                     <label>No</label>
                                                 </div>
@@ -261,7 +264,7 @@
                                 <div class="col-md-3">
                                     <label for="Ciudadanía">Ciudadanía</label>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="d-flex flex-column-reverse">
                                         <select name="nationality" id="cbCuidadania" class="comboPaises form-select select2" required></select>
                                     </div>
@@ -279,7 +282,7 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-curve">
-                                                <input type="radio" name="radio-nacionalidad" class="muestraMasInformacion" data-target="#container-nacionalidad" value="No" data-display="0" />
+                                                <input type="radio" name="radio-nacionalidad" class="muestraMasInformacion" data-target="#container-nacionalidad" value="No" data-display="0" checked />
                                                 <div class="state p-primary-o">
                                                     <label>No</label>
                                                 </div>
@@ -318,7 +321,7 @@
                                 <label class="form-label">Género</label>
                                 <div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_genero" value="Masculino">
+                                        <input type="radio" name="beneficiario_genero" value="Masculino" required>
                                         <div class="state p-primary-o">
                                             <label>Masculino</label>
                                         </div>
@@ -374,22 +377,24 @@
                             <div class="row mb-4">
                                 <div class="col-md-4">
                                     <label class="form-label">Ciudad de Nacimiento</label>
-                                    <input type="text" class="form-control" name="beneficiario_ciudad">
+                                    <input type="text" class="form-control" name="beneficiario_ciudad" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Estado de Nacimiento</label>
-                                    <input type="text" class="form-control" name="beneficiario_estado">
+                                    <input type="text" class="form-control" name="beneficiario_estado" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">País de Nacimiento</label>
-                                    <select name="beneficiario_pais" id="cbPaisNacimiento" class="comboPaises form-select select2"></select>
+                                    <div class="d-flex flex-column-reverse">
+                                        <select name="beneficiario_pais" id="cbPaisNacimiento" class="comboPaises form-select select2" required></select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Estado Civil</label>
                                 <div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="beneficiario_estado_civil" value="Married">
+                                        <input type="radio" name="beneficiario_estado_civil" value="Married" checked>
                                         <div class="state p-primary-o">
                                             <label>Casado</label>
                                         </div>
@@ -420,7 +425,7 @@
                                         <label class="form-label">¿Para quién es este proceso?</label>
                                         <div>
                                             <div class="pretty p-default p-round">
-                                                <input type="radio" name="proceso" class="muestraMasInformacion" data-target="#container-proceso" value="Usted" data-display="0">
+                                                <input type="radio" name="proceso" class="muestraMasInformacion" data-target="#container-proceso" value="Usted" data-display="0" checked>
                                                 <div class="state p-primary-o">
                                                     <label>Usted</label>
                                                 </div>
@@ -447,23 +452,25 @@
                                     <legend>Dirección</legend>
                                     <div class="mb-3">
                                         <label class="form-label">Calle y Número</label>
-                                        <input type="text" class="form-control" name="direccion_calle_numero">
+                                        <input type="text" class="form-control" name="direccion_calle_numero" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Ciudad</label>
-                                        <input type="text" class="form-control" name="direccion_cuidad">
+                                        <input type="text" class="form-control" name="direccion_cuidad" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">País</label>
-                                        <select name="direccion_pais" id="" class="form-select">
-                                            <option value="EEUU">EEUU</option>
-                                            <option value="Mexico">Mexico</option>
-                                            <option value="Otro">Otro</option>
-                                        </select>
+                                        <div class="d-flex flex-column-reverse">
+                                            <select name="direccion_pais" id="" class="form-select" required>
+                                                <option value="EEUU" selected>EEUU</option>
+                                                <option value="Mexico">Mexico</option>
+                                                <option value="Otro">Otro</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Código Postal</label>
-                                        <input type="text" class="form-control" name="direccion_cp">
+                                        <input type="text" class="form-control" name="direccion_cp" required>
                                     </div>
                                 </fieldset>
                             </div>
@@ -471,13 +478,13 @@
                                 <div class="col-md-6">
                                     <div>
                                         <label class="form-label">Teléfono</label>
-                                        <input type="tel" class="form-control" name="direccion_telefono">
+                                        <input type="tel" class="form-control" name="direccion_telefono" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div>
                                         <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" name="direccion_email">
+                                        <input type="email" class="form-control" name="direccion_email" required>
                                     </div>
                                 </div>
                             </div>
@@ -486,7 +493,7 @@
                                 <label class="form-label">Mejor opción para contactarlo</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="contacto" value="Llamada">
+                                        <input type="radio" name="contacto" value="Llamada" checked>
                                         <div class="state p-primary-o">
                                             <label>Llamada</label>
                                         </div>
@@ -508,8 +515,8 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Horario de contacto preferido</label>
-                                <select id="horarioContacto" name="horario_contacto" class="form-select">
-                                    <option value="manana">Mañana (9:00 AM - 12:00 PM)</option>
+                                <select id="horarioContacto" name="horario_contacto" class="form-select" required>
+                                    <option value="manana" selected>Mañana (9:00 AM - 12:00 PM)</option>
                                     <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
                                     <!-- Puedes agregar más opciones de horarios según tus necesidades -->
                                 </select>
@@ -534,7 +541,7 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
-                                                <input type="radio" name="como_entro_eeuu" class="muestraMasInformacion" data-target="#container-visa" value="Sin Visa" data-display="0">
+                                                <input type="radio" name="como_entro_eeuu" class="muestraMasInformacion" data-target="#container-visa" value="Sin Visa" data-display="0" checked>
                                                 <div class="state p-primary-o">
                                                     <label>Sin Visa</label>
                                                 </div>
@@ -558,7 +565,9 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Estatus migratorio actual</label>
-                                <select name="estatus_migratorio_actual" class="form-select select2 cbEstatusMigratorio"></select>
+                                <div class="d-flex flex-md-column-reverse">
+                                    <select name="estatus_migratorio_actual" class="form-select select2 cbEstatusMigratorio" required></select>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Fecha de última entrada a los Estados Unidos</label>
@@ -566,7 +575,7 @@
                                     <span class="input-group-text">
                                         <i class="fa-duotone fa-calendar"></i>
                                     </span>
-                                    <input type="text" class="form-control flatpickr" id="input-fechaUltimaEntradaUSA" name="fecha_ultima_entrada" readonly>
+                                    <input type="text" class="form-control flatpickr" id="input-fechaUltimaEntradaUSA" name="fecha_ultima_entrada" readonly required>
                                 </div>
                             </div>
 
@@ -581,7 +590,7 @@
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="solicitud_migratoria" class="muestraMasInformacion" data-target="#container-peticionado" value="No" data-display="0">
+                                        <input type="radio" name="solicitud_migratoria" class="muestraMasInformacion" data-target="#container-peticionado" value="No" data-display="0" checked>
                                         <div class="state p-primary-o">
                                             <label>No</label>
                                         </div>
@@ -604,7 +613,7 @@
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="proceso_migracion" class="muestraMasInformacion" data-target="#container-procesoMigracion" value="No" data-display="0">
+                                        <input type="radio" name="proceso_migracion" class="muestraMasInformacion" data-target="#container-procesoMigracion" value="No" data-display="0" checked>
                                         <div class="state p-primary-o">
                                             <label>No</label>
                                         </div>
@@ -660,7 +669,7 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
-                                                <input type="radio" name="familiar_servicio" class="muestraMasInformacion" data-target="#container-servicioMilitar" value="No" data-display="0">
+                                                <input type="radio" name="familiar_servicio" class="muestraMasInformacion" data-target="#container-servicioMilitar" value="No" data-display="0" checked>
                                                 <div class="state p-primary-o">
                                                     <label>No</label>
                                                 </div>
@@ -686,7 +695,7 @@
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="victima_crimen" class="muestraMasInformacion" data-target="#container-victimaCrimen" value="No" data-display="0">
+                                        <input type="radio" name="victima_crimen" class="muestraMasInformacion" data-target="#container-victimaCrimen" value="No" data-display="0" checked>
                                         <div class="state p-primary-o">
                                             <label>No</label>
                                         </div>
@@ -768,7 +777,7 @@
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="arrestado" class="muestraMasInformacion" data-target="#container-arresto" value="No" data-display="0">
+                                        <input type="radio" name="arrestado" class="muestraMasInformacion" data-target="#container-arresto" value="No" data-display="0" checked>
                                         <div class="state p-primary-o">
                                             <label>No</label>
                                         </div>
@@ -801,17 +810,17 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" name="peticionario_telefono">
+                                    <input type="text" class="form-control" name="peticionario_telefono" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="" class="form-label">Relación</label>
-                                    <input type="text" class="form-control" name="peticionario_relacion">
+                                    <input type="text" class="form-control" name="peticionario_relacion" required>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" name="peticionario_direccion">
+                                <input type="text" class="form-control" name="peticionario_direccion" required>
                             </div>
 
                             <h3>Especifique el motivo de su visita:</h3>
