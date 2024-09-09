@@ -465,6 +465,12 @@ class ClientesController extends BaseController
         $casoModel = new CasoModel();
         $casos = $casoModel->obtenerCasosPorCliente($idCliente);
 
+        // Obtener documentos de cada caso
+        $documentoCasoModel = new DocumentoCasoModel();
+        foreach ($casos as &$caso) {
+            $caso['documentos'] = $documentoCasoModel->obtenerDocumentosPorCaso($caso['id_caso']);
+        }
+
         $formularioAdmisionModel = new FormularioAdmisionModel();
         $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
 

@@ -47,6 +47,25 @@
                                                 <strong>Antecedente:</strong>
                                                 <div class="p-3 bg-light"><?= htmlspecialchars_decode($caso['comentarios']) ?></div>
                                             </div>
+
+                                            <!-- Mostrar documentos del caso -->
+                                            <div class="mb-5">
+                                                <strong>Documentos:</strong>
+                                                <ul class="list-group">
+                                                    <?php if (!empty($caso['documentos'])) : ?>
+                                                        <?php foreach ($caso['documentos'] as $documento) : ?>
+                                                            <li class="list-group-item">
+                                                                <a href="<?= base_url('uploads/casos/' . $documento['nombre_documento']) ?>" target="_blank">
+                                                                    <?= $documento['nombre_documento'] ?>
+                                                                </a>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                        <li class="list-group-item text-muted">No hay documentos asociados a este caso.</li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
