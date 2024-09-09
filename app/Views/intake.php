@@ -7,14 +7,13 @@
     <meta name="description" content="Intake New Clients">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url("apple-touch-icon.png") ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url("favicon-32x32.png") ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url("favicon-16x16.png") ?>">
+    <link rel="manifest" href="<?= base_url("site.webmanifest") ?>">
+    <link rel="mask-icon" href="<?= base_url("safari-pinned-tab.svg") ?>" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
 
     <link rel="stylesheet" href="<?= base_url("css/normalize.css") ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -680,7 +679,9 @@
                                 <div id="container-servicioMilitar" class="col-md-6" hidden>
                                     <div>
                                         <label class="form-label">Si es así, por favor díganos el parentesco con usted:</label>
-                                        <select name="familiar_servicio_parentesco" class="form-select select2 cbParentescos"></select>
+                                        <select name="familiar_servicio_parentesco" class="form-select select2 cbParentescos">
+                                            <option value="" selected disabled>Selecciona una opción</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

@@ -154,6 +154,8 @@ $(function () {
             $target.attr('hidden', false);
         } else {
             $target.attr('hidden', true);
+            $target.find('input, textarea').val('');
+            $target.find('select').val('').trigger('change');
         }
     });
 
