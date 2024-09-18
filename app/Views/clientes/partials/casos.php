@@ -108,7 +108,10 @@
                                                 <?php if ($caso['pagado'] == "0") : ?>
                                                     <div class="text-center">
                                                         <script async src="https://js.stripe.com/v3/buy-button.js"></script>
-                                                        <stripe-buy-button buy-button-id="buy_btn_1PGpEuFzRmkRg5LnINWrs4i2" publishable-key="pk_test_51OcBXaFzRmkRg5LnsciCB7VwR4BLLNSiBvjptAqWrwRpf9jkFsdQShKI2yEF5SVVop6TvMU0wpTAU4DcbTfRtcYW00yY3yi58o"></stripe-buy-button>
+                                                        <stripe-buy-button
+                                                            buy-button-id="buy_btn_1Q0XSyFzRmkRg5Lnbrq8eYHi"
+                                                            publishable-key="pk_live_51OcBXaFzRmkRg5LnA8pS8iBLjsTOGSBfUe6qqij1C8Vp0t5AoGuKzBatdgeuoYSnpyzi2bpBSnRRbWalzHSi7EN200s6W8aC4L">
+                                                        </stripe-buy-button>
                                                     </div>
                                                 <?php else : ?>
                                                     <div class="text-center mt-3">
