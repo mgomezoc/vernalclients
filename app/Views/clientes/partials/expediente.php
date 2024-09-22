@@ -6,6 +6,21 @@
         <span>Expediente de <?= $cliente['nombre'] ?></span>
     </h5>
 
+    <!-- Formulario para subir archivos -->
+    <form id="formSubirArchivo" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="archivoExpediente" class="form-label">Subir nuevo archivo</label>
+            <input type="file" class="form-control" id="archivoExpediente" name="archivo" required>
+            <input type="hidden" name="id_cliente" value="<?= $cliente['id_cliente'] ?>">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-upload me-1"></i> Subir Archivo
+        </button>
+    </form>
+
+
+    <hr>
+
     <?php if (!empty($expedientes)): ?>
         <table class="table">
             <thead>
@@ -17,7 +32,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tablaExpediente">
                 <?php foreach ($expedientes as $expediente): ?>
                     <tr>
                         <td><?= $expediente['nombre_documento'] ?></td>
@@ -25,7 +40,7 @@
                         <td><?= number_format($expediente['tamano_documento'] / 1024, 2) ?> KB</td>
                         <td><?= date('d-m-Y H:i:s', strtotime($expediente['fecha_subida'])) ?></td>
                         <td>
-                            <a href="<?= base_url('uploads/casos/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
+                            <a href="<?= base_url('uploads/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
                                 <i class="fa-solid fa-download me-1"></i>
                                 Descargar
                             </a>

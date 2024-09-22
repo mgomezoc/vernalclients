@@ -152,6 +152,64 @@ $(function () {
             }
         }
     });
+
+    // Evento para manejar la subida de archivos
+    $('#formSubirArchivo').on('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        try {
+            const response = await subirArchivo(formData);
+            if (response.success) {
+                showSweetAlert('success', 'Archivo subido exitosamente.');
+                // Actualizar la tabla de expediente
+                actualizarTablaExpediente(response.expedientes);
+                $('#formSubirArchivo')[0].reset(); // Limpiar el formulario
+            } else {
+                showSweetAlert('error', response.message || 'Error al subir el archivo.');
+            }
+        } catch (error) {
+            showSweetAlert('error', 'Ocurrió un error inesperado al subir el archivo.');
+        }
+    });
+
+    // Función para enviar los datos del archivo vía AJAX
+    async function subirArchivo(formData) {
+        return await ajaxCall({
+            type: 'POST',
+            url: `${baseUrl}clientes/subir-archivos-expediente/${cliente.id_cliente}`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json'
+        });
+    }
+
+    // Función para actualizar la tabla de expedientes
+    function actualizarTablaExpediente(expedientes) {
+        const $tablaExpediente = $('#tablaExpediente');
+        $tablaExpediente.empty(); // Limpiar la tabla
+
+        if (expedientes.length > 0) {
+            expedientes.forEach((expediente) => {
+                const fila = `
+                    <tr>
+                        <td>${expediente.nombre_documento}</td>
+                        <td>${expediente.tipo_documento}</td>
+                        <td>${(expediente.tamano_documento / 1024).toFixed(2)} KB</td>
+                        <td>${new Date(expediente.fecha_subida).toLocaleString()}</td>
+                        <td>
+                            <a href="${baseUrl}uploads/${expediente.path_documento}" class="btn btn-sm btn-primary" target="_blank">
+                                <i class="fa-solid fa-download me-1"></i> Descargar
+                            </a>
+                        </td>
+                    </tr>`;
+                $tablaExpediente.append(fila);
+            });
+        } else {
+            $tablaExpediente.html('<tr><td colspan="5" class="text-center">No hay documentos en el expediente.</td></tr>');
+        }
+    }
 });
 
 async function actualizarEstatus(data) {

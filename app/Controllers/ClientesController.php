@@ -530,6 +530,57 @@ class ClientesController extends BaseController
         return view('clientes/partials/expediente', $data);
     }
 
+    public function subirArchivosExpediente($idCliente)
+    {
+        // Obtener el archivo del request
+        $file = $this->request->getFile('archivo');
+
+        // Verificar si el archivo fue enviado correctamente
+        if (!$file) {
+            return $this->response->setJSON(['success' => false, 'message' => 'No se recibió ningún archivo.'])->setStatusCode(400);
+        }
+
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generar un nombre aleatorio para el archivo
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads', $newName);
+
+            // Obtener la información del archivo
+            $tamanoDocumento = $file->getSize();
+            $tipoDocumento = $file->getClientMimeType();
+            $nombreDocumento = $file->getClientName();
+
+            // Crear la nueva ruta y mover el archivo
+            $newFileName = strtolower(str_replace(' ', '-', $nombreDocumento));
+            $newFilePath = 'casos/' . $newFileName;
+            rename(WRITEPATH . 'uploads/' . $newName, FCPATH . 'uploads/' . $newFilePath);
+
+            // Guardar la información del archivo en la base de datos
+            $expedienteModel = new ExpedienteClienteModel();
+            $expedienteData = [
+                'id_cliente' => $idCliente,
+                'nombre_documento' => $nombreDocumento,
+                'path_documento' => $newFilePath,
+                'tipo_documento' => $tipoDocumento,
+                'tamano_documento' => $tamanoDocumento,
+                'subido_por' => session()->get('usuario')['id']
+            ];
+
+            if ($expedienteModel->insert($expedienteData)) {
+                // Obtener la lista actualizada de expedientes
+                $expedientes = $expedienteModel->where('id_cliente', $idCliente)->findAll();
+
+                // Retornar la lista de expedientes actualizada
+                return $this->response->setJSON(['success' => true, 'expedientes' => $expedientes]);
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'Error al guardar el archivo en la base de datos.']);
+            }
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'El archivo no es válido o ya ha sido movido.'])->setStatusCode(400);
+    }
+
+
     public function obtenerCasosPorCliente()
     {
         $casoModel = new CasoModel();
