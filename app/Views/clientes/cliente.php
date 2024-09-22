@@ -1,3 +1,4 @@
+<?php $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY", "RECEPTION"]; ?>
 <div class="card card-body">
     <div class="section-header">
         <h1 class="section-title">
@@ -22,9 +23,7 @@
                 <span>Formulario de admisión</span>
             </button>
         </li>
-        <?php
-        $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY", "RECEPTION"];
-        if (in_array($perfil, $perfilesPermitidos)) : ?>
+        <?php if (in_array($perfil, $perfilesPermitidos)) : ?>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
                     <i class="fa-solid fa-folder-user me-1"></i>
@@ -32,7 +31,12 @@
                 </button>
             </li>
         <?php endif; ?>
-
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="expediente-tab" data-bs-toggle="tab" data-bs-target="#expediente-tab-pane" type="button" role="tab" aria-controls="expediente-tab-pane" aria-selected="false">
+                <i class="fa-solid fa-folder me-1"></i>
+                <span>Expediente</span>
+            </button>
+        </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit-tab-pane" type="button" role="tab" aria-controls="edit-tab-pane" aria-selected="false">
                 <i class="fa-solid fa-edit me-1"></i>
@@ -40,6 +44,7 @@
             </button>
         </li>
     </ul>
+
     <div class="tab-content" id="myTabContent">
         <!-- Formulario de Admisión -->
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
@@ -53,11 +58,17 @@
             </div>
         <?php endif; ?>
 
+        <!-- Expediente -->
+        <div class="tab-pane fade" id="expediente-tab-pane" role="tabpanel" aria-labelledby="expediente-tab" tabindex="0">
+            <?= view('clientes/partials/expediente', compact('expedientes', 'cliente')) ?>
+        </div>
+
         <!-- Editar Información -->
         <div class="tab-pane fade" id="edit-tab-pane" role="tabpanel" aria-labelledby="edit-tab" tabindex="0">
             <?= view('clientes/partials/editar_informacion', compact('cliente', 'sucursales')) ?>
         </div>
     </div>
+
 </div>
 
 <div class="modal fade" id="modalComentarios" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">

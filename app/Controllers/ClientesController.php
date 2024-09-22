@@ -10,6 +10,7 @@ use App\Models\ClienteEstatusModel;
 use App\Models\ClienteModel;
 use App\Models\ComentarioCasoModel;
 use App\Models\DocumentoCasoModel;
+use App\Models\ExpedienteClienteModel;
 use App\Models\FormularioAdmisionModel;
 use App\Models\SucursalModel;
 use App\Models\UsuarioModel;
@@ -474,6 +475,10 @@ class ClientesController extends BaseController
         $formularioAdmisionModel = new FormularioAdmisionModel();
         $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
 
+        // Obtener los expedientes (documentos) del cliente
+        $expedienteModel = new ExpedienteClienteModel();  // Modelo para la tabla expediente_cliente
+        $expedientes = $expedienteModel->where('id_cliente', $idCliente)->findAll();
+
         $sucursalModel = new SucursalModel();
         $data['sucursales'] = $sucursalModel->obtenerTodas();
 
@@ -481,6 +486,7 @@ class ClientesController extends BaseController
         $data['cliente'] = $cliente;
         $data['casos'] = $casos;
         $data['formulario'] = $formulario;
+        $data['expedientes'] = $expedientes;  // Añadir los expedientes al array de datos
         $data['renderBody'] = $this->render("clientes/cliente", $data);
 
         // Añadir estilos y scripts de Fancybox
@@ -503,6 +509,25 @@ class ClientesController extends BaseController
         }
 
         return $this->render('shared/layout', $data);
+    }
+
+    public function expediente($idCliente)
+    {
+        $expedienteModel = new ExpedienteClienteModel();
+
+        // Obtener los documentos del cliente
+        $expedientes = $expedienteModel->where('id_cliente', $idCliente)->findAll();
+
+        // Datos del cliente
+        $clienteModel = new ClienteModel();
+        $cliente = $clienteModel->find($idCliente);
+
+        $data = [
+            'cliente' => $cliente,
+            'expedientes' => $expedientes
+        ];
+
+        return view('clientes/partials/expediente', $data);
     }
 
     public function obtenerCasosPorCliente()
