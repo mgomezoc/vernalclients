@@ -193,22 +193,60 @@ $(function () {
         if (expedientes.length > 0) {
             expedientes.forEach((expediente) => {
                 const fila = `
-                    <tr>
-                        <td>${expediente.nombre_documento}</td>
-                        <td>${expediente.tipo_documento}</td>
-                        <td>${(expediente.tamano_documento / 1024).toFixed(2)} KB</td>
-                        <td>${new Date(expediente.fecha_subida).toLocaleString()}</td>
-                        <td>
-                            <a href="${baseUrl}uploads/${expediente.path_documento}" class="btn btn-sm btn-primary" target="_blank">
-                                <i class="fa-solid fa-download me-1"></i> Descargar
-                            </a>
-                        </td>
-                    </tr>`;
+                <tr>
+                    <td>${expediente.nombre_documento}</td>
+                    <td>${expediente.tipo_documento}</td>
+                    <td>${(expediente.tamano_documento / 1024).toFixed(2)} KB</td>
+                    <td>${new Date(expediente.fecha_subida).toLocaleString()}</td>
+                    <td>
+                        <a href="${baseUrl}uploads/${expediente.path_documento}" class="btn btn-sm btn-primary" target="_blank">
+                            <i class="fa-solid fa-download me-1"></i> Descargar
+                        </a>
+                        <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="${expediente.id}">
+                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>`;
                 $tablaExpediente.append(fila);
             });
         } else {
             $tablaExpediente.html('<tr><td colspan="5" class="text-center">No hay documentos en el expediente.</td></tr>');
         }
+    }
+
+    // Evento para eliminar un archivo
+    $(document).on('click', '.btnEliminarArchivo', function () {
+        const idExpediente = $(this).data('id');
+
+        // Mostrar confirmación
+        mostrarConfirmacion(
+            '¿Estás seguro de que deseas eliminar este archivo?',
+            async function (idExpediente) {
+                try {
+                    const response = await eliminarArchivo(idExpediente);
+                    if (response.success) {
+                        showSweetAlert('success', response.message);
+                        // Actualizar la tabla de expedientes
+                        actualizarTablaExpediente(response.expedientes);
+                    } else {
+                        showSweetAlert('error', response.message || 'Error al eliminar el archivo.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showSweetAlert('error', 'Ocurrió un error inesperado al eliminar el archivo.');
+                }
+            },
+            idExpediente
+        ); // Pasar idExpediente como parámetro a mostrarConfirmacion
+    });
+
+    // Función para eliminar el archivo vía AJAX
+    async function eliminarArchivo(idExpediente) {
+        return await ajaxCall({
+            type: 'POST',
+            url: `${baseUrl}clientes/eliminar-archivo-expediente/${idExpediente}`,
+            dataType: 'json'
+        });
     }
 });
 

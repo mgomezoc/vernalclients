@@ -41,13 +41,16 @@
                         <td><?= date('d-m-Y H:i:s', strtotime($expediente['fecha_subida'])) ?></td>
                         <td>
                             <a href="<?= base_url('uploads/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
-                                <i class="fa-solid fa-download me-1"></i>
-                                Descargar
+                                <i class="fa-solid fa-download me-1"></i> Descargar
                             </a>
+                            <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="<?= $expediente['id'] ?>">
+                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+
         </table>
     <?php else: ?>
         <div class="alert alert-info">

@@ -94,6 +94,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,R
     // Expediente - Mostrar archivos del cliente
     $routes->get('expediente/(:num)', 'ClientesController::expediente/$1');
     $routes->post('subir-archivos-expediente/(:num)', 'ClientesController::subirArchivosExpediente/$1');
+    $routes->post('eliminar-archivo-expediente/(:num)', 'ClientesController::eliminarArchivoExpediente/$1');
 });
 
 $routes->group('clientes', ['filter' => 'SessionAdmin:CALL'], function ($routes) {

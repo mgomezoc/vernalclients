@@ -580,6 +580,40 @@ class ClientesController extends BaseController
         return $this->response->setJSON(['success' => false, 'message' => 'El archivo no es válido o ya ha sido movido.'])->setStatusCode(400);
     }
 
+    public function eliminarArchivoExpediente($idExpediente)
+    {
+        $expedienteModel = new ExpedienteClienteModel();
+
+        // Buscar el expediente por su ID
+        $expediente = $expedienteModel->find($idExpediente);
+
+        if (!$expediente) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Documento no encontrado.'])->setStatusCode(404);
+        }
+
+        // Eliminar el archivo del sistema de archivos
+        $filePath = FCPATH . 'uploads/' . $expediente['path_documento'];
+        if (file_exists($filePath)) {
+            unlink($filePath); // Eliminar el archivo
+        }
+
+        // Eliminar el registro de la base de datos
+        if ($expedienteModel->delete($idExpediente)) {
+            $expedienteModel = new ExpedienteClienteModel();
+
+            // Obtener los documentos del cliente
+            $expedientes = $expedienteModel->where('id_cliente', $expediente['id_cliente'])->findAll();
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Archivo eliminado correctamente.',
+                'expedientes' => $expedientes
+            ]);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Error al eliminar el documento de la base de datos.']);
+        }
+    }
+
 
     public function obtenerCasosPorCliente()
     {
