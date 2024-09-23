@@ -457,7 +457,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Ciudad</label>
-                                        <input type="text" class="form-control" name="direccion_cuidad" required>
+                                        <input type="text" class="form-control" name="direccion_ciudad" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">País</label>

@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClienteModel;
-use App\Models\FormularioAdmisionModel;
+use App\Models\IntakeModel;
 use App\Models\SucursalModel;
 use App\Models\PagoConsultaModel;
 
@@ -34,30 +34,67 @@ class IntakeController extends BaseController
     function guardar()
     {
         $clienteModel = new ClienteModel();
-        $formularioAdmisionModel = new FormularioAdmisionModel();
+        $formularioAdmisionModel = new IntakeModel();
         $pagoConsultaModel = new PagoConsultaModel();
 
         $idCliente = $this->request->getPost('id_cliente');
         $nuevoEstatus = 2;
-        $datosAdmision = $this->request->getPost();
 
-        $insertData = [
+        // Extraer los datos enviados por el formulario
+        $datosAdmision = [
             'id_cliente' => $idCliente,
-            'datos_admision' => json_encode($datosAdmision)
+            'proceso' => $this->request->getPost('proceso'),
+            'a_number' => $this->request->getPost('a_number'),
+            'contacto' => $this->request->getPost('contacto'),
+            'sucursal' => $this->request->getPost('sucursal'),
+            'arrestado' => $this->request->getPost('arrestado'),
+            'arrestado_fecha_cargo' => $this->request->getPost('arrestado_fecha_cargo'),
+            'arrestado_explicacion' => $this->request->getPost('arrestado_explicacion'),
+            'tipo_visa' => $this->request->getPost('tipo_visa'),
+            'nationality' => $this->request->getPost('nationality'),
+            'direccion_cp' => $this->request->getPost('direccion_cp'),
+            'direccion_pais' => $this->request->getPost('direccion_pais'),
+            'motivo_visita' => $this->request->getPost('motivo_visita'),
+            'direccion_calle_numero' => $this->request->getPost('direccion_calle_numero'),
+            'direccion_ciudad' => $this->request->getPost('direccion_ciudad'),
+            'direccion_telefono' => $this->request->getPost('direccion_telefono'),
+            'direccion_email' => $this->request->getPost('direccion_email'),
+            'beneficiario_nombre' => $this->request->getPost('beneficiario_nombre'),
+            'beneficiario_genero' => $this->request->getPost('beneficiario_genero'),
+            'beneficiario_fecha_nacimiento' => $this->request->getPost('beneficiario_fecha_nacimiento'),
+            'beneficiario_estado_civil' => $this->request->getPost('beneficiario_estado_civil'),
+            'estatus_migratorio_actual' => $this->request->getPost('estatus_migratorio_actual'),
+            'fecha_ultima_entrada' => $this->request->getPost('fecha_ultima_entrada'),
+            'solicitud_migratoria' => $this->request->getPost('solicitud_migratoria'),
+            'solicitud_migratoria_explicacion' => $this->request->getPost('solicitud_migratoria_explicacion'),
+            'proceso_migracion' => $this->request->getPost('proceso_migracion'),
+            'proceso_migracion_explicacion' => $this->request->getPost('proceso_migracion_explicacion'),
+            'fuente_informacion' => $this->request->getPost('fuente_informacion'),
+            'parientes' => json_encode($this->request->getPost('parientes')),  // campo JSON
+            'familiar_servicio' => $this->request->getPost('familiar_servicio'),
+            'familiar_servicio_parentesco' => $this->request->getPost('familiar_servicio_parentesco'),
+            'victima_crimen' => $this->request->getPost('victima_crimen'),
+            'victima_crimen_info' => $this->request->getPost('victima_crimen_info'),
+            'cometido_crimen' => json_encode($this->request->getPost('cometido_crimen')),  // campo JSON
+            'proceso_relacion' => $this->request->getPost('proceso_relacion'),
+            'beneficiario_vive_ambos_padres' => $this->request->getPost('beneficiario_vive_ambos_padres'),
+            'fecha_consulta' => date('Y-m-d H:i:s'),
         ];
 
-        // Guardar el formulario de admisión
-        $formularioAdmisionModel->insertarFormularioAdmision($insertData);
+        // Guardar los datos del formulario de admisión
+        if (!$formularioAdmisionModel->insertarFormularioAdmision($datosAdmision)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Error al guardar el formulario de admisión.']);
+        }
 
         // Actualizar el estatus del cliente
         if (!$clienteModel->actualizarEstatusCliente($idCliente, $nuevoEstatus)) {
             return $this->response->setJSON(['success' => false, 'message' => 'Ocurrió un error al actualizar el estatus del cliente.']);
         }
 
-        // Crear registro en pagos_consultas
+        // Registrar un pago pendiente
         $pagoData = [
             'id_cliente' => $idCliente,
-            'id_usuario' => 1,
+            'id_usuario' => 1, // Por defecto
             'monto' => 1934.68,
             'forma_pago' => 'otro',
             'estatus_pago' => 'pendiente',
