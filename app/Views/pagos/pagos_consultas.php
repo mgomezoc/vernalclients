@@ -76,7 +76,7 @@
                             <th data-field="monto">Monto</th>
                             <th data-field="forma_pago">Forma de Pago</th>
                             <th data-field="estatus_pago">Estatus</th>
-                            <th data-field="fecha_pago">Fecha de Pago</th>
+                            <th data-field="fecha_pago" data-formatter="formatoAmericano">Fecha de Pago</th>
                             <th data-field="referencia">Referencia</th>
                             <th data-field="notas">Notas</th>
                             <th data-field="id_pago" data-formatter="accionesTablaPagos">Acciones</th>

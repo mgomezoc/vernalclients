@@ -48,7 +48,7 @@
                             <th data-field="usuario">Usuario</th>
                             <th data-field="accion">Acción</th>
                             <th data-field="detalle">Detalle</th>
-                            <th data-field="fecha">Fecha</th>
+                            <th data-field="fecha" data-formatter="formatoAmericano">Fecha</th>
                         </tr>
                     </thead>
                 </table>

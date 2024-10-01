@@ -16,7 +16,7 @@
               <th data-field="apellido_paterno">Apellido</th>
               <th data-field="correo_electronico">Correo</th>
               <th data-field="perfil" data-sortable="true" data-formatter="formatoPerfiles">Perfil</th>
-              <th data-field="fecha_creacion" data-sortable="true">Creado</th>
+              <th data-field="fecha_creacion" data-formatter="formatoAmericano" data-sortable="true">Creado</th>
               <th data-field="id" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
             </tr>
           </thead>

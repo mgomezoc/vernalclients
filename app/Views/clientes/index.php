@@ -73,7 +73,7 @@
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
                             <th data-field="nombre_estatus" data-formatter="columnaEstatus" data-align="center">Estatus</th>
                             <th data-field="nombre_usuario_asignado">Asignado</th>
-                            <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
+                            <th data-field="fecha_ultima_actualizacion" data-formatter="formatoAmericano">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true" data-visible="false">Creado</th>
                             <th data-field="slug" data-formatter="accionesTablaUsuarios" data-align="center">Acciones</th>
                         </tr>

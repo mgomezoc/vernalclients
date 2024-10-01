@@ -184,7 +184,7 @@
                 </div>
                 <div class="data-cell">
                     <div class="data-label">Ciudad y país de nacimiento</div>
-                    <div class="data-text">{{beneficiario_ciudad_pais}}</div>
+                    <div class="data-text">{{beneficiario_ciudad}}, {{beneficiario_pais}}</div>
                 </div>
                 <div class="data-cell">
                     <div class="data-label">Calle y número</div>

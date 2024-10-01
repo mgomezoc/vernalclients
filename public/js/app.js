@@ -187,3 +187,27 @@ function columnaEstatus(value, row) {
 
     return `<span class="badge ${color} badge-min-width" title="${row.descripcion_estatus}" data-toggle='tooltip' data-placement='left'>${value}</span>`;
 }
+
+function formatoAmericano(fecha) {
+    // Crea un objeto Date a partir de la fecha
+    const fechaObj = new Date(fecha);
+
+    // Extrae las partes de la fecha
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son de 0 a 11
+    const dia = String(fechaObj.getDate()).padStart(2, '0');
+    const año = fechaObj.getFullYear();
+
+    // Extrae las partes de la hora
+    const horas = String(fechaObj.getHours()).padStart(2, '0');
+    const minutos = String(fechaObj.getMinutes()).padStart(2, '0');
+    const segundos = String(fechaObj.getSeconds()).padStart(2, '0');
+
+    // Devuelve la fecha en formato americano
+    return `${mes}/${dia}/${año} ${horas}:${minutos}:${segundos}`;
+}
+
+// Ejemplo de uso
+const fechaOriginal = '2024-07-23 06:34:28';
+const fechaAmericana = formatoAmericano(fechaOriginal);
+
+console.log(fechaAmericana); // Resultado: 07/23/2024 06:34:28

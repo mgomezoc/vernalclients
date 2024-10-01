@@ -829,6 +829,12 @@
                             <h3>Especifique el motivo de su visita:</h3>
                             <textarea cols="30" rows="5" class="form-control" name="motivo_visita" required></textarea>
                         </div>
+                        <!-- Agregar input para adjuntar documentos -->
+                        <div class="mb-3 mt-4">
+                            <label for="documentosAdjuntos" class="form-label">Adjuntar Documentos</label>
+                            <input type="file" class="form-control" id="documentosAdjuntos" name="documentos[]" multiple>
+                            <small class="text-muted">Puede adjuntar múltiples documentos. (Formatos aceptados: PDF, JPG, PNG)</small>
+                        </div>
                         <hr>
                         <div class="mt-3 text-center">
                             <button type="submit" class="btn btn-lg btn-primary">Enviar</button>
