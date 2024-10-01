@@ -21,40 +21,34 @@
 
     <hr>
 
-    <?php if (!empty($expedientes)): ?>
-        <table class="table">
-            <thead>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre del Documento</th>
+                <th>Tipo</th>
+                <th>Tamaño</th>
+                <th>Fecha de Subida</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaExpediente">
+            <?php foreach ($expedientes as $expediente): ?>
                 <tr>
-                    <th>Nombre del Documento</th>
-                    <th>Tipo</th>
-                    <th>Tamaño</th>
-                    <th>Fecha de Subida</th>
-                    <th>Acciones</th>
+                    <td><?= $expediente['nombre_documento'] ?></td>
+                    <td><?= $expediente['tipo_documento'] ?></td>
+                    <td><?= number_format($expediente['tamano_documento'] / 1024, 2) ?> KB</td>
+                    <td><?= date('m/d/Y H:i:s', strtotime($expediente['fecha_subida'])) ?></td>
+                    <td>
+                        <a href="<?= base_url('uploads/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
+                            <i class="fa-solid fa-download me-1"></i> Descargar
+                        </a>
+                        <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="<?= $expediente['id'] ?>">
+                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody id="tablaExpediente">
-                <?php foreach ($expedientes as $expediente): ?>
-                    <tr>
-                        <td><?= $expediente['nombre_documento'] ?></td>
-                        <td><?= $expediente['tipo_documento'] ?></td>
-                        <td><?= number_format($expediente['tamano_documento'] / 1024, 2) ?> KB</td>
-                        <td><?= date('d-m-Y H:i:s', strtotime($expediente['fecha_subida'])) ?></td>
-                        <td>
-                            <a href="<?= base_url('uploads/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
-                                <i class="fa-solid fa-download me-1"></i> Descargar
-                            </a>
-                            <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="<?= $expediente['id'] ?>">
-                                <i class="fa-solid fa-trash me-1"></i> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+            <?php endforeach; ?>
+        </tbody>
 
-        </table>
-    <?php else: ?>
-        <div class="alert alert-info">
-            No hay documentos en el expediente.
-        </div>
-    <?php endif; ?>
+    </table>
 </div>

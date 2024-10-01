@@ -13,7 +13,7 @@ $(function () {
     tplComentarios = $('#tplComentarios').html();
     $modalComentarios = $('#modalComentarios');
 
-    const renderData = Handlebars.compile(tplFormulario)(datos);
+    const renderData = Handlebars.compile(tplFormulario)(formulario);
     $('#formulario_admision').html(renderData);
 
     $('.select2').select2({

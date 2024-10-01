@@ -12,6 +12,7 @@ use App\Models\ComentarioCasoModel;
 use App\Models\DocumentoCasoModel;
 use App\Models\ExpedienteClienteModel;
 use App\Models\FormularioAdmisionModel;
+use App\Models\IntakeModel;
 use App\Models\SucursalModel;
 use App\Models\UsuarioModel;
 use Exception;
@@ -472,8 +473,8 @@ class ClientesController extends BaseController
             $caso['documentos'] = $documentoCasoModel->obtenerDocumentosPorCaso($caso['id_caso']);
         }
 
-        $formularioAdmisionModel = new FormularioAdmisionModel();
-        $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
+        $formularioAdmisionModel = new IntakeModel();
+        $formulario = $formularioAdmisionModel->obtenerFormularioPorCliente($idCliente);
 
         // Obtener los expedientes (documentos) del cliente
         $expedienteModel = new ExpedienteClienteModel();  // Modelo para la tabla expediente_cliente
