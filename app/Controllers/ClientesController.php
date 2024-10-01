@@ -542,26 +542,32 @@ class ClientesController extends BaseController
         }
 
         if ($file->isValid() && !$file->hasMoved()) {
-            // Generar un nombre aleatorio para el archivo
+            // Generar un nombre único para el archivo, preservando la extensión
             $newName = $file->getRandomName();
-            $file->move(WRITEPATH . 'uploads', $newName);
+
+            // Crear la ruta del cliente
+            $clientDirectory = FCPATH . 'documentos_clientes/' . $idCliente;
+
+            // Verificar si el directorio existe, de lo contrario crearlo
+            if (!is_dir($clientDirectory)) {
+                mkdir($clientDirectory, 0777, true); // Crear directorios recursivamente con permisos de lectura y escritura
+            }
+
+            // Mover el archivo al directorio del cliente con el nombre aleatorio
+            $file->move($clientDirectory, $newName);
 
             // Obtener la información del archivo
             $tamanoDocumento = $file->getSize();
             $tipoDocumento = $file->getClientMimeType();
             $nombreDocumento = $file->getClientName();
-
-            // Crear la nueva ruta y mover el archivo
-            $newFileName = strtolower(str_replace(' ', '-', $nombreDocumento));
-            $newFilePath = 'casos/' . $newFileName;
-            rename(WRITEPATH . 'uploads/' . $newName, FCPATH . 'uploads/' . $newFilePath);
+            $pathDocumento = 'documentos_clientes/' . $idCliente . '/' . $newName;
 
             // Guardar la información del archivo en la base de datos
             $expedienteModel = new ExpedienteClienteModel();
             $expedienteData = [
                 'id_cliente' => $idCliente,
                 'nombre_documento' => $nombreDocumento,
-                'path_documento' => $newFilePath,
+                'path_documento' => $pathDocumento,
                 'tipo_documento' => $tipoDocumento,
                 'tamano_documento' => $tamanoDocumento,
                 'subido_por' => session()->get('usuario')['id']
@@ -576,10 +582,11 @@ class ClientesController extends BaseController
             } else {
                 return $this->response->setJSON(['success' => false, 'message' => 'Error al guardar el archivo en la base de datos.']);
             }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Archivo no válido o ya ha sido movido.']);
         }
-
-        return $this->response->setJSON(['success' => false, 'message' => 'El archivo no es válido o ya ha sido movido.'])->setStatusCode(400);
     }
+
 
     public function eliminarArchivoExpediente($idExpediente)
     {
@@ -592,17 +599,19 @@ class ClientesController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Documento no encontrado.'])->setStatusCode(404);
         }
 
+        // Obtener la ruta completa del archivo (cambio para reflejar la nueva estructura de carpetas)
+        $filePath = FCPATH . $expediente['path_documento'];
+
         // Eliminar el archivo del sistema de archivos
-        $filePath = FCPATH . 'uploads/' . $expediente['path_documento'];
         if (file_exists($filePath)) {
-            unlink($filePath); // Eliminar el archivo
+            if (!unlink($filePath)) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Error al eliminar el archivo del sistema de archivos.'])->setStatusCode(500);
+            }
         }
 
         // Eliminar el registro de la base de datos
         if ($expedienteModel->delete($idExpediente)) {
-            $expedienteModel = new ExpedienteClienteModel();
-
-            // Obtener los documentos del cliente
+            // Obtener los documentos restantes del cliente
             $expedientes = $expedienteModel->where('id_cliente', $expediente['id_cliente'])->findAll();
 
             return $this->response->setJSON([
@@ -611,9 +620,10 @@ class ClientesController extends BaseController
                 'expedientes' => $expedientes
             ]);
         } else {
-            return $this->response->setJSON(['success' => false, 'message' => 'Error al eliminar el documento de la base de datos.']);
+            return $this->response->setJSON(['success' => false, 'message' => 'Error al eliminar el registro de la base de datos.'])->setStatusCode(500);
         }
     }
+
 
 
     public function obtenerCasosPorCliente()

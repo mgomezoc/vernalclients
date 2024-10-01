@@ -18,10 +18,9 @@
         </button>
     </form>
 
-
     <hr>
 
-    <table class="table table-striped">
+    <table id="tableExpediente" class="table table-sm table-striped">
         <thead>
             <tr>
                 <th>Nombre del Documento</th>
@@ -37,9 +36,13 @@
                     <td><?= $expediente['nombre_documento'] ?></td>
                     <td><?= $expediente['tipo_documento'] ?></td>
                     <td><?= number_format($expediente['tamano_documento'] / 1024, 2) ?> KB</td>
-                    <td><?= date('m/d/Y H:i:s', strtotime($expediente['fecha_subida'])) ?></td>
+                    <td title="<?= (new DateTime($expediente['fecha_subida']))->format('d \d\e F \d\e\l Y') ?>">
+                        <?= date('m/d/Y H:i:s', strtotime($expediente['fecha_subida'])) ?>
+                    </td>
                     <td>
-                        <a href="<?= base_url('uploads/' . $expediente['path_documento']) ?>" class="btn btn-sm btn-primary" target="_blank">
+                        <!-- Ajustar la ruta de descarga para apuntar a la nueva estructura de directorios -->
+                        <a href="<?= base_url($expediente['path_documento']) ?>"
+                            class="btn btn-sm btn-primary" target="_blank">
                             <i class="fa-solid fa-download me-1"></i> Descargar
                         </a>
                         <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="<?= $expediente['id'] ?>">
@@ -49,6 +52,5 @@
                 </tr>
             <?php endforeach; ?>
         </tbody>
-
     </table>
 </div>

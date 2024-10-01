@@ -153,6 +153,8 @@ $(function () {
         }
     });
 
+    //EXPEDIENTE
+    $('#tableExpediente').bootstrapTable();
     // Evento para manejar la subida de archivos
     $('#formSubirArchivo').on('submit', async function (e) {
         e.preventDefault();
