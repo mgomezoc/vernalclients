@@ -33,6 +33,8 @@ public/js/*.map
 # Ignorar archivos de imágenes subidos
 public/uploads/*
 
+tmp
+
 # Ignorar archivos del IDE
 *.swp
 *~
