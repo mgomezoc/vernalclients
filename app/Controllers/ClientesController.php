@@ -473,8 +473,8 @@ class ClientesController extends BaseController
             $caso['documentos'] = $documentoCasoModel->obtenerDocumentosPorCaso($caso['id_caso']);
         }
 
-        $formularioAdmisionModel = new IntakeModel();
-        $formulario = $formularioAdmisionModel->obtenerFormularioPorCliente($idCliente);
+        $formularioAdmisionModel = new FormularioAdmisionModel();
+        $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
 
         // Obtener los expedientes (documentos) del cliente
         $expedienteModel = new ExpedienteClienteModel();  // Modelo para la tabla expediente_cliente

@@ -13,7 +13,7 @@ $(function () {
     tplComentarios = $('#tplComentarios').html();
     $modalComentarios = $('#modalComentarios');
 
-    const renderData = Handlebars.compile(tplFormulario)(formulario);
+    const renderData = Handlebars.compile(tplFormulario)(datos);
     $('#formulario_admision').html(renderData);
 
     $('.select2').select2({
@@ -201,7 +201,7 @@ $(function () {
                     <td>${(expediente.tamano_documento / 1024).toFixed(2)} KB</td>
                     <td>${new Date(expediente.fecha_subida).toLocaleString()}</td>
                     <td>
-                        <a href="${baseUrl}uploads/${expediente.path_documento}" class="btn btn-sm btn-primary" target="_blank">
+                        <a href="${baseUrl}${expediente.path_documento}" class="btn btn-sm btn-primary" target="_blank">
                             <i class="fa-solid fa-download me-1"></i> Descargar
                         </a>
                         <button class="btn btn-sm btn-danger btnEliminarArchivo" data-id="${expediente.id}">
