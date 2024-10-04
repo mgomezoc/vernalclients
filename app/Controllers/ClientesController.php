@@ -108,28 +108,34 @@ class ClientesController extends BaseController
     public function obtenerClientes()
     {
         $clienteModel = new ClienteModel();
+
+        // Obtener los datos enviados desde el cliente (AJAX o POST)
         $postData = json_decode($this->request->getBody(), true);
 
-        $limit = $postData['limit'] ?? 10;
-        $offset = $postData['offset'] ?? 0;
+        // Definir los parámetros para los filtros y la paginación
+        $limit = $postData['limit'] ?? 10; // número de resultados por página (por defecto 10)
+        $offset = $postData['offset'] ?? 0; // página actual o desplazamiento
         $filtros = [
-            'tipo' => $postData['tipo'] ?? '',
-            'sucursal' => $postData['sucursal'] ?? '',
-            'estatus' => $postData['estatus'] ?? '',
-            'periodo' => $postData['periodo'] ?? ''
+            'tipo' => $postData['tipo'] ?? '', // tipo de consulta
+            'sucursal' => $postData['sucursal'] ?? '', // sucursal seleccionada
+            'estatus' => $postData['estatus'] ?? '', // estatus seleccionado
+            'periodo' => $postData['periodo'] ?? '', // rango de fechas
+            'search' => $postData['search'] ?? '', // filtro de búsqueda por nombre o teléfono
         ];
 
+        // Obtener los clientes paginados con los filtros aplicados
         $result = $clienteModel->obtenerClientesPaginados($limit, $offset, $filtros);
 
-        // Agregar lógica para determinar si puede crear un caso
+        // Determinar si los clientes pueden crear un caso según su estatus
         $estatusPermitidos = [2, 3, 8]; // Intake, Asignado, Por Asignar
-
         foreach ($result['rows'] as &$cliente) {
             $cliente['puedeCrearCaso'] = in_array($cliente['estatus'], $estatusPermitidos);
         }
 
+        // Retornar la respuesta en formato JSON
         return $this->response->setJSON($result);
     }
+
 
     public function obtenerClientesRecepcion()
     {

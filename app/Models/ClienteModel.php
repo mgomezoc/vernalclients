@@ -148,13 +148,13 @@ class ClienteModel extends Model
     {
         $builder = $this->db->table($this->table);
 
-        // Ajuste de las uniones con las tablas involucradas
+        // Uniones necesarias
         $builder->join('sucursales', 'sucursales.id = clientes.sucursal', 'left');
         $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus', 'left');
         $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente', 'left');
         $builder->join('usuarios', 'usuarios.id = cliente_abogado.id_usuario', 'left');
 
-        // Selección de los campos con el alias correcto
+        // Selección de los campos con alias correctos
         $builder->select('clientes.*, 
                      sucursales.nombre as nombre_sucursal, 
                      clientes_estatus.nombre as nombre_estatus, 
@@ -164,7 +164,7 @@ class ClienteModel extends Model
                      clientes.meet_url,
                      usuarios.nombre as nombre_usuario_asignado');
 
-        // Aplicación de filtros
+        // Aplicar filtros
         if (!empty($filtros['tipo'])) {
             $builder->where('clientes.tipo_consulta', $filtros['tipo']);
         }
@@ -174,7 +174,6 @@ class ClienteModel extends Model
         }
 
         if (!empty($filtros['estatus'])) {
-            // Si el filtro de estatus es un array, usar whereIn
             if (is_array($filtros['estatus'])) {
                 $builder->whereIn('clientes.estatus', $filtros['estatus']);
             } else {
@@ -182,6 +181,7 @@ class ClienteModel extends Model
             }
         }
 
+        // Filtro por periodo (rango de fechas)
         if (!empty($filtros['periodo'])) {
             $periodo = explode(' to ', $filtros['periodo']);
             if (count($periodo) === 2) {
@@ -192,16 +192,24 @@ class ClienteModel extends Model
             }
         }
 
+        // Filtro de búsqueda por nombre o teléfono
+        if (!empty($filtros['search'])) {
+            $builder->groupStart() // agrupar para OR like
+                ->like('clientes.nombre', $filtros['search'])
+                ->orLike('clientes.telefono', $filtros['search'])
+                ->groupEnd();
+        }
+
         // Ordenar y limitar los resultados
         $builder->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         $builder->limit($limit, $offset);
 
-        // Obtener los resultados
+        // Obtener resultados
         $result = $builder->get()->getResultArray();
 
-        // Contar el total de registros que cumplen con los filtros (sin paginación)
+        // Obtener el total de registros para la paginación
+        $builder->select("COUNT(*) as total", false); // evitar conflicto de alias
         $countQuery = clone $builder;
-        $countQuery->select("COUNT(*) as total");
         $total = $countQuery->get()->getRow()->total;
 
         return [
@@ -209,6 +217,7 @@ class ClienteModel extends Model
             'rows' => $result
         ];
     }
+
 
 
 
