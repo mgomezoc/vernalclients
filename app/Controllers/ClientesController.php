@@ -473,17 +473,16 @@ class ClientesController extends BaseController
         $casoModel = new CasoModel();
         $casos = $casoModel->obtenerCasosPorCliente($idCliente);
 
-        // Obtener documentos de cada caso
         $documentoCasoModel = new DocumentoCasoModel();
         foreach ($casos as &$caso) {
             $caso['documentos'] = $documentoCasoModel->obtenerDocumentosPorCaso($caso['id_caso']);
         }
 
-        $formularioAdmisionModel = new FormularioAdmisionModel();
-        $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
+        $formularioAdmisionModel = new IntakeModel();
+        $formulario = $formularioAdmisionModel->obtenerFormularioPorCliente($idCliente);
 
-        // Obtener los expedientes (documentos) del cliente
-        $expedienteModel = new ExpedienteClienteModel();  // Modelo para la tabla expediente_cliente
+
+        $expedienteModel = new ExpedienteClienteModel();
         $expedientes = $expedienteModel->where('id_cliente', $idCliente)->findAll();
 
         $sucursalModel = new SucursalModel();
@@ -493,10 +492,9 @@ class ClientesController extends BaseController
         $data['cliente'] = $cliente;
         $data['casos'] = $casos;
         $data['formulario'] = $formulario;
-        $data['expedientes'] = $expedientes;  // Añadir los expedientes al array de datos
+        $data['expedientes'] = $expedientes;
         $data['renderBody'] = $this->render("clientes/cliente", $data);
 
-        // Añadir estilos y scripts de Fancybox
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">';
         $data["styles"] .= '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">';
@@ -509,7 +507,6 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js'></script>";  // Fancybox JS
         $data['scripts'] .= "<script src='" . base_url("js/cliente.js") . "'></script>";
 
-        // Registrar acción de visualización de un cliente específico
         $usuario = session()->get('usuario');
         if ($usuario) {
             registrarAccion($usuario['id'], 'view_client', "El usuario visualizó la información del cliente ID $idCliente.");

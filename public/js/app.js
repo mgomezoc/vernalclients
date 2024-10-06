@@ -205,9 +205,3 @@ function formatoAmericano(fecha) {
     // Devuelve la fecha en formato americano
     return `${mes}/${dia}/${año} ${horas}:${minutos}:${segundos}`;
 }
-
-// Ejemplo de uso
-const fechaOriginal = '2024-07-23 06:34:28';
-const fechaAmericana = formatoAmericano(fechaOriginal);
-
-console.log(fechaAmericana); // Resultado: 07/23/2024 06:34:28

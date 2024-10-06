@@ -1,4 +1,5 @@
 <?php $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY", "RECEPTION"]; ?>
+
 <div class="card card-body">
     <div class="section-header">
         <h1 class="section-title">
@@ -339,5 +340,4 @@
     const cliente = <?= json_encode($cliente) ?>;
     const casos = <?= json_encode($casos) ?>;
     const formulario = <?= json_encode($formulario) ?>;
-    const datos = formulario ? JSON.parse(formulario.datos_admision) : [];
 </script>

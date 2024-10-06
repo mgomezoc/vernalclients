@@ -93,12 +93,12 @@ class IntakeController extends BaseController
             'proceso_migracion' => $this->request->getPost('proceso_migracion'),
             'proceso_migracion_explicacion' => $this->request->getPost('proceso_migracion_explicacion'),
             'fuente_informacion' => $this->request->getPost('fuente_informacion'),
-            'parientes' => json_encode($this->request->getPost('parientes')),  // campo JSON
+            'parientes' => $this->request->getPost('parientes'),
             'familiar_servicio' => $this->request->getPost('familiar_servicio'),
             'familiar_servicio_parentesco' => $this->request->getPost('familiar_servicio_parentesco'),
             'victima_crimen' => $this->request->getPost('victima_crimen'),
             'victima_crimen_info' => $this->request->getPost('victima_crimen_info'),
-            'cometido_crimen' => json_encode($this->request->getPost('cometido_crimen')),  // campo JSON
+            'cometido_crimen' => $this->request->getPost('cometido_crimen'),
             'proceso_relacion' => $this->request->getPost('proceso_relacion'),
             'beneficiario_vive_ambos_padres' => $this->request->getPost('beneficiario_vive_ambos_padres'),
             'peticionario_nombre' => $this->request->getPost('peticionario_nombre'),

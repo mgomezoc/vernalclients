@@ -13,9 +13,6 @@ $(function () {
     tplComentarios = $('#tplComentarios').html();
     $modalComentarios = $('#modalComentarios');
 
-    const renderData = Handlebars.compile(tplFormulario)(datos);
-    $('#formulario_admision').html(renderData);
-
     $('.select2').select2({
         placeholder: 'Seleccione una opción',
         theme: 'bootstrap-5'

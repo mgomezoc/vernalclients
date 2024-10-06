@@ -179,6 +179,8 @@ $(function () {
             const sucursal_nombre = $('#cbSucursales option:selected').text();
             formData.sucursal_nombre = sucursal_nombre;
 
+            formData.parientes = formData.parientes.join(',');
+
             if (formData.fuente_informacion) {
                 if ($.isArray(formData.fuente_informacion)) {
                     formData.fuente_informacion = formData.fuente_informacion.join('|');
