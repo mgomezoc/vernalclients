@@ -105,7 +105,7 @@
                                         <div class="row justify-content-center align-content-center">
                                             <label class="col-sm-3 col-form-label">Fecha de consulta:</label>
                                             <div class="col-sm-9">
-                                                <input type="text" name="fecha_creado" value="<?= $fechaActual ?>" class="form-control-plaintext" readonly>
+                                                <input type="text" name="fecha_creado" value="<?= $fechaSimple ?>" class="form-control-plaintext" title='<?= $fechaTitle ?>' readonly>
                                             </div>
                                         </div>
                                     </div>

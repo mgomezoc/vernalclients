@@ -21,12 +21,33 @@ class IntakeController extends BaseController
         $sucursalModel = new SucursalModel();
         $sucursal = $sucursalModel->find($cliente['sucursal']);
 
-        $fechaActual = (new \DateTime())->format('d-m-Y');
+        // Crear un objeto DateTime para la fecha actual en la zona horaria de Dallas
+        $fechaActual = new \DateTime('now', new \DateTimeZone('America/Chicago'));
+
+        // Formato mes-día-año
+        $fechaSimple = $fechaActual->format('m-d-Y');
+
+        // Crear el formateador de fechas con `IntlDateFormatter`
+        $formatter = new \IntlDateFormatter(
+            'es_ES',                     // Locale en español
+            \IntlDateFormatter::FULL,     // Formato completo para la fecha
+            \IntlDateFormatter::NONE,     // No necesitamos formato para la hora
+            'America/Chicago',            // Zona horaria
+            \IntlDateFormatter::GREGORIAN // Calendario
+        );
+
+        // Formatear la fecha descriptiva
+        $fechaTitle = $formatter->format($fechaActual);
+
+        // Opcionalmente, para que la primera letra inicie en mayúsculas
+        $fechaTitle = ucfirst($fechaTitle);
+
 
         $data["title"] = "Inicio";
         $data["cliente"] = $cliente;
         $data["sucursal"] = $sucursal;
-        $data["fechaActual"] = $fechaActual;
+        $data["fechaSimple"] = $fechaSimple;
+        $data['fechaTitle'] = $fechaTitle;
 
         return view("intake", $data);
     }
@@ -47,9 +68,11 @@ class IntakeController extends BaseController
             'a_number' => $this->request->getPost('a_number'),
             'contacto' => $this->request->getPost('contacto'),
             'sucursal' => $this->request->getPost('sucursal'),
+            'sucursal_nombre' => $this->request->getPost('sucursal_nombre'),
             'arrestado' => $this->request->getPost('arrestado'),
             'arrestado_fecha_cargo' => $this->request->getPost('arrestado_fecha_cargo'),
             'arrestado_explicacion' => $this->request->getPost('arrestado_explicacion'),
+            'como_entro_eeuu' => $this->request->getPost('como_entro_eeuu'),
             'tipo_visa' => $this->request->getPost('tipo_visa'),
             'nationality' => $this->request->getPost('nationality'),
             'direccion_cp' => $this->request->getPost('direccion_cp'),
@@ -78,6 +101,10 @@ class IntakeController extends BaseController
             'cometido_crimen' => json_encode($this->request->getPost('cometido_crimen')),  // campo JSON
             'proceso_relacion' => $this->request->getPost('proceso_relacion'),
             'beneficiario_vive_ambos_padres' => $this->request->getPost('beneficiario_vive_ambos_padres'),
+            'peticionario_nombre' => $this->request->getPost('peticionario_nombre'),
+            'peticionario_telefono' => $this->request->getPost('peticionario_telefono'),
+            'peticionario_relacion' => $this->request->getPost('peticionario_relacion'),
+            'peticionario_direccion' => $this->request->getPost('peticionario_direccion'),
             'fecha_consulta' => date('Y-m-d H:i:s'),
         ];
 

@@ -176,6 +176,9 @@ $(function () {
             const $frm = $(this);
             let formData = $frm.serializeObject();
 
+            const sucursal_nombre = $('#cbSucursales option:selected').text();
+            formData.sucursal_nombre = sucursal_nombre;
+
             if (formData.fuente_informacion) {
                 if ($.isArray(formData.fuente_informacion)) {
                     formData.fuente_informacion = formData.fuente_informacion.join('|');
@@ -241,13 +244,14 @@ $(function () {
                 lawFirmLocationID: formData.sucursal
             };
 
-            console.log(dataCliente, formData);
+            console.log({ dataCliente, formData });
 
             if ($frm.valid()) {
                 guardarIntake(formData).then(function (r) {
                     if (!r.success) {
                         swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
+                        return false;
                         const idPago = r.id_pago;
 
                         addClient(dataCliente, idPago);

@@ -72,7 +72,7 @@
                         <tr>
                             <th data-field="id_pago">ID</th>
                             <th data-field="nombre_cliente">Cliente</th>
-                            <th data-field="nombre_usuario">Usuario</th>
+                            <th data-field="nombre_usuario" data-visible="false">Usuario</th>
                             <th data-field="monto">Monto</th>
                             <th data-field="forma_pago">Forma de Pago</th>
                             <th data-field="estatus_pago">Estatus</th>
