@@ -20,6 +20,88 @@ $(function () {
 
     Fancybox.bind('[data-fancybox]', {});
 
+    //INTAKE
+    $('.flatpickr').flatpickr({
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'm-d-Y',
+        allowInput: true
+    });
+
+    cargarSucursales(formulario.sucursal);
+
+    $('#btnEditar').on('click', function () {
+        $('#formularioAdmision').find('input, textarea').prop('readonly', false);
+        $('.select2, .flatpickr').prop('disabled', false);
+        $('#formularioAdmision').find('input, textarea, select').prop('disabled', false);
+
+        $('#btnGuardar').removeClass('d-none');
+        $(this).addClass('d-none');
+    });
+
+    $('#formularioAdmision').on('submit', async function (e) {
+        e.preventDefault();
+        const $frm = $(this);
+        const formData = $frm.serializeObject();
+        const sucursal_nombre = $('#cbSucursales option:selected').text();
+        formData.sucursal_nombre = sucursal_nombre;
+
+        if (formData.fuente_informacion) {
+            if ($.isArray(formData.fuente_informacion)) {
+                formData.fuente_informacion = formData.fuente_informacion.join('|');
+            }
+        } else {
+            formData.fuente_informacion = '';
+        }
+
+        $frm.find('input, textarea, button').attr('disabled', true);
+
+        Swal.fire({
+            title: 'Actualizando formulario',
+            text: 'Por favor, espere mientras procesamos su solicitud...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+            const resultado = await actualizarIntake(formData);
+
+            Swal.close();
+
+            if (!resultado.success) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: resultado.message,
+                    confirmButtonText: 'Entendido'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Actualización exitosa',
+                    text: resultado.message,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    location.reload();
+                });
+            }
+        } catch (error) {
+            Swal.close();
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error inesperado',
+                text: 'Ocurrió un problema al procesar su solicitud. Intente nuevamente más tarde.',
+                confirmButtonText: 'Entendido'
+            });
+        } finally {
+            $frm.find('input, textarea, button').attr('disabled', false);
+        }
+    });
+
     // Evento para enviar encuesta
     $('.btnEncuesta').on('click', function () {
         showSweetAlert('success', 'Se ha enviado la encuesta.');
@@ -330,11 +412,63 @@ async function actualizarCliente(data) {
     });
 }
 
+async function actualizarIntake(formData) {
+    return ajaxCall({
+        type: 'post',
+        url: `${baseUrl}intake/actualizar`,
+        data: formData,
+        dataType: 'json'
+    });
+}
+
 function showSweetAlert(type, message) {
     swal.fire({
         icon: type,
         title: message,
         showConfirmButton: true,
         timer: 2000
+    });
+}
+
+function cargarSucursales(sucursalSeleccionada = '') {
+    $.ajax({
+        url: `${baseUrl}api/lawFirmLocations`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            var $select = $('#cbSucursales');
+            $select.empty();
+
+            // Agregamos la opción por defecto
+            $select.append($('<option>', { value: '', text: 'Seleccione una sucursal' }));
+
+            // Obtenemos los datos y llenamos el select
+            const data = response.totalCount > 0 ? response.data : [];
+            $.each(data, function (i, option) {
+                $select.append(
+                    $('<option>', {
+                        value: option.lawFirmLocationID,
+                        text: option.name
+                    })
+                );
+            });
+
+            // Inicializamos select2
+            $select.select2({
+                placeholder: 'Seleccione una opción',
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Seleccionamos la sucursal si hay un ID válido
+            if (sucursalSeleccionada) {
+                $select.val(sucursalSeleccionada).trigger('change');
+            }
+
+            $select.prop('disabled', true);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al cargar las sucursales: ' + error);
+        }
     });
 }

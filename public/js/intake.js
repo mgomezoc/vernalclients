@@ -143,7 +143,12 @@ $(function () {
         }
     });
 
-    $('.flatpickr').flatpickr();
+    $('.flatpickr').flatpickr({
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'm-d-Y',
+        allowInput: true
+    });
 
     $('.muestraMasInformacion').on('change', function () {
         const $ck = $(this);

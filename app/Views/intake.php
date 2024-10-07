@@ -519,7 +519,6 @@
                                 <select id="horarioContacto" name="horario_contacto" class="form-select" required>
                                     <option value="manana" selected>Mañana (9:00 AM - 12:00 PM)</option>
                                     <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
-                                    <!-- Puedes agregar más opciones de horarios según tus necesidades -->
                                 </select>
                             </div>
 

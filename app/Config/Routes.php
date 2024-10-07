@@ -34,7 +34,8 @@ $routes->post('salir', 'AccountController::salir');
 // Intake
 $routes->get('intake/(:segment)', 'IntakeController::index/$1');
 $routes->post('intake/guardar', 'IntakeController::guardar');
-$routes->post('intake/actualizarPago/(:num)', 'IntakeController::actualizarPago/$1'); // Nueva ruta para actualizar pago
+$routes->post('intake/actualizarPago/(:num)', 'IntakeController::actualizarPago/$1');
+$routes->post('intake/actualizar', 'IntakeController::actualizar');
 
 // Encuestas
 $routes->get('encuesta/(:segment)', 'EncuestaController::index/$1');

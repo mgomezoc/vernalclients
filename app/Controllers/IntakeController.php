@@ -67,14 +67,19 @@ class IntakeController extends BaseController
             'proceso' => $this->request->getPost('proceso'),
             'a_number' => $this->request->getPost('a_number'),
             'contacto' => $this->request->getPost('contacto'),
+            'horario_contacto' => $this->request->getPost('horario_contacto'),
             'sucursal' => $this->request->getPost('sucursal'),
             'sucursal_nombre' => $this->request->getPost('sucursal_nombre'),
+            'es_primera_consulta' => $this->request->getPost('es_primera_consulta'),
+            'fecha_ultima_consulta' => $this->request->getPost('fecha_ultima_consulta'),
             'arrestado' => $this->request->getPost('arrestado'),
             'arrestado_fecha_cargo' => $this->request->getPost('arrestado_fecha_cargo'),
             'arrestado_explicacion' => $this->request->getPost('arrestado_explicacion'),
             'como_entro_eeuu' => $this->request->getPost('como_entro_eeuu'),
             'tipo_visa' => $this->request->getPost('tipo_visa'),
             'nationality' => $this->request->getPost('nationality'),
+            'radio-nacionalidad' => $this->request->getPost('radio-nacionalidad'),
+            'segunda_nacionalidad' => $this->request->getPost('segunda_nacionalidad'),
             'direccion_cp' => $this->request->getPost('direccion_cp'),
             'direccion_pais' => $this->request->getPost('direccion_pais'),
             'motivo_visita' => $this->request->getPost('motivo_visita'),
@@ -133,6 +138,50 @@ class IntakeController extends BaseController
         }
 
         return $this->response->setJSON(['success' => true, 'message' => 'Se actualizó correctamente el estatus del cliente.', 'id_pago' => $idPago]);
+    }
+
+    public function actualizar()
+    {
+        $intakeModel = new IntakeModel();
+        $clienteModel = new ClienteModel();
+
+        // Obtener el ID del cliente
+        $idCliente = $this->request->getPost('id_cliente');
+
+        // Verificar si el cliente existe
+        if (!$clienteModel->find($idCliente)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Cliente no encontrado.'
+            ]);
+        }
+
+        // Filtrar solo los campos permitidos (los que se definieron en el modelo IntakeModel)
+        $allowedFields = $intakeModel->allowedFields;
+        $datosActualizados = $this->request->getPost(array_intersect(array_keys($this->request->getPost()), $allowedFields));
+
+        // Verificar si hay datos para actualizar
+        if (empty($datosActualizados)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No se proporcionaron datos para actualizar.'
+            ]);
+        }
+
+        // Intentar actualizar los datos en la base de datos
+        $actualizado = $intakeModel->actualizarFormularioPorCliente($idCliente, $datosActualizados);
+
+        if ($actualizado) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Formulario de admisión actualizado correctamente.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error al actualizar el formulario de admisión.'
+            ]);
+        }
     }
 
     public function actualizarPago($idPago)
