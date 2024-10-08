@@ -140,21 +140,34 @@ class ClientesController extends BaseController
     public function obtenerClientesRecepcion()
     {
         $clienteModel = new ClienteModel();
+
+        // Obtener los datos enviados desde el cliente (AJAX o POST)
         $postData = json_decode($this->request->getBody(), true);
 
-        $limit = $postData['limit'] ?? 10;
-        $offset = $postData['offset'] ?? 0;
+        // Definir los parámetros para los filtros y la paginación
+        $limit = $postData['limit'] ?? 10; // número de resultados por página (por defecto 10)
+        $offset = $postData['offset'] ?? 0; // página actual o desplazamiento
         $filtros = [
-            'tipo' => $postData['tipo'] ?? '',
-            'sucursal' => $postData['sucursal'] ?? '',
-            'estatus' => $postData['estatus'] !== '' ? $postData['estatus'] : [2, 4, 8], // Si 'estatus' está vacío, usar [2, 4, 8]
-            'periodo' => $postData['periodo'] ?? ''
+            'tipo' => $postData['tipo'] ?? '', // tipo de consulta
+            'sucursal' => $postData['sucursal'] ?? '', // sucursal seleccionada
+            'estatus' => isset($postData['estatus']) && $postData['estatus'] !== '' ? $postData['estatus'] : [2, 4, 8], // Si 'estatus' está vacío, usar [2, 4, 8]
+            'periodo' => $postData['periodo'] ?? '', // rango de fechas
+            'search' => $postData['search'] ?? '', // filtro de búsqueda por nombre o teléfono
         ];
 
+        // Obtener los clientes paginados con los filtros aplicados
         $result = $clienteModel->obtenerClientesPaginados($limit, $offset, $filtros);
 
+        // Determinar si los clientes pueden crear un caso según su estatus
+        $estatusPermitidos = [2, 3, 8]; // Intake, Asignado, Por Asignar
+        foreach ($result['rows'] as &$cliente) {
+            $cliente['puedeCrearCaso'] = in_array($cliente['estatus'], $estatusPermitidos);
+        }
+
+        // Retornar la respuesta en formato JSON
         return $this->response->setJSON($result);
     }
+
 
     public function obtenerClientesAbogado()
     {
