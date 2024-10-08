@@ -65,6 +65,7 @@ class IntakeController extends BaseController
         $datosAdmision = [
             'id_cliente' => $idCliente,
             'proceso' => $this->request->getPost('proceso'),
+            'posee_a_number' => $this->request->getPost('posee_a_number'),
             'a_number' => $this->request->getPost('a_number'),
             'contacto' => $this->request->getPost('contacto'),
             'horario_contacto' => $this->request->getPost('horario_contacto'),
@@ -89,6 +90,9 @@ class IntakeController extends BaseController
             'direccion_telefono' => $this->request->getPost('direccion_telefono'),
             'direccion_email' => $this->request->getPost('direccion_email'),
             'beneficiario_nombre' => $this->request->getPost('beneficiario_nombre'),
+            'beneficiario_ciudad' => $this->request->getPost('beneficiario_ciudad'),
+            'beneficiario_estado' => $this->request->getPost('beneficiario_estado'),
+            'beneficiario_pais' => $this->request->getPost('beneficiario_pais'),
             'beneficiario_genero' => $this->request->getPost('beneficiario_genero'),
             'beneficiario_fecha_nacimiento' => $this->request->getPost('beneficiario_fecha_nacimiento'),
             'beneficiario_estado_civil' => $this->request->getPost('beneficiario_estado_civil'),

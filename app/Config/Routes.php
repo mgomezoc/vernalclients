@@ -31,6 +31,8 @@ $routes->get('login', 'AccountController::login');
 $routes->post('login', 'AccountController::acceder');
 $routes->post('salir', 'AccountController::salir');
 
+$routes->get('migracion/migrar-formularios', 'MigracionController::migrarFormularios');
+
 // Intake
 $routes->get('intake/(:segment)', 'IntakeController::index/$1');
 $routes->post('intake/guardar', 'IntakeController::guardar');

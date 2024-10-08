@@ -198,6 +198,14 @@ $(function () {
                 formData.fuente_informacion = '';
             }
 
+            if (formData.cometido_crimen) {
+                if ($.isArray(formData.cometido_crimen)) {
+                    formData.cometido_crimen = formData.cometido_crimen.join(',');
+                }
+            } else {
+                formData.cometido_crimen = '';
+            }
+
             formData.beneficiario_nombre = `${formData.name1} ${formData.name2} ${formData.name3}`;
 
             const sexID = formData.beneficiario_genero == 'Masculino' ? 0 : 1;
