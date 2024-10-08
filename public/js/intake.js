@@ -216,7 +216,7 @@ $(function () {
                 //"alienNumber": "string",
                 birthText: formData.beneficiario_fecha_nacimiento,
                 birthCity: formData.beneficiario_ciudad,
-                birthState: formData.beneficiario_estado,
+                birthState: formData.direccion_estado,
                 birthCountry: formData.beneficiario_pais,
                 dayPhone: formData.direccion_telefono,
                 eveningPhone: formData.direccion_telefono,

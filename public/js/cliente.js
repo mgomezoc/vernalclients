@@ -21,6 +21,18 @@ $(function () {
     Fancybox.bind('[data-fancybox]', {});
 
     //INTAKE
+    const EstatusMigratorio = [
+        { label: 'Ciudadano/a' },
+        { label: 'Residente Permanente' },
+        { label: 'Visa de Trabajo' },
+        { label: 'Visa de Estudiante' },
+        { label: 'Refugiado/a o Asilado/a' },
+        { label: 'Sin Documentos' },
+        { label: 'En Proceso de Naturalización' },
+        { label: 'Otro Estatus Migratorio' },
+        { label: 'Desconocido' }
+    ];
+
     $('.flatpickr').flatpickr({
         dateFormat: 'Y-m-d',
         altInput: true,
@@ -29,6 +41,20 @@ $(function () {
     });
 
     cargarSucursales(formulario.sucursal);
+
+    // Construir un fragmento de HTML en lugar de manipular el DOM en cada iteración
+    let options = '';
+
+    // Iterar sobre el array EstatusMigratorio
+    EstatusMigratorio.forEach(function (option) {
+        // Determinar si la opción actual debe estar seleccionada
+        const selected = formulario.estatus_migratorio_actual === option.label ? 'selected' : '';
+        // Añadir la opción al fragmento de HTML
+        options += `<option value="${option.label}" ${selected}>${option.label}</option>`;
+    });
+
+    // Agregar todas las opciones al select de una sola vez
+    $('.cbEstatusMigratorio').html(options);
 
     $('#btnEditar').on('click', function () {
         $('#formularioAdmision').find('input, textarea').prop('readonly', false);
@@ -39,11 +65,82 @@ $(function () {
         $(this).addClass('d-none');
     });
 
+    $('#comoEntroEeuu').on('change', function () {
+        const comoEntro = $(this).val();
+
+        if (comoEntro == 'Con Visa') {
+            $('#container-visa').show();
+        } else {
+            $('#container-visa').hide();
+        }
+    });
+
+    $('#solicitudMigratoria').on('change', function () {
+        if ($(this).val() === 'Si') {
+            $('#container-peticionado').show();
+            $('#container-peticionado textarea').prop('disabled', false);
+        } else {
+            $('#container-peticionado').hide();
+            $('#container-peticionado textarea').prop('disabled', true).val(''); // Limpiar el campo si se oculta
+        }
+    });
+
+    $('#procesoMigracion').on('change', function () {
+        if ($(this).val() === 'Si') {
+            $('#container-procesoMigracion').show();
+            $('#container-procesoMigracion textarea').prop('disabled', false);
+        } else {
+            $('#container-procesoMigracion').hide();
+            $('#container-procesoMigracion textarea').prop('disabled', true).val(''); // Limpiar el campo si se oculta
+        }
+    });
+
+    $('#familiarServicio').on('change', function () {
+        if ($(this).val() === 'Si') {
+            $('#container-servicioMilitar').show();
+            $('#familiarServicioParentesco').prop('disabled', false);
+        } else {
+            $('#container-servicioMilitar').hide();
+            $('#familiarServicioParentesco').prop('disabled', true).val(''); // Limpiar el campo si se oculta
+        }
+    });
+
+    $('#victimaCrimen').on('change', function () {
+        if ($(this).val() === 'Si') {
+            $('#container-victimaCrimen').show();
+            $('#container-victimaCrimen textarea').prop('disabled', false);
+        } else {
+            $('#container-victimaCrimen').hide();
+            $('#container-victimaCrimen textarea').prop('disabled', true).val(''); // Limpiar el campo si se oculta
+        }
+    });
+
+    $('#arrestado').on('change', function () {
+        if ($(this).val() === 'Si') {
+            $('#container-arresto').show();
+            $('#container-arresto textarea').prop('disabled', false);
+            $('#container-explicacion').show();
+            $('#container-explicacion textarea').prop('disabled', false);
+        } else {
+            $('#container-arresto').hide();
+            $('#container-arresto textarea').prop('disabled', true).val('');
+            $('#container-explicacion').hide();
+            $('#container-explicacion textarea').prop('disabled', true).val('');
+        }
+    });
+
     $('#formularioAdmision').on('submit', async function (e) {
         e.preventDefault();
         const $frm = $(this);
         const formData = $frm.serializeObject();
         const sucursal_nombre = $('#cbSucursales option:selected').text();
+
+        if (!Array.isArray(formData.parientes)) {
+            formData.parientes = [formData.parientes];
+        }
+
+        formData.parientes = formData.parientes.join(',');
+
         formData.sucursal_nombre = sucursal_nombre;
 
         if (formData.fuente_informacion) {
@@ -52,6 +149,14 @@ $(function () {
             }
         } else {
             formData.fuente_informacion = '';
+        }
+
+        if (formData.cometido_crimen) {
+            if ($.isArray(formData.cometido_crimen)) {
+                formData.cometido_crimen = formData.cometido_crimen.join(',');
+            }
+        } else {
+            formData.cometido_crimen = '';
         }
 
         $frm.find('input, textarea, button').attr('disabled', true);

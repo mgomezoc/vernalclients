@@ -71,7 +71,7 @@ class IntakeController extends BaseController
             'sucursal' => $this->request->getPost('sucursal'),
             'sucursal_nombre' => $this->request->getPost('sucursal_nombre'),
             'es_primera_consulta' => $this->request->getPost('es_primera_consulta'),
-            'fecha_ultima_consulta' => $this->request->getPost('fecha_ultima_consulta'),
+            'fecha_ultima_consulta' => $this->request->getPost('fecha_ultima_consulta') ?: null,  // Corrección aquí
             'arrestado' => $this->request->getPost('arrestado'),
             'arrestado_fecha_cargo' => $this->request->getPost('arrestado_fecha_cargo'),
             'arrestado_explicacion' => $this->request->getPost('arrestado_explicacion'),
@@ -85,6 +85,7 @@ class IntakeController extends BaseController
             'motivo_visita' => $this->request->getPost('motivo_visita'),
             'direccion_calle_numero' => $this->request->getPost('direccion_calle_numero'),
             'direccion_ciudad' => $this->request->getPost('direccion_ciudad'),
+            'direccion_estado' => $this->request->getPost('direccion_estado'),
             'direccion_telefono' => $this->request->getPost('direccion_telefono'),
             'direccion_email' => $this->request->getPost('direccion_email'),
             'beneficiario_nombre' => $this->request->getPost('beneficiario_nombre'),
@@ -159,6 +160,11 @@ class IntakeController extends BaseController
         // Filtrar solo los campos permitidos (los que se definieron en el modelo IntakeModel)
         $allowedFields = $intakeModel->allowedFields;
         $datosActualizados = $this->request->getPost(array_intersect(array_keys($this->request->getPost()), $allowedFields));
+
+        // Verificar si la fecha_ultima_consulta viene vacía y asignar null si es necesario
+        if (isset($datosActualizados['fecha_ultima_consulta']) && empty($datosActualizados['fecha_ultima_consulta'])) {
+            $datosActualizados['fecha_ultima_consulta'] = null;
+        }
 
         // Verificar si hay datos para actualizar
         if (empty($datosActualizados)) {

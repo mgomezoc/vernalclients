@@ -28,6 +28,7 @@ class IntakeModel extends Model
         'radio-nacionalidad',
         'segunda_nacionalidad',
         'direccion_cp',
+        'direccion_estado',
         'direccion_pais',
         'motivo_visita',
         'direccion_calle_numero',
