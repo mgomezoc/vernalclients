@@ -85,16 +85,7 @@
                     <h5 class="fs-4 mb-4">INFORMACIÓN DEL BENEFICIARIO(A):</h5>
 
                     <div class="row mb-4">
-                        <div class="form-check form-check-inline">
-                            <input type="radio" id="aNumberSi" name="a_number" class="form-check-input" value="Si"
-                                <?= set_radio('a_number', 'Si', $formulario['a_number'] == 'Si') ?> disabled>
-                            <label class="form-check-label" for="aNumberSi">Sí</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" id="aNumberNo" name="a_number" class="form-check-input" value="No"
-                                <?= set_radio('a_number', 'No', $formulario['a_number'] == 'No') ?> disabled>
-                            <label class="form-check-label" for="aNumberNo">No</label>
-                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label" for="nationality">Ciudadanía:</label>
                             <input type="text" name="nationality" class="form-control" value="<?= $formulario['nationality'] ?>" disabled>

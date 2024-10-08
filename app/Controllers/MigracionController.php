@@ -81,11 +81,14 @@ class MigracionController extends BaseController
             // Determinar el valor de "es_primera_consulta" basado en "fecha_ultima_consulta"
             $esPrimeraConsulta = $fechaUltimaConsulta ? 'No' : 'Si';
 
+            // Asignar el valor por defecto a "posee_a_number" si está vacío o es null
+            $poseeANumber = $datosAdmision['posee_a_number'] ?? 'No';
+
             $intakeData = [
                 'id_cliente' => $idCliente,
                 'fecha_consulta' => $formulario['fecha_consulta'],
                 'proceso' => $datosAdmision['proceso'] ?? null,
-                'posee_a_number' => $datosAdmision['posee_a_number'] ?? null,
+                'posee_a_number' => $poseeANumber,
                 'a_number' => $datosAdmision['a_number'] ?? null,
                 'contacto' => $datosAdmision['contacto'] ?? null,
                 'horario_contacto' => $datosAdmision['horario_contacto'] ?? null,
