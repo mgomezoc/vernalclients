@@ -184,6 +184,10 @@ $(function () {
             const sucursal_nombre = $('#cbSucursales option:selected').text();
             formData.sucursal_nombre = sucursal_nombre;
 
+            if (!Array.isArray(formData.parientes)) {
+                formData.parientes = [formData.parientes];
+            }
+
             formData.parientes = formData.parientes.join(',');
 
             if (formData.fuente_informacion) {

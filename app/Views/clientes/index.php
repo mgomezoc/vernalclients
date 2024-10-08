@@ -62,7 +62,7 @@
 
 
         <div class="section-table">
-            <div class="table-responsive">
+            <div class="border">
                 <table id="tablaClientes" class="table table-striped table-sm table-linklaw">
                     <thead>
                         <tr>

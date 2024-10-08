@@ -303,6 +303,9 @@ body {
   text-align: center;
   text-transform: uppercase;
 }
+.fixed-table-body {
+  overflow: visible !important;
+}
 .svg-inline--fa {
   animation: fadeIn 0.2s linear;
 }
