@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intake_<?= $cliente['clientID'] ?></title>
+    <title>Intake - <?= $formulario['beneficiario_nombre'] ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,11 +171,19 @@
             <div class="row">
                 <div class="col-md-6 data-cell">
                     <div class="data-label">Fecha de consulta:</div>
-                    <div class="data-text"><?= isset($formulario['fecha_creado']) ? esc($formulario['fecha_creado']) : 'N/A' ?></div>
+                    <div class="data-text"><?= isset($formulario['fecha_consulta']) ? esc($formulario['fecha_consulta']) : 'N/A' ?></div>
+                </div>
+                <div class="col-md-6 data-cell">
+                    <div class="data-label">Sucursal:</div>
+                    <div class="data-text"><?= isset($formulario['sucursal_nombre']) ? esc($formulario['sucursal_nombre']) : 'N/A' ?></div>
                 </div>
                 <div class="col-md-6 data-cell">
                     <div class="data-label">¿Es su primera consulta aquí?</div>
                     <div class="data-text"><?= isset($formulario['es_primera_consulta']) ? esc($formulario['es_primera_consulta']) : 'N/A' ?></div>
+                </div>
+                <div class="col-md-6 data-cell">
+                    <div class="data-label">¿Recuerda la última fecha de su consulta?</div>
+                    <div class="data-text"><?= isset($formulario['fecha_ultima_consulta']) ? esc($formulario['fecha_ultima_consulta']) : 'N/A' ?></div>
                 </div>
                 <div class="col-md-12 data-cell">
                     <div class="data-label">¿Cómo se enteró de nuestro servicio?</div>
@@ -208,6 +216,10 @@
                     <div class="data-text"><?= isset($formulario['beneficiario_genero']) ? esc($formulario['beneficiario_genero']) : 'N/A' ?></div>
                 </div>
                 <div class="col-md-6 data-cell">
+                    <div class="data-label">Estado Civil</div>
+                    <div class="data-text"><?= isset($formulario['beneficiario_estado_civil']) ? esc($formulario['beneficiario_estado_civil']) : 'N/A' ?></div>
+                </div>
+                <div class="col-md-6 data-cell">
                     <div class="data-label">Fecha de nacimiento</div>
                     <div class="data-text"><?= isset($formulario['beneficiario_fecha_nacimiento']) ? esc($formulario['beneficiario_fecha_nacimiento']) : 'N/A' ?></div>
                 </div>
@@ -221,7 +233,7 @@
                 </div>
                 <div class="col-md-6 data-cell">
                     <div class="data-label">Ciudad</div>
-                    <div class="data-text"><?= isset($formulario['direccion_cuidad']) ? esc($formulario['direccion_cuidad']) : 'N/A' ?></div>
+                    <div class="data-text"><?= isset($formulario['direccion_ciudad']) ? esc($formulario['direccion_ciudad']) : 'N/A' ?></div>
                 </div>
                 <div class="col-md-6 data-cell">
                     <div class="data-label">País</div>
@@ -246,6 +258,10 @@
                 <div class="col-md-6 data-cell">
                     <div class="data-label">Horario de contacto preferido</div>
                     <div class="data-text"><?= isset($formulario['horario_contacto']) ? esc($formulario['horario_contacto']) : 'N/A' ?></div>
+                </div>
+                <div class="col-md-6 data-cell">
+                    <div class="data-label">Vive con ambos padres</div>
+                    <div class="data-text"><?= isset($formulario['beneficiario_vive_ambos_padres']) ? esc($formulario['beneficiario_vive_ambos_padres']) : 'N/A' ?></div>
                 </div>
             </div>
 
@@ -282,6 +298,10 @@
                 <div class="col-md-12 data-cell">
                     <div class="data-label">¿Está actualmente en un proceso de inmigración?</div>
                     <div class="data-text"><?= isset($formulario['proceso_migracion']) ? esc($formulario['proceso_migracion']) : 'N/A' ?></div>
+                </div>
+                <div class="col-md-12 data-cell">
+                    <div class="data-label">Relación en el proceso</div>
+                    <div class="data-text"><?= isset($formulario['proceso_relacion']) ? esc($formulario['proceso_relacion']) : 'N/A' ?></div>
                 </div>
                 <?php if (isset($formulario['proceso_migracion_explicacion'])): ?>
                     <div class="col-md-12 data-cell">

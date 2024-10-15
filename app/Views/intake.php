@@ -382,7 +382,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Estado de Nacimiento</label>
-                                    <input type="text" class="form-control" name="direccion_estado" required>
+                                    <input type="text" class="form-control" name="beneficiario_estado" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">País de Nacimiento</label>
@@ -458,6 +458,10 @@
                                     <div class="mb-3">
                                         <label class="form-label">Ciudad</label>
                                         <input type="text" class="form-control" name="direccion_ciudad" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Estado</label>
+                                        <input type="text" class="form-control" name="direccion_estado" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">País</label>

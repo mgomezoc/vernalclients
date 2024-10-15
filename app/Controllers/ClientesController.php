@@ -925,10 +925,10 @@ class ClientesController extends BaseController
     public function imprimir($idCliente)
     {
         $clienteModel = new ClienteModel();
-        $formularioAdmisionModel = new FormularioAdmisionModel();
+        $formularioAdmisionModel = new IntakeModel();
 
         $cliente = $clienteModel->find($idCliente);
-        $formulario = $formularioAdmisionModel->obtenerPorIdCliente($idCliente);
+        $formulario = $formularioAdmisionModel->obtenerFormularioPorCliente($idCliente);
 
         // Verifica si el formulario tiene los datos necesarios
         if (!$formulario) {
@@ -936,7 +936,7 @@ class ClientesController extends BaseController
         }
 
         $data['cliente'] = $cliente;
-        $data['formulario'] = json_decode($formulario['datos_admision'], true); // Decodifica el JSON
+        $data['formulario'] = $formulario;
 
         return view('clientes/imprimir_admision', $data);
     }
