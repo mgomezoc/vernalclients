@@ -520,7 +520,7 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
-        $data['scripts'] .= "<script src='" . base_url("js/cliente.js") . "'></script>";
+        $data['scripts'] .= "<script src='" . base_url("js/cliente.js?v=1.0.1") . "'></script>";
 
         $usuario = session()->get('usuario');
         if ($usuario) {
