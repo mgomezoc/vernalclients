@@ -175,9 +175,8 @@ $(function () {
     });
 
     $('#frmIntake')
-        .on('submit', function (e) {
+        .on('submit', async function (e) {
             e.preventDefault();
-
             const $frm = $(this);
             let formData = $frm.serializeObject();
 
@@ -266,7 +265,7 @@ $(function () {
             console.log({ dataCliente, formData });
 
             if ($frm.valid()) {
-                guardarIntake(formData).then(function (r) {
+                guardarIntake(formData).then(async function (r) {
                     if (!r.success) {
                         swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
@@ -276,6 +275,18 @@ $(function () {
 
                         $('#formContainer').hide();
                         $('#mensajeCorrecto').fadeIn();
+
+                        const formDataFile = new FormData($frm[0]);
+                        try {
+                            const response = await subirArchivo(formDataFile);
+                            if (response.success) {
+                                showSweetAlert('success', 'Archivo subido exitosamente.');
+                            } else {
+                                showSweetAlert('error', response.message || 'Error al subir el archivo.');
+                            }
+                        } catch (error) {
+                            showSweetAlert('error', 'Ocurrió un error inesperado al subir el archivo.');
+                        }
                     }
                 });
             }
@@ -527,6 +538,17 @@ function actualizarClientID(id_cliente, clientID) {
         type: 'post',
         url: baseUrl + 'clientes/clientid',
         data: data,
+        dataType: 'json'
+    });
+}
+
+async function subirArchivo(formData) {
+    return await ajaxCall({
+        type: 'POST',
+        url: `${baseUrl}clientes/subir-archivos-expediente/${Cliente.id_cliente}`,
+        data: formData,
+        processData: false,
+        contentType: false,
         dataType: 'json'
     });
 }

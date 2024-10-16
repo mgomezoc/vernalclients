@@ -28,13 +28,15 @@ $(function () {
         allowInput: true
     });
 
-    cargarPaisesDireccion(formulario.direccion_pais, 'cbDireccionPais');
-    cargarTiposVisa(formulario.tipo_visa, 'cbTipoVisa');
-    cargarEstatusMigratorio(formulario.estatus_migratorio_actual, 'cbEstatusMigratorio');
-    cargarParentescos(formulario.familiar_servicio_parentesco, 'cbFamiliarServicioParentesco');
-    cargarSucursales(formulario.sucursal);
-    cargarPaises(formulario.nationality, `cbCiudadania`);
-    cargarNacionalidades(formulario.segunda_nacionalidad, `cbSegundaNacionalidad`);
+    if (formulario) {
+        cargarPaisesDireccion(formulario.direccion_pais, 'cbDireccionPais');
+        cargarTiposVisa(formulario.tipo_visa, 'cbTipoVisa');
+        cargarEstatusMigratorio(formulario.estatus_migratorio_actual, 'cbEstatusMigratorio');
+        cargarParentescos(formulario.familiar_servicio_parentesco, 'cbFamiliarServicioParentesco');
+        cargarSucursales(formulario.sucursal);
+        cargarPaises(formulario.nationality, `cbCiudadania`);
+        cargarNacionalidades(formulario.segunda_nacionalidad, `cbSegundaNacionalidad`);
+    }
 
     $('#btnEditar').on('click', function () {
         $('#formularioAdmision').find('input, textarea').prop('readonly', false);

@@ -835,8 +835,8 @@
                         <!-- Agregar input para adjuntar documentos -->
                         <div class="mb-3 mt-4">
                             <label for="documentosAdjuntos" class="form-label">Adjuntar Documentos</label>
-                            <input type="file" class="form-control" id="documentosAdjuntos" name="documentos[]" multiple>
-                            <small class="text-muted">Puede adjuntar múltiples documentos. (Formatos aceptados: PDF, JPG, PNG)</small>
+                            <input type="file" class="form-control" id="documentosAdjuntos" name="archivo" accept=".pdf,.jpg,.jpeg,.png">
+                            <small class="text-muted">Puede adjuntar un documento en formato PDF, JPG o PNG.</small>
                         </div>
                         <hr>
                         <div class="mt-3 text-center">
@@ -861,6 +861,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js" integrity="sha512-v0vjOquuhHQslRkq1a5BwUIyKSD7ZbgFfQv4jzSBGwbIVTCOs5JQdotZVoRjPRzb9UToTvuP2kdR5CVE4TLgMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="<?= base_url("js/app.js") ?>"></script>
     <script src="<?= base_url("js/intake.js") ?>"></script>
 
 </body>
