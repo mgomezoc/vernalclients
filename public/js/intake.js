@@ -270,7 +270,6 @@ $(function () {
                     if (!r.success) {
                         swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
                     } else {
-                        return false;
                         const idPago = r.id_pago;
 
                         addClient(dataCliente, idPago);

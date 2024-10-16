@@ -28,12 +28,12 @@ $(function () {
         allowInput: true
     });
 
+    cargarPaisesDireccion(formulario.direccion_pais, 'cbDireccionPais');
     cargarTiposVisa(formulario.tipo_visa, 'cbTipoVisa');
     cargarEstatusMigratorio(formulario.estatus_migratorio_actual, 'cbEstatusMigratorio');
     cargarParentescos(formulario.familiar_servicio_parentesco, 'cbFamiliarServicioParentesco');
     cargarSucursales(formulario.sucursal);
     cargarPaises(formulario.nationality, `cbCiudadania`);
-    cargarPaises(formulario.direccion_pais, `cbDireccionPais`);
     cargarNacionalidades(formulario.segunda_nacionalidad, `cbSegundaNacionalidad`);
 
     $('#btnEditar').on('click', function () {
@@ -588,6 +588,44 @@ function cargarTiposVisa(visaSeleccionada = '', selectVisaID = '') {
     // Inicializamos select2 si es necesario
     $select.select2({
         placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5',
+        width: '100%'
+    });
+}
+
+function cargarPaisesDireccion(paisSeleccionado = '', selectPaisID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectPaisID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Array de países predefinido
+    const paises = [{ label: 'EEUU' }, { label: 'Mexico' }, { label: 'Otro' }];
+
+    // Construir el fragmento HTML para las opciones
+    let options = '<option value="" disabled>Seleccione un país</option>'; // Opción por defecto
+
+    paises.forEach(function (option) {
+        const selected = paisSeleccionado === option.label ? 'selected' : '';
+        options += `<option value="${option.label}" ${selected}>${option.label}</option>`;
+    });
+
+    // Seleccionamos el select específico por su ID
+    var $select = $(`#${selectPaisID}`);
+
+    // Validamos que el select exista en el DOM
+    if ($select.length === 0) {
+        console.error(`El select con ID ${selectPaisID} no fue encontrado`);
+        return;
+    }
+
+    // Añadimos todas las opciones de una sola vez
+    $select.html(options);
+
+    // Inicializamos select2 si es necesario
+    $select.select2({
+        placeholder: 'Seleccione un país',
         theme: 'bootstrap-5',
         width: '100%'
     });
