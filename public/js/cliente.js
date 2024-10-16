@@ -21,18 +21,6 @@ $(function () {
     Fancybox.bind('[data-fancybox]', {});
 
     //INTAKE
-    const EstatusMigratorio = [
-        { label: 'Ciudadano/a' },
-        { label: 'Residente Permanente' },
-        { label: 'Visa de Trabajo' },
-        { label: 'Visa de Estudiante' },
-        { label: 'Refugiado/a o Asilado/a' },
-        { label: 'Sin Documentos' },
-        { label: 'En Proceso de Naturalización' },
-        { label: 'Otro Estatus Migratorio' },
-        { label: 'Desconocido' }
-    ];
-
     $('.flatpickr').flatpickr({
         dateFormat: 'Y-m-d',
         altInput: true,
@@ -40,24 +28,13 @@ $(function () {
         allowInput: true
     });
 
+    cargarTiposVisa(formulario.tipo_visa, 'cbTipoVisa');
+    cargarEstatusMigratorio(formulario.estatus_migratorio_actual, 'cbEstatusMigratorio');
+    cargarParentescos(formulario.familiar_servicio_parentesco, 'cbFamiliarServicioParentesco');
     cargarSucursales(formulario.sucursal);
     cargarPaises(formulario.nationality, `cbCiudadania`);
     cargarPaises(formulario.direccion_pais, `cbDireccionPais`);
     cargarNacionalidades(formulario.segunda_nacionalidad, `cbSegundaNacionalidad`);
-
-    // Construir un fragmento de HTML en lugar de manipular el DOM en cada iteración
-    let options = '';
-
-    // Iterar sobre el array EstatusMigratorio
-    EstatusMigratorio.forEach(function (option) {
-        // Determinar si la opción actual debe estar seleccionada
-        const selected = formulario.estatus_migratorio_actual === option.label ? 'selected' : '';
-        // Añadir la opción al fragmento de HTML
-        options += `<option value="${option.label}" ${selected}>${option.label}</option>`;
-    });
-
-    // Agregar todas las opciones al select de una sola vez
-    $('.cbEstatusMigratorio').html(options);
 
     $('#btnEditar').on('click', function () {
         $('#formularioAdmision').find('input, textarea').prop('readonly', false);
@@ -535,6 +512,191 @@ function showSweetAlert(type, message) {
         title: message,
         showConfirmButton: true,
         timer: 2000
+    });
+}
+
+function cargarTiposVisa(visaSeleccionada = '', selectVisaID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectVisaID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Array de tipos de visa predefinido
+    const tiposVisa = [
+        { Propósito: 'Atletas, artistas, animadores', 'Tipo de Visa': 'P' },
+        { Propósito: 'Trabajador australiano – especialidad profesional', 'Tipo de Visa': 'E-3' },
+        { Propósito: 'Tarjeta de Cruce de Frontera: México', 'Tipo de Visa': 'BCC' },
+        { Propósito: 'Visitantes de negocios', 'Tipo de Visa': 'B-1' },
+        { Propósito: 'Tripulación (en servicio a bordo de un barco o un avión en los Estados Unidos)', 'Tipo de Visa': 'D' },
+        { Propósito: 'Diplomáticos y funcionarios de un gobierno extranjero', 'Tipo de Visa': 'A' },
+        { Propósito: 'Empleados domésticos o niñeras (deben ir acompañando a un empleador extranjero)', 'Tipo de Visa': 'B-1' },
+        { Propósito: 'Empleados de una organización internacional designada y OTAN', 'Tipo de Visa': 'G1-G5, NATO' },
+        { Propósito: 'Visitantes de intercambio', 'Tipo de Visa': 'J' },
+        { Propósito: 'Visitantes de intercambio - au pairs', 'Tipo de Visa': 'J-1' },
+        { Propósito: 'Visitantes de intercambio – hijos (menores de 21 años) o cónyuge del titular de una visa J-1', 'Tipo de Visa': 'J-2' },
+        { Propósito: 'Visitantes de intercambio – profesores, investigadores, maestros', 'Tipo de Visa': 'J-1' },
+        { Propósito: 'Visitantes de intercambio – intercambio cultural', 'Tipo de Visa': 'J, Q' },
+        { Propósito: 'Prometido(a)', 'Tipo de Visa': 'K-1' },
+        { Propósito: 'Personal militar y extranjero emplazados en los Estados Unidos', 'Tipo de Visa': 'A-2, NATO1-6' },
+        { Propósito: 'Ciudadanos extranjeros con habilidad extraordinaria en las ciencias, las artes, educación, negocios o atletismo', 'Tipo de Visa': 'O-1' },
+        { Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Chile', 'Tipo de Visa': 'H-1B1' },
+        { Propósito: 'Profesionales del Tratado de Libre Comercio (TLC): Singapur', 'Tipo de Visa': 'H-1B1' },
+        { Propósito: 'Representante de información de medios de comunicación (medios de comunicación, periodistas)', 'Tipo de Visa': 'I' },
+        { Propósito: 'Transferencia de empleados de una compañía', 'Tipo de Visa': 'L' },
+        { Propósito: 'Tratamiento médico', 'Tipo de Visa': 'B-2' },
+        { Propósito: 'Trabajadores profesionales TLCAN (NAFTA): México, Canadá', 'Tipo de Visa': 'TN/TD' },
+        { Propósito: 'Enfermeras que viajan a áreas con escasez de profesionales de la salud', 'Tipo de Visa': 'H-1C' },
+        { Propósito: 'Médicos', 'Tipo de Visa': 'J-1, H-1B' },
+        { Propósito: 'Trabajadores religiosos', 'Tipo de Visa': 'R' },
+        { Propósito: 'Ocupaciones especializadas en campos que requieren un alto conocimiento especializado', 'Tipo de Visa': 'H-1B' },
+        { Propósito: 'Estudiantes – estudiantes académicos y de idioma', 'Tipo de Visa': 'F-1' },
+        { Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa F-1', 'Tipo de Visa': 'F-2' },
+        { Propósito: 'Estudiantes - vocacional', 'Tipo de Visa': 'M-1' },
+        { Propósito: 'Dependientes de estudiantes – dependiente del titular de una visa M-1', 'Tipo de Visa': 'M-2' },
+        { Propósito: 'Trabajadores agrícolas temporales – estacionales', 'Tipo de Visa': 'H-2A' },
+        { Propósito: 'Trabajadores temporales – no agrícolas', 'Tipo de Visa': 'H-2B' },
+        { Propósito: 'Visitantes por turismo, vacaciones, placer', 'Tipo de Visa': 'B-2' },
+        { Propósito: 'Entrenamiento en un programa sin fines de empleo', 'Tipo de Visa': 'H-3' },
+        { Propósito: 'Inversionistas', 'Tipo de Visa': 'E-2' },
+        { Propósito: 'Comerciantes', 'Tipo de Visa': 'E-1' },
+        { Propósito: 'En tránsito en los Estados Unidos', 'Tipo de Visa': 'C' },
+        { Propósito: 'Víctimas del tráfico de personas', 'Tipo de Visa': 'T-1' },
+        { Propósito: 'Renovaciones de visa en los Estados Unidos - A, G, y OTAN', 'Tipo de Visa': 'A1-2, G1-4, NATO1-6' }
+    ];
+
+    // Construir el fragmento HTML para las opciones
+    let options = '<option value="" disabled>Seleccione un tipo de visa</option>'; // Opción por defecto
+
+    tiposVisa.forEach(function (option) {
+        const selected = visaSeleccionada === option['Tipo de Visa'] ? 'selected' : '';
+        options += `<option value="${option['Tipo de Visa']}" ${selected}>${option['Tipo de Visa']} - ${option.Propósito}</option>`;
+    });
+
+    // Seleccionamos el select específico por su ID
+    var $select = $(`#${selectVisaID}`);
+
+    // Validamos que el select exista en el DOM
+    if ($select.length === 0) {
+        console.error(`El select con ID ${selectVisaID} no fue encontrado`);
+        return;
+    }
+
+    // Añadimos todas las opciones de una sola vez
+    $select.html(options);
+
+    // Inicializamos select2 si es necesario
+    $select.select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5',
+        width: '100%'
+    });
+}
+
+function cargarParentescos(parentescoSeleccionado = '', selectParentescoID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectParentescoID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Array Parentescos predefinido
+    const Parentescos = [
+        { label: 'Hijo/a' },
+        { label: 'Esposo/a' },
+        { label: 'Padre/Madre' },
+        { label: 'Hermano/a' },
+        { label: 'Abuelo/a' },
+        { label: 'Nieto/a' },
+        { label: 'Tío/a' },
+        { label: 'Sobrino/a' },
+        { label: 'Primo/a' },
+        { label: 'Yerno/Nuera' },
+        { label: 'Suegro/a' },
+        { label: 'Padrastro/Madrastra' },
+        { label: 'Hermanastro/a' },
+        { label: 'Amigo/a' },
+        { label: 'Colega' },
+        { label: 'Vecino/a' },
+        { label: 'Pareja (no casados)' },
+        { label: 'Novio/a' },
+        { label: 'Compañero/a de cuarto' },
+        { label: 'Otro' }
+    ];
+
+    // Construir el fragmento HTML para las opciones
+    let options = '<option value="" disabled>Seleccione un parentesco</option>'; // Opción por defecto
+
+    Parentescos.forEach(function (option) {
+        const selected = parentescoSeleccionado === option.label ? 'selected' : '';
+        options += `<option value="${option.label}" ${selected}>${option.label}</option>`;
+    });
+
+    // Seleccionamos el select específico por su ID
+    var $select = $(`#${selectParentescoID}`);
+
+    // Validamos que el select exista en el DOM
+    if ($select.length === 0) {
+        console.error(`El select con ID ${selectParentescoID} no fue encontrado`);
+        return;
+    }
+
+    // Añadimos todas las opciones de una sola vez
+    $select.html(options);
+
+    // Inicializamos select2 si es necesario
+    $select.select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5',
+        width: '100%'
+    });
+}
+
+function cargarEstatusMigratorio(estatusSeleccionado = '', selectEstatusID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectEstatusID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Array EstatusMigratorio predefinido
+    const EstatusMigratorio = [
+        { label: 'Ciudadano/a' },
+        { label: 'Residente Permanente' },
+        { label: 'Visa de Trabajo' },
+        { label: 'Visa de Estudiante' },
+        { label: 'Refugiado/a o Asilado/a' },
+        { label: 'Sin Documentos' },
+        { label: 'En Proceso de Naturalización' },
+        { label: 'Otro Estatus Migratorio' },
+        { label: 'Desconocido' }
+    ];
+
+    // Construir el fragmento HTML para las opciones
+    let options = '<option value="" disabled>Seleccione un estatus migratorio</option>'; // Opción por defecto
+
+    EstatusMigratorio.forEach(function (option) {
+        const selected = estatusSeleccionado === option.label ? 'selected' : '';
+        options += `<option value="${option.label}" ${selected}>${option.label}</option>`;
+    });
+
+    // Seleccionamos el select específico por su ID
+    var $select = $(`#${selectEstatusID}`);
+
+    // Validamos que el select exista en el DOM
+    if ($select.length === 0) {
+        console.error(`El select con ID ${selectEstatusID} no fue encontrado`);
+        return;
+    }
+
+    // Añadimos todas las opciones de una sola vez
+    $select.html(options);
+
+    // Inicializamos select2 si es necesario
+    $select.select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5',
+        width: '100%'
     });
 }
 

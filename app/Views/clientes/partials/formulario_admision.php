@@ -5,6 +5,9 @@
             <a href="<?= site_url('clientes/imprimir/' . $cliente['id_cliente']) ?>" class="btn btn-outline-light me-2">
                 <i class="fa-solid fa-print"></i> Imprimir
             </a>
+            <a href="<?= site_url('intake/' . $cliente['slug']) ?>" class="btn btn-outline-warning me-2" target="_blank">
+                <i class="fa-duotone fa-solid fa-arrow-up-right-from-square"></i> Intake
+            </a>
             <button id="btnEditar" class="btn btn-outline-info me-2">
                 <i class="fa-solid fa-edit"></i> Editar
             </button>
@@ -242,15 +245,17 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label class="form-label" for="como_entro_eeuu">¿Cómo entró a EE.UU.?</label>
-                            <select id="comoEntroEeuu" name="como_entro_eeuu" class="form-select" disabled>
+                            <select id="comoEntroEeuu" name="como_entro_eeuu" class="form-select select2" disabled>
                                 <option value="Con Visa" <?= set_select('como_entro_eeuu', 'Con Visa', $formulario['como_entro_eeuu'] == 'Con Visa') ?>>Con Visa</option>
                                 <option value="Sin Visa" <?= set_select('como_entro_eeuu', 'Sin Visa', $formulario['como_entro_eeuu'] == 'Sin Visa') ?>>Sin Visa</option>
                                 <option value="Con parole" <?= set_select('como_entro_eeuu', 'Con parole', $formulario['como_entro_eeuu'] == 'Con parole') ?>>Con parole</option>
                             </select>
                         </div>
                         <div class="col-md-6" id="container-visa" style="display: <?= ($formulario['como_entro_eeuu'] == 'Con Visa') ? 'block' : 'none' ?>;">
-                            <label class="form-label" for="tipo_visa">Tipo de visa (si aplica):</label>
-                            <input type="text" name="tipo_visa" id="tipoVisa" class="form-control" value="<?= $formulario['tipo_visa'] ?>" disabled>
+                            <label class="form-label" for="cbTipoVisa">Tipo de visa (si aplica):</label>
+                            <select name="tipo_visa" id="cbTipoVisa" class="form-select" disabled>
+                                <option value="" selected disabled>Cargando...</option>
+                            </select>
                         </div>
                     </div>
 
@@ -326,28 +331,23 @@
 
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label class="form-label" for="familiar_servicio">¿Tiene algún familiar en el servicio militar?</label>
+                            <label class="form-label" for="familiarServicio">¿Tiene algún familiar en el servicio militar?</label>
                             <select id="familiarServicio" name="familiar_servicio" class="form-select" disabled>
                                 <option value="Si" <?= set_select('familiar_servicio', 'Si', $formulario['familiar_servicio'] == 'Si') ?>>Sí</option>
                                 <option value="No" <?= set_select('familiar_servicio', 'No', $formulario['familiar_servicio'] == 'No') ?>>No</option>
                             </select>
                         </div>
                         <div class="col-md-6" id="container-servicioMilitar" style="display: <?= ($formulario['familiar_servicio'] == 'Si') ? 'block' : 'none' ?>;">
-                            <label class="form-label" for="familiar_servicio_parentesco">Parentesco con el familiar en el servicio militar:</label>
-                            <select name="familiar_servicio_parentesco" id="familiarServicioParentesco" class="form-select select2" disabled>
-                                <option value="" disabled <?= empty($formulario['familiar_servicio_parentesco']) ? 'selected' : '' ?>>Selecciona una opción</option>
-                                <option value="Padre" <?= set_select('familiar_servicio_parentesco', 'Padre', $formulario['familiar_servicio_parentesco'] == 'Padre') ?>>Padre</option>
-                                <option value="Madre" <?= set_select('familiar_servicio_parentesco', 'Madre', $formulario['familiar_servicio_parentesco'] == 'Madre') ?>>Madre</option>
-                                <option value="Hermano/a" <?= set_select('familiar_servicio_parentesco', 'Hermano/a', $formulario['familiar_servicio_parentesco'] == 'Hermano/a') ?>>Hermano/a</option>
-                                <option value="Hijo/a" <?= set_select('familiar_servicio_parentesco', 'Hijo/a', $formulario['familiar_servicio_parentesco'] == 'Hijo/a') ?>>Hijo/a</option>
-                                <option value="Otro" <?= set_select('familiar_servicio_parentesco', 'Otro', $formulario['familiar_servicio_parentesco'] == 'Otro') ?>>Otro</option>
+                            <label class="form-label" for="cbFamiliarServicioParentesco">Parentesco con el familiar en el servicio militar:</label>
+                            <select name="familiar_servicio_parentesco" id="cbFamiliarServicioParentesco" class="form-select select2" disabled>
+                                <option value="" selected disabled>Cargando...</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label class="form-label" for="victima_crimen">¿Ha sido alguna vez víctima de un crimen?</label>
+                            <label class="form-label" for="victimaCrimen">¿Ha sido alguna vez víctima de un crimen?</label>
                             <select id="victimaCrimen" name="victima_crimen" class="form-select" disabled>
                                 <option value="Si" <?= set_select('victima_crimen', 'Si', $formulario['victima_crimen'] == 'Si') ?>>Sí</option>
                                 <option value="No" <?= set_select('victima_crimen', 'No', $formulario['victima_crimen'] == 'No') ?>>No</option>
