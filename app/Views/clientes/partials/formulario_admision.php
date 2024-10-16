@@ -1,11 +1,11 @@
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
+<div class="card mt-3">
+    <div class="card-header d-flex justify-content-between align-items-center sticky-header">
         <h5>Información del formulario</h5>
         <div>
-            <a href="<?= site_url('clientes/imprimir/' . $cliente['id_cliente']) ?>" class="btn btn-outline-secondary me-2">
+            <a href="<?= site_url('clientes/imprimir/' . $cliente['id_cliente']) ?>" class="btn btn-outline-light me-2">
                 <i class="fa-solid fa-print"></i> Imprimir
             </a>
-            <button id="btnEditar" class="btn btn-outline-secondary me-2">
+            <button id="btnEditar" class="btn btn-outline-info me-2">
                 <i class="fa-solid fa-edit"></i> Editar
             </button>
             <button id="btnGuardar" class="btn btn-primary d-none" form="formularioAdmision">
@@ -67,8 +67,8 @@
                             $opciones = ['Amigos', 'Familia', 'Fue Cliente', 'Walk-In', 'Facebook', 'Tarjeta', 'Internet', 'Instagram', 'Youtube', 'Tiktok', 'Google', 'Otro'];
                             foreach ($opciones as $opcion): ?>
                                 <div class="form-check form-check-inline">
-                                    <input type="checkbox" class="form-check-input" name="fuente_informacion" value="<?= $opcion ?>" <?= in_array($opcion, $fuentes) ? 'checked' : '' ?> disabled>
-                                    <label class="form-check-label"><?= $opcion ?></label>
+                                    <input type="checkbox" class="form-check-input" name="fuente_informacion" id="ck-<?= $opcion ?>" value="<?= $opcion ?>" <?= in_array($opcion, $fuentes) ? 'checked' : '' ?> disabled>
+                                    <label for="ck-<?= $opcion ?>" class="form-check-label"><?= $opcion ?></label>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -88,11 +88,15 @@
 
                         <div class="col-md-6">
                             <label class="form-label" for="nationality">Ciudadanía:</label>
-                            <input type="text" name="nationality" class="form-control" value="<?= $formulario['nationality'] ?>" disabled>
+                            <select id="cbCiudadania" name="nationality" class="form-select" disabled>
+                                <option value="" selected disabled>Cargando...</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="segunda_nacionalidad">¿Posee alguna segunda nacionalidad?</label>
-                            <input type="text" name="segunda_nacionalidad" class="form-control" value="<?= $formulario['segunda_nacionalidad'] ?>" disabled>
+                            <select id="cbSegundaNacionalidad" name="segunda_nacionalidad" class="form-select" disabled>
+                                <option value="" selected disabled>Cargando...</option>
+                            </select>
                         </div>
                     </div>
 
@@ -154,40 +158,51 @@
                     <!-- Datos de Nacimiento -->
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
-                            <label class="form-label" for="direccion_ciudad">Ciudad de nacimiento:</label>
-                            <input type="text" name="direccion_ciudad" class="form-control" value="<?= $formulario['beneficiario_ciudad'] ?>" disabled>
+                            <label class="form-label" for="beneficiario_ciudad">Ciudad de nacimiento:</label>
+                            <input type="text" name="beneficiario_ciudad" class="form-control" value="<?= $formulario['beneficiario_ciudad'] ?>" disabled>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label" for="direccion_estado">Estado de nacimiento:</label>
-                            <input type="text" name="direccion_estado" class="form-control" value="<?= $formulario['beneficiario_estado'] ?>" disabled>
+                            <label class="form-label" for="beneficiario_estado">Estado de nacimiento:</label>
+                            <input type="text" name="beneficiario_estado" class="form-control" value="<?= $formulario['beneficiario_estado'] ?>" disabled>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label" for="direccion_pais">País de nacimiento:</label>
-                            <input type="text" name="direccion_pais" class="form-control" value="<?= $formulario['beneficiario_pais'] ?>" disabled>
+                            <label class="form-label" for="beneficiario_pais">País de nacimiento:</label>
+                            <input type="text" name="beneficiario_pais" class="form-control" value="<?= $formulario['beneficiario_pais'] ?>" disabled>
                         </div>
                     </div>
 
                     <!-- Información de Contacto -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label" for="direccion_calle_numero">Calle y número:</label>
-                            <input type="text" name="direccion_calle_numero" class="form-control" value="<?= $formulario['direccion_calle_numero'] ?>" disabled>
+                    <fieldset class="border p-3 mb-4">
+                        <legend class="fs-5 mb-3">Dirección</legend>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="direccion_calle_numero">Calle y número:</label>
+                                <input type="text" name="direccion_calle_numero" class="form-control" value="<?= $formulario['direccion_calle_numero'] ?>" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="direccion_ciudad">Ciudad:</label>
+                                <input type="text" name="direccion_ciudad" class="form-control" value="<?= $formulario['direccion_ciudad'] ?>" disabled>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="direccion_ciudad">Ciudad:</label>
-                            <input type="text" name="direccion_ciudad" class="form-control" value="<?= $formulario['direccion_ciudad'] ?>" disabled>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Estado</label>
+                                <input type="text" name="direccion_estado" class="form-control" value="<?= $formulario['direccion_estado'] ?>" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="direccion_pais">País:</label>
+                                <select name="direccion_pais" id="cbDireccionPais" class="form-select" disabled>
+                                    <option value="" selected disabled>Cargando...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="direccion_cp">Código postal:</label>
+                                <input type="text" name="direccion_cp" class="form-control" value="<?= $formulario['direccion_cp'] ?>" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label" for="direccion_pais">País:</label>
-                            <input type="text" name="direccion_pais" class="form-control" value="<?= $formulario['direccion_pais'] ?>" disabled>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="direccion_cp">Código postal:</label>
-                            <input type="text" name="direccion_cp" class="form-control" value="<?= $formulario['direccion_cp'] ?>" disabled>
-                        </div>
-                    </div>
+                    </fieldset>
+
+
 
                     <div class="row mb-4">
                         <div class="col-md-6">

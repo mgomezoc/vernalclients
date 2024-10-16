@@ -9,15 +9,30 @@ use App\Models\PagoConsultaModel;
 
 class IntakeController extends BaseController
 {
-    function index($slug)
+    public function index($slug)
     {
         $clienteModel = new ClienteModel();
+        $intakeModel = new IntakeModel(); // Añadido para verificar si ya existe un formulario
+
+        // Buscar el cliente por el slug
         $cliente = $clienteModel->where('slug', $slug)->first();
 
         if (!$cliente) {
             return "Cliente no encontrado";
         }
 
+        // Verificar si el cliente ya tiene un formulario de admisión completado
+        $formularioExistente = $intakeModel->where('id_cliente', $cliente['id_cliente'])->first();
+
+        if ($formularioExistente) {
+            // Si el formulario ya existe, mostramos el mensaje con los datos completos
+            return view('mensaje_formulario_existente', [
+                'cliente' => $cliente,
+                'formularioExistente' => $formularioExistente // Pasa el formulario a la vista
+            ]);
+        }
+
+        // Obtener la información de la sucursal
         $sucursalModel = new SucursalModel();
         $sucursal = $sucursalModel->find($cliente['sucursal']);
 
@@ -37,20 +52,20 @@ class IntakeController extends BaseController
         );
 
         // Formatear la fecha descriptiva
-        $fechaTitle = $formatter->format($fechaActual);
+        $fechaTitle = ucfirst($formatter->format($fechaActual)); // Primera letra en mayúsculas
 
-        // Opcionalmente, para que la primera letra inicie en mayúsculas
-        $fechaTitle = ucfirst($fechaTitle);
-
-
-        $data["title"] = "Inicio";
-        $data["cliente"] = $cliente;
-        $data["sucursal"] = $sucursal;
-        $data["fechaSimple"] = $fechaSimple;
-        $data['fechaTitle'] = $fechaTitle;
+        // Preparar los datos para la vista del formulario de admisión
+        $data = [
+            "title" => "Inicio",
+            "cliente" => $cliente,
+            "sucursal" => $sucursal,
+            "fechaSimple" => $fechaSimple,
+            "fechaTitle" => $fechaTitle
+        ];
 
         return view("intake", $data);
     }
+
 
     function guardar()
     {

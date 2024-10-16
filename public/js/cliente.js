@@ -41,6 +41,9 @@ $(function () {
     });
 
     cargarSucursales(formulario.sucursal);
+    cargarPaises(formulario.nationality, `cbCiudadania`);
+    cargarPaises(formulario.direccion_pais, `cbDireccionPais`);
+    cargarNacionalidades(formulario.segunda_nacionalidad, `cbSegundaNacionalidad`);
 
     // Construir un fragmento de HTML en lugar de manipular el DOM en cada iteración
     let options = '';
@@ -574,6 +577,106 @@ function cargarSucursales(sucursalSeleccionada = '') {
         },
         error: function (xhr, status, error) {
             console.error('Error al cargar las sucursales: ' + error);
+        }
+    });
+}
+
+function cargarPaises(paisSeleccionado = '', selectPaisID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectPaisID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Hacemos la llamada AJAX para obtener los países
+    $.ajax({
+        url: `${baseUrl}api/worldCountries`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            // Obtenemos el select específico por su ID
+            var $select = $(`#${selectPaisID}`);
+
+            // Validamos que el select exista en el DOM
+            if ($select.length === 0) {
+                console.error(`El select con ID ${selectPaisID} no fue encontrado`);
+                return;
+            }
+
+            // Limpiamos el select y agregamos la opción por defecto
+            $select.empty();
+            $select.append($('<option>', { value: '', text: 'Seleccione un país' }));
+
+            // Llenamos el select con los países
+            $.each(response, function (i, country) {
+                $select.append($('<option>', { value: country.name, text: country.name }));
+            });
+
+            // Inicializamos select2 para el select actual
+            $select.select2({
+                placeholder: 'Seleccione una opción',
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Seleccionamos el país si hay un valor preseleccionado
+            if (paisSeleccionado) {
+                $select.val(paisSeleccionado).trigger('change');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al cargar los países: ' + error);
+        }
+    });
+}
+
+function cargarNacionalidades(paisSeleccionado = '', selectNacionalidadID = '') {
+    // Validamos que se haya pasado un ID válido
+    if (!selectNacionalidadID) {
+        console.error('ID del select es requerido');
+        return;
+    }
+
+    // Hacemos la llamada AJAX para obtener las nacionalidades
+    $.ajax({
+        url: 'https://restcountries.com/v3.1/all',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Obtenemos el select específico por su ID
+            var $select = $(`#${selectNacionalidadID}`);
+
+            // Validamos que el select exista en el DOM
+            if ($select.length === 0) {
+                console.error(`El select con ID ${selectNacionalidadID} no fue encontrado`);
+                return;
+            }
+
+            // Limpiamos el select y agregamos la opción por defecto
+            $select.empty();
+            $select.append($('<option>', { value: '', text: 'Seleccione una nacionalidad' }));
+
+            // Llenamos el select con las nacionalidades (usando traducción en español)
+            data.forEach(function (country) {
+                if (country.translations && country.translations.spa && country.translations.spa.common) {
+                    $select.append($('<option>', { value: country.translations.spa.common, text: country.translations.spa.common }));
+                }
+            });
+
+            // Inicializamos select2 para el select actual
+            $select.select2({
+                placeholder: 'Seleccione una opción',
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Seleccionamos el país si hay un valor preseleccionado
+            if (paisSeleccionado) {
+                $select.val(paisSeleccionado).trigger('change');
+            }
+        },
+        error: function (error) {
+            console.error('Error al obtener las nacionalidades: ', error);
         }
     });
 }

@@ -465,6 +465,15 @@ label.error {
 .descripcion-section ul li i {
   color: #007bff;
 }
+.card-header.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* padding: 10px; */
+  background: #0e1c2c;
+  color: #e2e2e2;
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */
