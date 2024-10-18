@@ -174,12 +174,7 @@ $(function () {
                     <div class="descripcion-section">
                         <h6><i class="fa-solid fa-arrows-alt-v me-2"></i>Transiciones Permitidas</h6>
                         <ul class="list-unstyled mb-0">
-                            ${info.transicionesPermitidas
-                                .map(
-                                    (estatus) =>
-                                        `<li><i class="fa-solid fa-arrow-right me-2"></i>${$('#cbEstatus option[value="' + estatus + '"]').text()}</li>`
-                                )
-                                .join('')}
+                            ${info.transicionesPermitidas.map((estatus) => `<li><i class="fa-solid fa-arrow-right me-2"></i>${$('#cbEstatus option[value="' + estatus + '"]').text()}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -264,7 +259,7 @@ $(function () {
 
     $('#filtrosClientes').on('submit', function (e) {
         e.preventDefault();
-        $tablaClientes.bootstrapTable('refresh');
+        $tablaClientes.bootstrapTable('refreshOptions', { pageNumber: 1 });
     });
 
     $('#btnAgregarCliente').on('click', function () {

@@ -58,7 +58,7 @@
                                 <li class="list-group-item"><strong>Nombre del cliente:</strong> <?= esc($cliente["nombre"]) ?></li>
                                 <li class="list-group-item"><strong>Teléfono:</strong> <?= esc($cliente["telefono"]) ?></li>
                                 <li class="list-group-item"><strong>Sucursal:</strong> <?= esc($formularioExistente["sucursal_nombre"]) ?></li>
-                                <li class="list-group-item"><strong>Fecha de Consulta:</strong> <?= esc($formularioExistente["fecha_consulta"]) ?></li>
+                                <li class="list-group-item"><strong>Fecha de Consulta:</strong> <?= date('m-d-Y', strtotime(esc($formularioExistente["fecha_consulta"]))) ?></li>
                                 <li class="list-group-item"><strong>Contacto preferido:</strong> <?= esc($formularioExistente["contacto"]) ?> (Horario: <?= esc($formularioExistente["horario_contacto"]) ?>)</li>
                                 <li class="list-group-item"><strong>Motivo de la visita:</strong> <?= esc($formularioExistente["motivo_visita"]) ?></li>
                             </ul>
@@ -69,11 +69,11 @@
                             <ul class="list-group list-group-flush text-start">
                                 <li class="list-group-item"><strong>Nombre del Beneficiario:</strong> <?= esc($formularioExistente["beneficiario_nombre"]) ?></li>
                                 <li class="list-group-item"><strong>Género:</strong> <?= esc($formularioExistente["beneficiario_genero"]) ?></li>
-                                <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> <?= esc($formularioExistente["beneficiario_fecha_nacimiento"]) ?></li>
+                                <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> <?= date('m-d-Y', strtotime(esc($formularioExistente["beneficiario_fecha_nacimiento"]))) ?></li>
                                 <li class="list-group-item"><strong>Ciudad de Nacimiento:</strong> <?= esc($formularioExistente["beneficiario_ciudad"]) ?></li>
                                 <li class="list-group-item"><strong>Nacionalidad:</strong> <?= esc($formularioExistente["nationality"]) ?><?= esc($formularioExistente["segunda_nacionalidad"]) ? ', ' . esc($formularioExistente["segunda_nacionalidad"]) : '' ?></li>
                                 <li class="list-group-item"><strong>Estatus Migratorio Actual:</strong> <?= esc($formularioExistente["estatus_migratorio_actual"]) ?></li>
-                                <li class="list-group-item"><strong>Fecha de última entrada a EEUU:</strong> <?= esc($formularioExistente["fecha_ultima_entrada"]) ?></li>
+                                <li class="list-group-item"><strong>Fecha de última entrada a EEUU:</strong> <?= date('m-d-Y', strtotime(esc($formularioExistente["fecha_ultima_entrada"]))) ?></li>
                             </ul>
                         </div>
                     </div>

@@ -68,6 +68,7 @@ class CasoModel extends Model
     {
         return $this->like('proceso', $term)
             ->orLike('caseID', $term)
+            ->orLike('id_caso', $term)
             ->orderBy('fecha_actualizacion', 'DESC')
             ->limit(10)
             ->findAll();

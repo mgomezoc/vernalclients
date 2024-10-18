@@ -3,6 +3,14 @@
  *
  */
 
+Handlebars.registerHelper('formatFecha', function (fechaStr) {
+    let date = new Date(fechaStr);
+    let day = date.getUTCDate().toString().padStart(2, '0');
+    let month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    let year = date.getUTCFullYear();
+    return `${month}-${day}-${year}`;
+});
+
 Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
     switch (operator) {
         case '==':
@@ -44,7 +52,7 @@ $(function () {
 
     $('#search').on('keyup', function () {
         let searchTerm = $(this).val();
-        if (searchTerm.length > 2) {
+        if (searchTerm.length > 1) {
             $('#results').show();
             $.ajax({
                 url: `${baseUrl}buscar`,

@@ -116,7 +116,7 @@ $menus = $profileConfig->menus[$perfil] ?? [];
                 {{#each casos}}
                     <a href="<?= base_url("/") ?>clientes/{{id_cliente}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                         <div class="mb-1">Caso #{{id_caso}}: {{proceso}}</div>
-                        <small>Creado: {{fecha_creacion}}</small>
+                        <small>Creado: {{formatFecha fecha_creacion}}</small>
                     </a>
                 {{/each}}
             {{/if}}
@@ -141,7 +141,7 @@ $menus = $profileConfig->menus[$perfil] ?? [];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
-    <script src="<?= base_url("js/app.js?v=1.0.1") ?>"></script>
+    <script src="<?= base_url("js/app.js?v=1.0.2") ?>"></script>
     <?php if (isset($scripts) && is_array($scripts)): ?>
         <?php foreach ($scripts as $script): ?>
             <?= $script ?>
