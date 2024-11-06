@@ -192,6 +192,19 @@ class ClienteModel extends Model
             }
         }
 
+        // Filtro de búsqueda por nombre o teléfono
+        if (!empty($filtros['search'])) {
+            $builder->groupStart() // agrupar para OR like
+                ->like('clientes.nombre', $filtros['search'])
+                ->orLike('clientes.telefono', $filtros['search'])
+                ->orLike('clientes.tipo_consulta', $filtros['search'])
+                ->orLike('sucursales.nombre', $filtros['search'])
+                ->orLike('clientes_estatus.nombre', $filtros['search'])
+                ->orLike('usuarios.nombre', $filtros['search'])
+                ->orLike('clientes.fecha_ultima_actualizacion', $filtros['search'])
+                ->groupEnd();
+        }
+
         // Clonar el builder antes de aplicar los límites para obtener el total
         $countQuery = clone $builder;
 
