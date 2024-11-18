@@ -202,7 +202,8 @@ function formatoPerfiles(value) {
         3: 'PARALEGAL',
         4: 'ADMIN',
         5: 'MARKETING',
-        6: 'ATTORNEY'
+        6: 'ATTORNEY',
+        7: 'ADMINCALL'
     };
     return perfiles[value] || 'DESCONOCIDO';
 }

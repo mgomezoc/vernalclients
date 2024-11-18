@@ -1,4 +1,4 @@
-<?php $perfilesPermitidos = ["ADMIN", "PARALEGAL", "ATTORNEY", "RECEPTION"]; ?>
+<?php $perfilesPermitidos = ["ADMIN", "ADMINCALL", "PARALEGAL", "ATTORNEY", "RECEPTION"]; ?>
 
 <div class="card card-body">
     <div class="section-header">

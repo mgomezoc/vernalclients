@@ -44,6 +44,23 @@ class Profiles extends BaseConfig
                 'label' => 'Auditoría',
             ],
         ],
+        'ADMINCALL' => [
+            'usuarios' => [
+                'icon' => 'fa-solid fa-users-cog', // Ícono relacionado con la gestión de usuarios
+                'url' => 'usuarios',
+                'label' => 'Usuarios',
+            ],
+            'clientes' => [
+                'icon' => 'fa-solid fa-user-friends', // Ícono de grupo de personas para clientes
+                'url' => 'clientes',
+                'label' => 'Clientes',
+            ],
+            'pagos' => [
+                'icon' => 'fa-solid fa-money-check-alt',
+                'url' => 'pagos_consultas',
+                'label' => 'Pagos',
+            ],
+        ],
         'CALL' => [
             'clientes' => [
                 'icon' => 'fa-solid fa-headset', // Ícono de auriculares para representar el call center

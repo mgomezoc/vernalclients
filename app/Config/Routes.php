@@ -44,7 +44,7 @@ $routes->get('encuesta/(:segment)', 'EncuestaController::index/$1');
 $routes->post('encuesta/guardarRespuestaEncuesta', 'EncuestaRespuestaController::guardarRespuestaEncuesta');
 
 // Usuarios
-$routes->group('usuarios', ['filter' => 'SessionAdmin:ADMIN'], function ($routes) {
+$routes->group('usuarios', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL'], function ($routes) {
     $routes->get('/', 'Usuarios::index', ['as' => 'usuarios.index']);
     $routes->get('obtener-usuarios', 'Usuarios::obtenerUsuarios', ['as' => 'usuarios.obtener']);
     $routes->get('obtener-usuario/(:num)', 'Usuarios::obtenerUsuarioPorId/$1');
@@ -54,7 +54,7 @@ $routes->group('usuarios', ['filter' => 'SessionAdmin:ADMIN'], function ($routes
 });
 
 // Sucursales
-$routes->group('sucursales', ['filter' => 'SessionAdmin:ADMIN'], function ($routes) {
+$routes->group('sucursales', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL'], function ($routes) {
     $routes->get('/', 'Sucursales::index', ['as' => 'sucursales.index']);
     $routes->get('obtener-sucursales', 'Sucursales::obtenerSucursales', ['as' => 'sucursales.obtener']);
     $routes->post('agregar-sucursal', 'Sucursales::agregarSucursal', ['as' => 'sucursales.agregar']);
@@ -64,7 +64,7 @@ $routes->group('sucursales', ['filter' => 'SessionAdmin:ADMIN'], function ($rout
 });
 
 // Abogados
-$routes->group('abogados', ['filter' => 'SessionAdmin:ADMIN,ATTORNEY'], function ($routes) {
+$routes->group('abogados', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,ATTORNEY'], function ($routes) {
     $routes->get('/', 'AbogadosController::index', ['as' => 'abogados.index']);
     $routes->get('obtener-abogados', 'AbogadosController::obtenerAbogados');
     $routes->post('agregar-abogado', 'AbogadosController::agregarAbogado', ['as' => 'abogados.agregar']);
@@ -73,7 +73,7 @@ $routes->group('abogados', ['filter' => 'SessionAdmin:ADMIN,ATTORNEY'], function
 });
 
 // CLIENTES
-$routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,ATTORNEY,RECEPTION,CALL'], function ($routes) {
+$routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,PARALEGAL,ATTORNEY,RECEPTION,CALL'], function ($routes) {
     $routes->get('/', 'ClientesController::index', ['as' => 'clientes.index']);
     $routes->post('obtener-clientes', 'ClientesController::obtenerClientes');
     $routes->post('agregar-cliente', 'ClientesController::insertarCliente');
@@ -108,7 +108,7 @@ $routes->group('clientes', ['filter' => 'SessionAdmin:CALL'], function ($routes)
 });
 
 // Casos
-$routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,RECEPTION,ATTORNEY'], function ($routes) {
+$routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,PARALEGAL,RECEPTION,ATTORNEY'], function ($routes) {
     $routes->post('actualizarCaseID', 'CasosController::actualizarCaseID');
     $routes->post('actualizar-estatus', 'CasosController::actualizarEstatus');
     $routes->post('comentarios', 'CasosController::obtenerComentarios');
@@ -117,7 +117,7 @@ $routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,PARALEGAL,RECEPTION,ATT
 });
 
 // Reportes
-$routes->group('reportes', ['filter' => 'SessionAdmin:ADMIN,ATTORNEY'], function ($routes) {
+$routes->group('reportes', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,ATTORNEY'], function ($routes) {
     $routes->get('/', 'ReportesController::index');
     $routes->get('encuesta-respuesta', 'EncuestaRespuestaController::obtenerRegistros');
     $routes->get('encuesta-respuestas', 'EncuestaRespuestaController::obtenerTablaEncuestas');
@@ -158,13 +158,13 @@ $routes->group('api', ['namespace' => '\App\Controllers'], function ($routes) {
 });
 
 //AUDITORIA
-$routes->group('auditoria', ['filter' => 'SessionAdmin:ADMIN'], function ($routes) {
+$routes->group('auditoria', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL'], function ($routes) {
     $routes->get('/', 'AuditoriaController::index');
     $routes->post('obtener', 'AuditoriaController::obtenerAuditoria');
 });
 
 // PAGOS CONSULTAS
-$routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,RECEPTION'], function ($routes) {
+$routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,RECEPTION'], function ($routes) {
     $routes->get('/', 'PagosConsultasController::index', ['as' => 'pagos_consultas.index']);
     $routes->post('obtener', 'PagosConsultasController::obtenerPagosConsultas', ['as' => 'pagos_consultas.obtener']);
     $routes->post('marcar_pagado', 'PagosConsultasController::marcar_pagado');

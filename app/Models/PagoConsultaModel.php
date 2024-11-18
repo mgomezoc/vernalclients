@@ -50,47 +50,70 @@ class PagoConsultaModel extends Model
         return $this->delete($idPago);
     }
 
-    /**
-     * Obtiene los pagos de consulta con filtros y paginación.
-     *
-     * @param int $limit Límite de resultados por página
-     * @param int $offset Desplazamiento de resultados
-     * @param array $filters Filtros aplicables (cliente, usuario, periodo, estatus, etc.)
-     * @return array Resultados de la consulta
-     */
-    public function obtenerPagos(int $limit = 10, int $offset = 0, array $filters = [])
+    public function obtenerPagosPaginados(int $limit, int $offset, array $filters)
     {
-        $this->select('pagos_consultas.*, clientes.nombre AS nombre_cliente, usuarios.nombre AS nombre_usuario')
-            ->join('clientes', 'clientes.id_cliente = pagos_consultas.id_cliente')
-            ->join('usuarios', 'usuarios.id = pagos_consultas.id_usuario')
-            ->limit($limit, $offset)
-            ->orderBy('fecha_pago', 'DESC');
+        $builder = $this->db->table($this->table);
+
+        // Join con las tablas relacionadas
+        $builder->join('clientes', 'clientes.id_cliente = pagos_consultas.id_cliente', 'left');
+        $builder->join('usuarios', 'usuarios.id = pagos_consultas.id_usuario', 'left');
+
+        // Seleccionar columnas necesarias con alias
+        $builder->select('pagos_consultas.*, 
+                      clientes.nombre AS nombre_cliente, 
+                      usuarios.nombre AS nombre_usuario');
 
         // Aplicar filtros
         if (!empty($filters['cliente'])) {
-            $this->where('pagos_consultas.id_cliente', $filters['cliente']);
+            $builder->where('pagos_consultas.id_cliente', $filters['cliente']);
         }
 
         if (!empty($filters['usuario'])) {
-            $this->where('pagos_consultas.id_usuario', $filters['usuario']);
+            $builder->where('pagos_consultas.id_usuario', $filters['usuario']);
         }
 
         if (!empty($filters['periodo'])) {
-            $this->where('fecha_pago >=', $filters['periodo']['inicio'])
-                ->where('fecha_pago <=', $filters['periodo']['fin']);
+            $periodo = explode(' to ', $filters['periodo']);
+            if (count($periodo) === 2) {
+                $builder->where('pagos_consultas.fecha_pago >=', $periodo[0]);
+                $builder->where('pagos_consultas.fecha_pago <=', $periodo[1]);
+            }
         }
 
         if (!empty($filters['forma_pago'])) {
-            $this->where('forma_pago', $filters['forma_pago']);
+            $builder->where('pagos_consultas.forma_pago', $filters['forma_pago']);
         }
 
         if (!empty($filters['estatus_pago'])) {
-            $this->where('estatus_pago', $filters['estatus_pago']);
+            $builder->where('pagos_consultas.estatus_pago', $filters['estatus_pago']);
         }
 
-        // Ejecutar la consulta y devolver resultados
-        return $this->findAll();
+        // Filtro de búsqueda
+        if (!empty($filters['search'])) {
+            $builder->groupStart()
+                ->like('clientes.nombre', $filters['search'])
+                ->orLike('pagos_consultas.id_pago', $filters['search'])
+                ->orLike('pagos_consultas.referencia', $filters['search'])
+                ->groupEnd();
+        }
+
+        // Clonar el builder para calcular el total antes de aplicar límites
+        $countQuery = clone $builder;
+        $total = $countQuery->countAllResults(false);
+
+        // Aplicar paginación
+        $builder->limit($limit, $offset);
+        $builder->orderBy('pagos_consultas.fecha_pago', 'desc');
+
+        // Obtener resultados paginados
+        $rows = $builder->get()->getResultArray();
+
+        return [
+            'total' => $total,  // Total de registros antes de aplicar límites
+            'rows' => $rows     // Registros con paginación aplicada
+        ];
     }
+
 
     /**
      * Obtiene el total de pagos según los filtros aplicados.

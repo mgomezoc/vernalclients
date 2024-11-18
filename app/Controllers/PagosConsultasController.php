@@ -40,6 +40,7 @@ class PagosConsultasController extends BaseController
         $pagoConsultaModel = new PagoConsultaModel();
         $postData = json_decode($this->request->getBody(), true);
 
+        // Parámetros de paginación y filtros
         $limit = $postData['limit'] ?? 10;
         $offset = $postData['offset'] ?? 0;
         $filtros = [
@@ -48,19 +49,16 @@ class PagosConsultasController extends BaseController
             'periodo' => $postData['periodo'] ?? '',
             'forma_pago' => $postData['forma_pago'] ?? '',
             'estatus_pago' => $postData['estatus_pago'] ?? '',
+            'search' => $postData['search'] ?? '', // Filtro de búsqueda general
         ];
 
-        $result = $pagoConsultaModel->obtenerPagos($limit, $offset, $filtros);
-        $total = $pagoConsultaModel->contarPagos($filtros);
+        // Obtener los pagos con paginación y filtros
+        $result = $pagoConsultaModel->obtenerPagosPaginados($limit, $offset, $filtros);
 
-        // Formatear respuesta para paginación de Bootstrap Table
-        $response = [
-            'total' => $total,
-            'rows' => $result,
-        ];
-
-        return $this->response->setJSON($response);
+        // Retornar respuesta en formato JSON para paginación de Bootstrap Table
+        return $this->response->setJSON($result);
     }
+
 
     public function marcar_pagado()
     {
