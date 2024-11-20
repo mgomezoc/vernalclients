@@ -9,27 +9,27 @@ class Profiles extends BaseConfig
     public $menus = [
         'ADMIN' => [
             'usuarios' => [
-                'icon' => 'fa-solid fa-users-cog', // Ícono relacionado con la gestión de usuarios
+                'icon' => 'fa-solid fa-users-cog',
                 'url' => 'usuarios',
                 'label' => 'Usuarios',
             ],
             'sucursales' => [
-                'icon' => 'fa-solid fa-building', // Ícono de edificio para representar sucursales
+                'icon' => 'fa-solid fa-building',
                 'url' => 'sucursales',
                 'label' => 'Sucursales',
             ],
             'abogados' => [
-                'icon' => 'fa-solid fa-gavel', // Ícono de martillo, representando abogados o justicia
+                'icon' => 'fa-solid fa-gavel',
                 'url' => 'abogados',
                 'label' => 'Abogados',
             ],
             'clientes' => [
-                'icon' => 'fa-solid fa-user-friends', // Ícono de grupo de personas para clientes
+                'icon' => 'fa-solid fa-user-friends',
                 'url' => 'clientes',
                 'label' => 'Clientes',
             ],
             'reportes' => [
-                'icon' => 'fa-solid fa-chart-line', // Ícono de gráfico de línea para representar reportes
+                'icon' => 'fa-solid fa-chart-line',
                 'url' => 'reportes',
                 'label' => 'Reportes',
             ],
@@ -39,19 +39,14 @@ class Profiles extends BaseConfig
                 'label' => 'Pagos',
             ],
             'auditoria' => [
-                'icon' => 'fa-solid fa-clipboard-check', // Ícono de auditoría para representar revisión y control
+                'icon' => 'fa-solid fa-clipboard-check',
                 'url' => 'auditoria',
                 'label' => 'Auditoría',
             ],
         ],
         'ADMINCALL' => [
-            'usuarios' => [
-                'icon' => 'fa-solid fa-users-cog', // Ícono relacionado con la gestión de usuarios
-                'url' => 'usuarios',
-                'label' => 'Usuarios',
-            ],
             'clientes' => [
-                'icon' => 'fa-solid fa-user-friends', // Ícono de grupo de personas para clientes
+                'icon' => 'fa-solid fa-user-friends',
                 'url' => 'clientes',
                 'label' => 'Clientes',
             ],
@@ -63,38 +58,38 @@ class Profiles extends BaseConfig
         ],
         'CALL' => [
             'clientes' => [
-                'icon' => 'fa-solid fa-headset', // Ícono de auriculares para representar el call center
+                'icon' => 'fa-solid fa-headset',
                 'url' => 'clientes/callcenter',
                 'label' => 'Clientes',
             ]
         ],
         'PARALEGAL' => [
             'clientes' => [
-                'icon' => 'fa-solid fa-user-tie', // Ícono de una persona con corbata, representando un asistente legal
+                'icon' => 'fa-solid fa-user-tie',
                 'url' => 'clientes/abogado',
                 'label' => 'Clientes',
             ],
         ],
         'ATTORNEY' => [
             'clientes' => [
-                'icon' => 'fa-solid fa-briefcase', // Ícono de maletín para representar prospectos o casos legales
+                'icon' => 'fa-solid fa-briefcase',
                 'url' => 'clientes/abogado',
                 'label' => 'Prospectos',
             ],
             'todos_clientes' => [
-                'icon' => 'fa-solid fa-book', // Ícono de libro para representar una bitácora
+                'icon' => 'fa-solid fa-book',
                 'url' => 'clientes/asignados',
                 'label' => 'Bitácora Clientes',
             ],
             'reportes' => [
-                'icon' => 'fa-solid fa-chart-pie', // Ícono de gráfico de pastel para reportes
+                'icon' => 'fa-solid fa-chart-pie',
                 'url' => 'reportes',
                 'label' => 'Reportes',
             ],
         ],
         'RECEPTION' => [
             'clientes' => [
-                'icon' => 'fa-solid fa-user-check', // Ícono de usuario con marca de verificación para recepción
+                'icon' => 'fa-solid fa-user-check',
                 'url' => 'clientes/recepcion',
                 'label' => 'Clientes',
             ],
@@ -106,7 +101,7 @@ class Profiles extends BaseConfig
         ],
         'MARKETING' => [
             'clientes' => [
-                'icon' => 'fa-solid fa-bullhorn', // Ícono de megáfono para representar marketing
+                'icon' => 'fa-solid fa-bullhorn',
                 'url' => 'clientes/recepcion',
                 'label' => 'Clientes',
             ],
