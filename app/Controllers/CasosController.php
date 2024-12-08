@@ -152,10 +152,15 @@ class CasosController extends Controller
         $postData['fecha_actualizacion'] = date('Y-m-d H:i:s');
 
         if ($casoModel->editarCaso($idCaso, $postData)) {
-            // Registrar acción de edición de caso
             $usuario = session()->get('usuario');
             if ($usuario) {
-                registrarAccion($usuario['id'], 'edit_case', "Editó el caso con ID: $idCaso.");
+                registrarAccion($usuario['id'], 'edit_case', sprintf(
+                    "Editó el caso #%d. Cambios: Antecedente: %s, Costo: %s, Fecha de corte: %s.",
+                    $idCaso,
+                    $postData['comentarios'],
+                    $postData['costo'],
+                    $postData['fecha_corte']
+                ));
             }
 
             $response['success'] = true;
@@ -164,6 +169,7 @@ class CasosController extends Controller
             $response['success'] = false;
             $response['message'] = 'Ocurrió un error al actualizar el caso.';
         }
+
 
         return $this->response->setJSON($response);
     }

@@ -8,6 +8,28 @@ let tplFormulario = '';
 let tplComentarios = '';
 let $modalComentarios;
 
+// Inicializar TinyMCE
+function initializeTinyMCE(selector) {
+    tinymce.init({
+        selector: selector,
+        plugins: 'autolink link lists code',
+        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link removeformat | code',
+        menubar: false,
+        setup: function (editor) {
+            editor.on('change', function () {
+                tinymce.triggerSave();
+            });
+        }
+    });
+}
+
+// Destruir TinyMCE
+function destroyTinyMCE(selector) {
+    if (tinymce.get(selector)) {
+        tinymce.get(selector).remove();
+    }
+}
+
 $(function () {
     tplFormulario = $('#tplFormulario').html();
     tplComentarios = $('#tplComentarios').html();
@@ -17,6 +39,8 @@ $(function () {
         placeholder: 'Seleccione una opción',
         theme: 'bootstrap-5'
     });
+
+    initializeTinyMCE('#antecedente');
 
     Fancybox.bind('[data-fancybox]', {});
 
@@ -416,6 +440,104 @@ $(function () {
             dataType: 'json'
         });
     }
+
+    // Abrir el modal y cargar los datos del caso
+    $(document).on('click', '.btnEditarCaso', function () {
+        const caso = $(this).data('caso');
+
+        // Cargar datos en el modal
+        $('#id_caso').val(caso.id_caso);
+        $('#costo').val(caso.costo);
+
+        // Manejo del campo 'antecedente' con TinyMCE
+        const antecedenteField = $('#antecedente');
+
+        // Destruir TinyMCE si ya está inicializado
+        destroyTinyMCE('antecedente');
+
+        // Actualizar el valor del campo de texto base
+        antecedenteField.val(caso.comentarios);
+
+        // Volver a inicializar TinyMCE
+        initializeTinyMCE('#antecedente');
+
+        // Manejo de Flatpickr
+        const fechaInput = $('#fecha_corte');
+        fechaInput.val(caso.fecha_corte); // Establecer el valor inicial en el input
+        fechaInput.flatpickr({
+            dateFormat: 'Y-m-d', // Formato del valor
+            altInput: true, // Mostrar formato alternativo
+            altFormat: 'm-d-Y', // Formato alternativo para mostrar al usuario
+            allowInput: true
+        });
+
+        // Mostrar el modal
+        $('#modalEditarCaso').modal('show');
+    });
+
+    // Enviar datos para guardar cambios
+    $('#formEditarCaso').validate({
+        rules: {
+            antecedente: {
+                required: true,
+                minlength: 5
+            },
+            costo: {
+                required: true,
+                number: true,
+                min: 0.01 // Solo valores positivos, mínimo 0.01
+            },
+            fecha_corte: {
+                required: true,
+                date: true
+            }
+        },
+        messages: {
+            antecedente: {
+                required: 'El antecedente es obligatorio.',
+                minlength: 'El antecedente debe tener al menos 5 caracteres.'
+            },
+            costo: {
+                required: 'El costo es obligatorio.',
+                number: 'Ingrese un valor válido.',
+                min: 'El costo debe ser mayor a 0.'
+            },
+            fecha_corte: {
+                required: 'La fecha de corte es obligatoria.',
+                date: 'Ingrese una fecha válida.'
+            }
+        },
+        submitHandler: async function (form, e) {
+            e.preventDefault();
+
+            const formData = $(form).serialize();
+
+            Swal.fire({
+                title: 'Confirmar cambios',
+                text: '¿Deseas guardar los cambios realizados?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await $.post(`${baseUrl}casos/editar`, formData);
+
+                        if (response.success) {
+                            Swal.fire('¡Éxito!', response.message, 'success').then(() => {
+                                location.reload(); // Recargar página para mostrar cambios
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    } catch (error) {
+                        Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+                    }
+                }
+            });
+        }
+    });
 });
 
 async function actualizarEstatus(data) {

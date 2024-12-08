@@ -84,6 +84,12 @@ $(function () {
         theme: 'bootstrap-5'
     });
 
+    $('#abogados').select2({
+        placeholder: 'Seleccione una opción',
+        theme: 'bootstrap-5',
+        dropdownParent: $('#modalAsignarAbogado')
+    });
+
     tplAccionesTabla = $('#tplAccionesTabla').html();
     tplClienteSlug = $('#tplClienteSlug').html();
     tplModalEstatus = $('#tplModalEstatus').html();

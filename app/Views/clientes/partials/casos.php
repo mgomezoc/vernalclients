@@ -135,6 +135,11 @@
                                             <i class="fa-solid fa-times me-1"></i>
                                             <span>Cerrar</span>
                                         </button>
+
+                                        <button class="btn btn-outline-primary btnEditarCaso" data-id="<?= $caso['id_caso'] ?>" data-caso="<?= htmlspecialchars(json_encode($caso)) ?>">
+                                            <i class="fa-solid fa-edit me-1"></i>
+                                            <span>Editar</span>
+                                        </button>
                                     <?php endif; ?>
 
                                     <button class="btnEncuesta btn btn-azul">
@@ -164,6 +169,41 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarCaso" tabindex="-1" aria-labelledby="modalEditarCasoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEditarCaso" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarCasoLabel">Editar Caso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_caso" id="id_caso">
+
+                    <div class="mb-3">
+                        <label for="antecedente" class="form-label">Antecedente</label>
+                        <textarea name="comentarios" id="antecedente" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="costo" class="form-label">Costo</label>
+                        <input type="number" name="costo" id="costo" class="form-control" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha_corte" class="form-label">Fecha de corte</label>
+                        <input type="text" name="fecha_corte" id="fecha_corte" class="form-control flatpickr" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
