@@ -130,16 +130,18 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
-                                    <?php if ($caso['estatus'] != "4") : ?>
-                                        <button class="btn btn-danger btnCerrarCaso" data-id="<?= $caso['id_caso'] ?>">
-                                            <i class="fa-solid fa-times me-1"></i>
-                                            <span>Cerrar</span>
-                                        </button>
+                                    <?php if ($perfil == "ATTORNEY" || $perfil == "ADMIN") : ?>
+                                        <?php if ($caso['estatus'] != "4") : ?>
+                                            <button class="btn btn-danger btnCerrarCaso" data-id="<?= $caso['id_caso'] ?>">
+                                                <i class="fa-solid fa-times me-1"></i>
+                                                <span>Cerrar</span>
+                                            </button>
 
-                                        <button class="btn btn-outline-primary btnEditarCaso" data-id="<?= $caso['id_caso'] ?>" data-caso="<?= htmlspecialchars(json_encode($caso)) ?>">
-                                            <i class="fa-solid fa-edit me-1"></i>
-                                            <span>Editar</span>
-                                        </button>
+                                            <button class="btn btn-outline-primary btnEditarCaso" data-id="<?= $caso['id_caso'] ?>" data-caso="<?= htmlspecialchars(json_encode($caso)) ?>">
+                                                <i class="fa-solid fa-edit me-1"></i>
+                                                <span>Editar</span>
+                                            </button>
+                                        <?php endif; ?>
                                     <?php endif; ?>
 
                                     <button class="btnEncuesta btn btn-azul">
