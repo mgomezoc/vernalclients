@@ -136,7 +136,6 @@
     </div>
 </template>
 
-
 <template id="tplFormulario">
     <div id="formulario_admision">
         <h5>INFORMACIÓN GENERAL:</h5>

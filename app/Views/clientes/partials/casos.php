@@ -1,4 +1,12 @@
 <div class="card card-body" style="background-color: #f8f9fa; border-radius: 0.5rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+    <!-- Botón Crear Caso -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0"><i class="fa-solid fa-folder-user me-2"></i>Casos</h5>
+        <button id="btnCrearCaso" class="btn btn-primary btnCrearCaso">
+            <i class="fa-solid fa-plus me-1"></i>
+            <span>Crear Caso</span>
+        </button>
+    </div>
     <div class="p-2">
         <div class="accordion" id="accordionCasos">
             <?php if (empty($casos)) : ?>
@@ -175,6 +183,7 @@
     </div>
 </div>
 
+<!-- Modal Editar Caso -->
 <div class="modal fade" id="modalEditarCaso" tabindex="-1" aria-labelledby="modalEditarCasoLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -206,6 +215,23 @@
                     <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear Caso -->
+<div class="modal fade" id="modalCrearCaso" tabindex="-1" aria-labelledby="modalCrearCasoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearCasoLabel">
+                    <i class="fa-solid fa-plus me-2"></i>Crear Nuevo Caso
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?= view('clientes/partials/formulario_nuevo_caso') ?>
+            </div>
         </div>
     </div>
 </div>

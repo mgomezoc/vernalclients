@@ -380,81 +380,72 @@ class ClientesController extends BaseController
 
         // Asegurarnos de que documentos sea un array
         if (!is_array($documentos)) {
-            $documentos = [$documentos]; // Si es un solo archivo, lo convertimos en un array
+            $documentos = $documentos ? [$documentos] : [];
         }
 
-        if ($estatus == "4") {
-            $casoModel = new CasoModel();
-            $documentoCasoModel = new DocumentoCasoModel(); // Modelo para los documentos
-
-            $data = [
-                'id_cliente' => $id_cliente,
-                'id_usuario' => $id_usuario,
-                'id_tipo_caso' => $id_tipo_caso,
-                'proceso' => $proceso,
-                'comentarios' => $comentarios,
-                'costo' => $costo,
-                'procesos_adicionales' => $procesos_adicionales,
-                'fecha_corte' => $fecha_corte,
-                'fecha_creacion' => date('Y-m-d H:i:s'),
-                'fecha_actualizacion' => date('Y-m-d H:i:s')
-            ];
-
-            // Crear caso
-            $crearCaso = $casoModel->crearCaso($data);
-
-            if ($crearCaso) {
-                // Guardar los documentos asociados al caso
-                if (!empty($documentos)) {
-                    foreach ($documentos as $documento) {
-                        // Obtener la extensión del archivo para determinar el tipo
-                        $extension = pathinfo($documento, PATHINFO_EXTENSION);
-                        $mimeType = $this->getMimeTypeByExtension($extension); // Método auxiliar para obtener el mime type
-
-                        if ($mimeType) {
-                            $datosDocumento = [
-                                'id_caso' => $crearCaso,
-                                'nombre_documento' => $documento,
-                                'path_documento' => WRITEPATH . 'uploads/casos/' . $crearCaso . '/' . $documento,
-                                'tipo_documento' => $mimeType,
-                                'fecha_subida' => date('Y-m-d H:i:s'),
-                                'subido_por' => $id_usuario,
-                            ];
-
-                            // Insertar el documento en la base de datos
-                            $documentoCasoModel->insert($datosDocumento);
-                        } else {
-                            // Registrar en log o manejar el error si no se puede identificar el tipo
-                            log_message('error', "Tipo de archivo no permitido para el documento: $documento");
-                        }
-                    }
-                }
-
-                $response['crearCaso'] = $crearCaso;
-            } else {
-                return $this->response->setJSON(['success' => false, 'message' => 'No se pudo crear el caso']);
-            }
-        }
-
-        // Actualizar el estatus del cliente
+        $casoModel = new CasoModel();
+        $documentoCasoModel = new DocumentoCasoModel();
         $clienteModel = new ClienteModel();
-        $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
 
-        // Registrar acciones
-        $usuario = session()->get('usuario');
-        if ($usuario) {
-            registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $id_cliente a $estatus.");
-            if (isset($crearCaso) && $crearCaso) {
-                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso para el cliente ID $id_cliente con el estatus $estatus.");
+        $data = [
+            'id_cliente' => $id_cliente,
+            'id_usuario' => $id_usuario,
+            'id_tipo_caso' => $id_tipo_caso,
+            'proceso' => $proceso,
+            'comentarios' => $comentarios,
+            'costo' => $costo,
+            'procesos_adicionales' => $procesos_adicionales,
+            'fecha_corte' => $fecha_corte,
+            'fecha_creacion' => date('Y-m-d H:i:s'),
+            'fecha_actualizacion' => date('Y-m-d H:i:s')
+        ];
+
+        // Crear caso
+        $crearCaso = $casoModel->crearCaso($data);
+
+        if ($crearCaso) {
+            // Guardar los documentos asociados al caso
+            foreach ($documentos as $documento) {
+                $extension = pathinfo($documento, PATHINFO_EXTENSION);
+                $mimeType = $this->getMimeTypeByExtension($extension); // Método auxiliar para obtener el MIME type
+
+                if ($mimeType) {
+                    $datosDocumento = [
+                        'id_caso' => $crearCaso,
+                        'nombre_documento' => $documento,
+                        'path_documento' => WRITEPATH . 'uploads/casos/' . $crearCaso . '/' . $documento,
+                        'tipo_documento' => $mimeType,
+                        'fecha_subida' => date('Y-m-d H:i:s'),
+                        'subido_por' => $id_usuario,
+                    ];
+
+                    $documentoCasoModel->insert($datosDocumento);
+                } else {
+                    log_message('error', "Tipo de archivo no permitido para el documento: $documento");
+                }
             }
+
+            // Actualizar el estatus del cliente
+            $actualizarEstatus = $clienteModel->actualizarEstatusCliente($id_cliente, $estatus);
+
+            // Registrar acciones
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso para el cliente ID $id_cliente.");
+                registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $id_cliente a $estatus.");
+            }
+
+            return $this->response->setJSON([
+                'success' => true,
+                'crearCaso' => $crearCaso,
+                'estatus' => $estatus,
+                'actualizarEstatus' => $actualizarEstatus,
+            ]);
         }
 
-        $response['success'] = true;
-        $response['estatus'] = $estatus;
-        $response['actualizarEstatus'] = $actualizarEstatus;
-
-        return $this->response->setJSON($response);
+        return $this->response->setJSON(['success' => false, 'message' => 'No se pudo crear el caso']);
     }
+
 
     /**
      * Método auxiliar para obtener el mime type basado en la extensión del archivo
@@ -522,6 +513,8 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
         $data['scripts'] .= "<script src='https://cdn.tiny.cloud/1/zdby7g4zkycr9nwngpr06j08z4kfnnml1igmjgtibdjmlio7/tinymce/7/tinymce.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/cliente.js?v=1.0.1") . "'></script>";
+        $data['scripts'] .= "<script src='" . base_url("js/eimmigration.js") . "'></script>";
+        $data['scripts'] .= "<script src='" . base_url("js/cliente-casos.js?v=1.0.0") . "'></script>";
 
         $usuario = session()->get('usuario');
         if ($usuario) {
