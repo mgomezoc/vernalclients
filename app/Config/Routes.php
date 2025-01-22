@@ -114,6 +114,7 @@ $routes->group('casos', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,PARALEGAL,REC
     $routes->post('comentarios', 'CasosController::obtenerComentarios');
     $routes->post('comentarios-agregar', 'CasosController::agregarComentario');
     $routes->post('editar', 'CasosController::editarCaso');
+    $routes->post('eliminar', 'CasosController::eliminarCaso');
 });
 
 // Reportes

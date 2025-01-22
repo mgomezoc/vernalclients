@@ -165,7 +165,20 @@ $(function () {
 
     // Cargar procesos en los selects
     cargarProcesosEInmigration();
+
+    //Eliminar casos
+    $('.btnEliminarCaso').on('click', function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const idCaso = $btn.data('id');
+        const nombreCaso = $btn.data('nombre');
+        eliminarCaso(idCaso);
+    });
 });
+
+function cargarCasos() {
+    location.reload();
+}
 
 async function cargarProcesosEInmigration() {
     try {
@@ -196,5 +209,39 @@ function nuevoCaso(data) {
         url: baseUrl + 'clientes/nuevo-caso',
         data: data,
         dataType: 'json'
+    });
+}
+
+function eliminarCaso(idCaso) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: baseUrl + 'casos/eliminar',
+                type: 'POST',
+                data: { id_caso: idCaso },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire('¡Eliminado!', response.message, 'success').then(function () {
+                            // Actualizar la lista de casos
+                            cargarCasos();
+                        });
+                    } else {
+                        Swal.fire('¡Error!', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('¡Error!', 'Ocurrió un error al intentar eliminar el caso.', 'error');
+                }
+            });
+        }
     });
 }

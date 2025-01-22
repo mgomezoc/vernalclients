@@ -144,22 +144,21 @@ class CasosController extends Controller
         $casoModel = new CasoModel();
         $idCaso = $this->request->getPost('id_caso');
 
-        // Obtener todos los datos de POST excepto 'id_caso'
+        // Filtrar solo las claves esperadas que se quieren actualizar
+        $expectedKeys = ['comentarios', 'costo', 'fecha_corte', 'pagado', 'forma_pago'];
         $postData = $this->request->getPost();
-        unset($postData['id_caso']);  // Asegúrate de no incluir el id_caso en los datos a actualizar
+        $filteredData = array_intersect_key($postData, array_flip($expectedKeys));
 
-        // Incluir la fecha de actualización
-        $postData['fecha_actualizacion'] = date('Y-m-d H:i:s');
+        // Asegúrate de incluir siempre la fecha de actualización
+        $filteredData['fecha_actualizacion'] = date('Y-m-d H:i:s');
 
-        if ($casoModel->editarCaso($idCaso, $postData)) {
+        if ($casoModel->editarCaso($idCaso, $filteredData)) {
             $usuario = session()->get('usuario');
             if ($usuario) {
                 registrarAccion($usuario['id'], 'edit_case', sprintf(
-                    "Editó el caso #%d. Cambios: Antecedente: %s, Costo: %s, Fecha de corte: %s.",
+                    "Editó el caso #%d. Cambios: %s.",
                     $idCaso,
-                    $postData['comentarios'],
-                    $postData['costo'],
-                    $postData['fecha_corte']
+                    json_encode($filteredData) // Registrar los cambios realizados
                 ));
             }
 
@@ -170,7 +169,35 @@ class CasosController extends Controller
             $response['message'] = 'Ocurrió un error al actualizar el caso.';
         }
 
-
         return $this->response->setJSON($response);
+    }
+
+    public function eliminarCaso()
+    {
+        $casoModel = new CasoModel();
+
+        // Obtener el ID del caso desde la solicitud
+        $idCaso = $this->request->getPost('id_caso');
+
+        // Validar que se proporcione el ID del caso
+        if (!$idCaso) {
+            return $this->failValidationErrors('Es necesario proporcionar el ID del caso.');
+        }
+
+        // Intentar eliminar el caso
+        if ($casoModel->eliminarCaso($idCaso)) {
+            // Registrar la acción de eliminación
+            $usuario = session()->get('usuario');
+            if ($usuario) {
+                registrarAccion($usuario['id'], 'delete_case', "Eliminó el caso con ID: $idCaso.");
+            }
+
+            return $this->respondDeleted([
+                'success' => true,
+                'message' => 'Caso eliminado correctamente.'
+            ]);
+        } else {
+            return $this->failServerError('No se pudo eliminar el caso.');
+        }
     }
 }

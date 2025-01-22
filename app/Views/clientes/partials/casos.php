@@ -135,14 +135,16 @@
                                                 <?php endif; ?>
 
                                                 <?php if ($caso['pagado'] == "0") : ?>
-                                                    <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
-                                                        <i class="fa-solid fa-receipt me-1"></i>
-                                                        <span>Pagado en línea</span>
-                                                    </button>
-                                                    <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="2">
-                                                        <i class="fa-solid fa-receipt me-1"></i>
-                                                        <span>Pagado en oficina</span>
-                                                    </button>
+                                                    <div class="text-center mt-3">
+                                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
+                                                            <i class="fa-solid fa-receipt me-1"></i>
+                                                            <span>Pagado en línea</span>
+                                                        </button>
+                                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="2">
+                                                            <i class="fa-solid fa-receipt me-1"></i>
+                                                            <span>Pagado en oficina</span>
+                                                        </button>
+                                                    </div>
                                                 <?php endif; ?>
                                             </div>
                                         <?php endif; ?>
@@ -172,6 +174,12 @@
                                         <i class="fa-solid fa-print me-1"></i>
                                         <span>Imprimir</span>
                                     </a>
+                                    <?php if ($perfil == "ADMIN") : ?>
+                                        <button class="btn btn-outline-danger btnEliminarCaso" data-id="<?= $caso['id_caso'] ?>">
+                                            <i class="fa-solid fa-trash me-1"></i>
+                                            <span>Eliminar</span>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
 
                             </div>
