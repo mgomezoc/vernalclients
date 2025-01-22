@@ -133,6 +133,17 @@
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
+
+                                                <?php if ($caso['pagado'] == "0") : ?>
+                                                    <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
+                                                        <i class="fa-solid fa-receipt me-1"></i>
+                                                        <span>Pagado en línea</span>
+                                                    </button>
+                                                    <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="2">
+                                                        <i class="fa-solid fa-receipt me-1"></i>
+                                                        <span>Pagado en oficina</span>
+                                                    </button>
+                                                <?php endif; ?>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -161,17 +172,6 @@
                                         <i class="fa-solid fa-print me-1"></i>
                                         <span>Imprimir</span>
                                     </a>
-
-                                    <?php if ($caso['pagado'] == "0") : ?>
-                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="1">
-                                            <i class="fa-solid fa-receipt me-1"></i>
-                                            <span>Pagado en línea</span>
-                                        </button>
-                                        <button class="btnPagarCaso btn btn-verde btnVerCaso" data-id="<?= $caso['id_caso'] ?>" data-tipo="2">
-                                            <i class="fa-solid fa-receipt me-1"></i>
-                                            <span>Pagado en oficina</span>
-                                        </button>
-                                    <?php endif; ?>
                                 </div>
 
                             </div>

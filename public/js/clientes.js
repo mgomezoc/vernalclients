@@ -66,6 +66,11 @@ $(function () {
             descripcion: 'El cliente está esperando ser asignado a un abogado, generalmente para consultas online.',
             rolResponsable: 'RECEPTION',
             transicionesPermitidas: ['3', '2', '7']
+        },
+        9: {
+            descripcion: 'El cliente esta tomando la decisión de continuar con el procedimiento.',
+            rolResponsable: 'ADMIN, ATTORNEY',
+            transicionesPermitidas: ['1', '6', '7']
         }
     };
 
@@ -121,10 +126,11 @@ $(function () {
             2: [3, 7, 8], // Intake -> Asignado, Inactivo, Por Asignar
             3: [4, 5, 7, 8], // Asignado -> Elegible, No Elegible, Inactivo, Por Asignar
             4: [6, 7], // Elegible -> Activo, Inactivo
-            5: [1, 7], // No Elegible -> Prospecto, Inactivo
+            5: [1, 7, 9], // No Elegible -> Prospecto, Inactivo, En Espera
             6: [3, 7], // Activo -> Asignado, Inactivo
             7: [1, 2, 6], // Inactivo -> Prospecto, Intake, Activo
-            8: [2, 3, 7] // Por Asignar -> Intake, Asignado, Inactivo
+            8: [2, 3, 7], // Por Asignar -> Intake, Asignado, Inactivo
+            9: [1, , 6, 7] // Retirado -> Prospecto
         };
 
         // Obtener el select de estatus

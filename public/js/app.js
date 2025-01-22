@@ -187,7 +187,8 @@ function columnaEstatus(value, row) {
         5: 'text-bg-danger', // no elegible - rechazado
         6: 'text-bg-info', // activo - en acción
         7: 'text-bg-secondary', // inactivo - estado neutro, no activo
-        8: 'text-bg-dark' // por asignar - esperando asignación
+        8: 'text-bg-dark', // por asignar - esperando asignación
+        9: 'text-bg-light' // en espera
     };
 
     const defaultClass = 'text-bg-dark';

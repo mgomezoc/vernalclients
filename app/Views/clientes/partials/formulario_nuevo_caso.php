@@ -70,6 +70,20 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-4">
+                <label for="fecha_limite" class="form-label fw-bold">Límite de tiempo</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa-regular fa-calendar-alt text-primary"></i>
+                    </span>
+                    <input type="text" name="fecha_limite" id="fecha_limite" class="form-control flatpickr" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Botón de Enviar -->
     <div class="d-flex justify-content-end">
         <button type="submit" class="btn btn-success">

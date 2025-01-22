@@ -109,6 +109,7 @@ $(function () {
                         title: 'Caso creado',
                         text: `Se creo el caso correctamente`
                     }).then(() => {
+                        window.location.reload();
                         //const id_caso = r.crearCaso;
                         //eateCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
                     });
