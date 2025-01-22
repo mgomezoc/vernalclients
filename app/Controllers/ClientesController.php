@@ -376,11 +376,27 @@ class ClientesController extends BaseController
         $id_tipo_caso = $this->request->getPost('id_tipo_caso');
         $proceso = $this->request->getPost('proceso');
         $fecha_corte = $this->request->getPost('fecha_corte');
-        $documentos = $this->request->getPost('documentos'); // Archivos recibidos
+        $limite_tiempo = $this->request->getPost('limite_tiempo');
+        $documentos = $this->request->getPost('documentos');
 
         // Asegurarnos de que documentos sea un array
         if (!is_array($documentos)) {
             $documentos = $documentos ? [$documentos] : [];
+        }
+
+        // Validaciones de fechas
+        if (!$fecha_corte || !$limite_tiempo) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Las fechas de corte y límite de tiempo son obligatorias.'
+            ]);
+        }
+
+        if (strtotime($limite_tiempo) >= strtotime($fecha_corte)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'El límite de tiempo debe ser anterior a la fecha de corte.'
+            ]);
         }
 
         $casoModel = new CasoModel();
@@ -396,6 +412,7 @@ class ClientesController extends BaseController
             'costo' => $costo,
             'procesos_adicionales' => $procesos_adicionales,
             'fecha_corte' => $fecha_corte,
+            'limite_tiempo' => $limite_tiempo, // Guardar el nuevo campo
             'fecha_creacion' => date('Y-m-d H:i:s'),
             'fecha_actualizacion' => date('Y-m-d H:i:s')
         ];
@@ -431,7 +448,7 @@ class ClientesController extends BaseController
             // Registrar acciones
             $usuario = session()->get('usuario');
             if ($usuario) {
-                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso para el cliente ID $id_cliente.");
+                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso para el cliente ID $id_cliente con límite de tiempo.");
                 registrarAccion($usuario['id'], 'update_client_status', "El usuario actualizó el estatus del cliente ID $id_cliente a $estatus.");
             }
 
@@ -445,6 +462,7 @@ class ClientesController extends BaseController
 
         return $this->response->setJSON(['success' => false, 'message' => 'No se pudo crear el caso']);
     }
+
 
 
     /**
@@ -480,6 +498,7 @@ class ClientesController extends BaseController
         $documentoCasoModel = new DocumentoCasoModel();
         foreach ($casos as &$caso) {
             $caso['documentos'] = $documentoCasoModel->obtenerDocumentosPorCaso($caso['id_caso']);
+            $caso['limite_tiempo'] = $caso['limite_tiempo'] ?? 'No definido';
         }
 
         $formularioAdmisionModel = new IntakeModel();
@@ -658,32 +677,43 @@ class ClientesController extends BaseController
         $idUsuario = $this->request->getPost('id_usuario');
         $comentarios = $this->request->getPost('comentarios');
         $costo = $this->request->getPost('costo');
+        $fechaCorte = $this->request->getPost('fecha_corte');
+        $limiteTiempo = $this->request->getPost('limite_tiempo');
+
+        // Validar que se proporcionen los datos obligatorios
+        if (!$idCliente || !$idUsuario || !$fechaCorte || !$limiteTiempo) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Faltan datos obligatorios.']);
+        }
+
+        // Validar que `limite_tiempo` sea una fecha válida
+        if (strtotime($limiteTiempo) >= strtotime($fechaCorte)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'El límite de tiempo debe ser anterior a la fecha de corte.']);
+        }
 
         $data = [
             'id_cliente' => $idCliente,
             'id_usuario' => $idUsuario,
             'comentarios' => $comentarios,
             'costo' => $costo,
+            'fecha_corte' => $fechaCorte,
+            'limite_tiempo' => $limiteTiempo,
             'fecha_creacion' => date('Y-m-d H:i:s'),
             'fecha_actualizacion' => date('Y-m-d H:i:s')
         ];
 
         if ($casoModel->crearCaso($data)) {
-            // Registrar acción de creación de caso
+            // Registrar acción
             $usuario = session()->get('usuario');
             if ($usuario) {
-                registrarAccion($usuario['id'], 'create_case', "El usuario creó un nuevo caso para el cliente ID $idCliente.");
+                registrarAccion($usuario['id'], 'create_case', "El usuario creó un caso con límite de tiempo para el cliente ID $idCliente.");
             }
 
-            $response['success'] = true;
-            $response['message'] = 'Se creó el caso correctamente.';
+            return $this->response->setJSON(['success' => true, 'message' => 'Caso creado correctamente.']);
         } else {
-            $response['success'] = false;
-            $response['message'] = 'Ocurrió un error al crear el caso.';
+            return $this->response->setJSON(['success' => false, 'message' => 'No se pudo crear el caso.']);
         }
-
-        return $this->response->setJSON($response);
     }
+
 
     public function actualizarClientID()
     {

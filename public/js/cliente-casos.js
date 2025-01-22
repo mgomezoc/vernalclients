@@ -1,5 +1,19 @@
 let fieldValue = [];
 
+// Añadir método de validación personalizado para las fechas
+$.validator.addMethod(
+    'validarFechaLimite',
+    function (value, element) {
+        const fechaCorte = $('#fecha_corte').val();
+        console.log('Validando fecha límite:', value, 'Fecha de corte:', fechaCorte); // Debugging
+        if (!fechaCorte || !value) return true; // Si no hay fecha de corte o fecha límite, no validar
+        const limiteTiempo = new Date(value);
+        const fechaCorteDate = new Date(fechaCorte);
+        return limiteTiempo <= fechaCorteDate; // Validar que el límite sea anterior o igual
+    },
+    'La fecha límite debe ser anterior o igual a la fecha de corte.' // Mensaje de error
+);
+
 $(function () {
     const $modalCrearCaso = $('#modalCrearCaso');
     const $formCrearCaso = $('#formCrearCaso');
@@ -28,6 +42,11 @@ $(function () {
                 required: true,
                 date: true
             },
+            limite_tiempo: {
+                required: true,
+                date: true,
+                validarFechaLimite: true // Aplica el método personalizado
+            },
             estatus: {
                 required: true
             }
@@ -48,6 +67,11 @@ $(function () {
             fecha_corte: {
                 required: 'Seleccione la fecha de corte.',
                 date: 'Ingrese una fecha válida.'
+            },
+            limite_tiempo: {
+                required: 'Seleccione una fecha límite.',
+                date: 'Ingrese una fecha válida.',
+                validarFechaLimite: 'La fecha límite debe ser anterior o igual a la fecha de corte.'
             },
             estatus: {
                 required: 'Seleccione un estatus para el caso.'
@@ -107,59 +131,14 @@ $(function () {
                     Swal.fire({
                         icon: 'success',
                         title: 'Caso creado',
-                        text: `Se creo el caso correctamente`
+                        text: `Se creó el caso correctamente`
                     }).then(() => {
                         window.location.reload();
-                        //const id_caso = r.crearCaso;
-                        //eateCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
                     });
                 }
             });
+
             return false;
-
-            Swal.fire({
-                title: 'Creando caso...',
-                text: 'Por favor, espere mientras procesamos su solicitud.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            $.ajax({
-                url: `${baseUrl}casos/crear`,
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    Swal.close();
-
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Caso creado',
-                            text: response.message
-                        }).then(() => {
-                            // Actualizar la tabla de casos
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message || 'No se pudo crear el caso.'
-                        });
-                    }
-                },
-                error: function () {
-                    Swal.close();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error inesperado',
-                        text: 'Ocurrió un problema al intentar crear el caso. Intente nuevamente más tarde.'
-                    });
-                }
-            });
         }
     });
 
@@ -176,6 +155,7 @@ $(function () {
     });
 });
 
+// Funciones auxiliares
 function cargarCasos() {
     location.reload();
 }

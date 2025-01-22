@@ -145,7 +145,7 @@ class CasosController extends Controller
         $idCaso = $this->request->getPost('id_caso');
 
         // Filtrar solo las claves esperadas que se quieren actualizar
-        $expectedKeys = ['comentarios', 'costo', 'fecha_corte', 'pagado', 'forma_pago'];
+        $expectedKeys = ['comentarios', 'costo', 'fecha_corte', 'limite_tiempo', 'pagado', 'forma_pago'];
         $postData = $this->request->getPost();
         $filteredData = array_intersect_key($postData, array_flip($expectedKeys));
 
@@ -171,6 +171,7 @@ class CasosController extends Controller
 
         return $this->response->setJSON($response);
     }
+
 
     public function eliminarCaso()
     {
