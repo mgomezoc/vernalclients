@@ -2,7 +2,8 @@
     <!-- Identificadores Ocultos -->
     <input type="hidden" name="id_cliente" value="<?= $cliente['id_cliente'] ?>">
     <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
-
+    <input type="hidden" name="clientID" value="<?= $cliente['clientID'] ?>">
+    <input type="hidden" name="sucursal" value="<?= $cliente['sucursal'] ?>">
     <!-- Proceso Principal -->
     <div class="mb-3">
         <label for="cbProcesosEInmigration" class="form-label fw-bold">Proceso Principal</label>

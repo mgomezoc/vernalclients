@@ -133,8 +133,16 @@ $(function () {
                         title: 'Caso creado',
                         text: `Se creó el caso correctamente`
                     }).then(() => {
-                        window.location.reload();
+                        setTimeout(() => {
+                            cargarCasos();
+                        }, 1600);
                     });
+                    //crea caso en eimmigration
+                    const id_caso = r.crearCaso;
+
+                    if (formData.clientID) {
+                        createCaseEImmigration(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
+                    }
                 }
             });
 
@@ -202,7 +210,7 @@ function eliminarCaso(idCaso) {
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    }).then(result => {
         if (result.isConfirmed) {
             $.ajax({
                 url: baseUrl + 'casos/eliminar',
@@ -222,6 +230,123 @@ function eliminarCaso(idCaso) {
                     Swal.fire('¡Error!', 'Ocurrió un error al intentar eliminar el caso.', 'error');
                 }
             });
+        }
+    });
+}
+
+function createCaseEImmigration(clientID, sucursal, processID, id_caso) {
+    const sucursalToLocationIDMap = {
+        1: 1,
+        2: 0,
+        4: 2,
+        5: 3
+    };
+
+    const lawFirmLocationID = sucursalToLocationIDMap[sucursal] !== undefined ? sucursalToLocationIDMap[sucursal] : 1;
+
+    var caseData = {
+        autoGenerateCaseNumber: true,
+        clientID: clientID,
+        caseID: 0,
+        applicationText: '',
+        caseCategoryID: null,
+        caseName: 'Intake',
+        caseNumber: `CN-${clientID}-${processID}`,
+        //"creationDate": "2024-03-26T18:46:47.217Z",
+        denialText: null,
+        expirationText: null,
+        externalCaseID: null,
+        externalCaseNumber: null,
+        filingTypeID: null,
+        physicalDocumentLocationID: null,
+        processID: processID,
+        areaOfPracticeID: 1,
+        processingText: null,
+        statusChangeComment: null,
+        //"statusChangeDate": "2024-03-26T18:46:47.217Z",
+        statusID: 0,
+        //"updateDate": "2024-03-26T18:46:47.217Z",
+        incidentText: null,
+        statuteOfLimitationText: null,
+        incidentLocation: null,
+        note: null,
+        case_Client: clientID,
+        lawFirmLocationID: lawFirmLocationID,
+        mainPartyID: clientID
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/createCase`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(caseData),
+        dataType: 'json',
+        success: function (r) {
+            console.log('Caso creado exitosamente:', r);
+
+            actualizarCaseID(id_caso, r.caseID);
+            addCasePartyEImmigration(r.caseID, clientID);
+            updateCustomFieldEImmigration(r.caseID, 1, {
+                fieldValue: fieldValue.join(' --- '),
+                description: 'Procesos Adicionales'
+            });
+        },
+        error: function (error) {
+            console.error('Error al crear el caso:', error);
+        }
+    });
+}
+
+function actualizarCaseID(id_caso, caseID) {
+    const data = {
+        id_caso: id_caso,
+        caseID: caseID
+    };
+
+    return $.ajax({
+        type: 'post',
+        url: baseUrl + 'casos/actualizarCaseID',
+        data: data,
+        dataType: 'json'
+    });
+}
+
+function addCasePartyEImmigration(caseID, clientID, clientName) {
+    var partyData = {
+        clientID: clientID,
+        caseID: caseID,
+        clientName: '',
+        clientTypeID: 0,
+        isMainParty: true,
+        roleID: 8
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/addCaseParty/${caseID}`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(partyData),
+        dataType: 'json',
+        success: function (data) {
+            console.log('Parte creada con éxito:', data);
+        },
+        error: function (error) {
+            console.error('Error al crear la parte del caso:', error);
+        }
+    });
+}
+
+function updateCustomFieldEImmigration(caseID, customFieldID, customFieldData) {
+    $.ajax({
+        url: `${baseUrl}/api/updateCustomField/${caseID}/${customFieldID}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(customFieldData),
+        success: function (response) {
+            console.log('Campo actualizado con éxito:', response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al actualizar el campo:', xhr.responseText);
         }
     });
 }

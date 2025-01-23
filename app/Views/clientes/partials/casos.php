@@ -29,20 +29,29 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="row">
-                                                <div class="mb-3">
-                                                    <strong>Límite de tiempo:</strong>
-                                                    <?php
-                                                    $limiteTiempo = new DateTime($caso['limite_tiempo']);
-                                                    $fechaActual = new DateTime();
-                                                    $interval = $fechaActual->diff($limiteTiempo);
-                                                    $diasRestantes = $interval->days;
-                                                    $colorClase = $diasRestantes > 7 ? 'text-success' : ($diasRestantes > 3 ? 'text-warning' : 'text-danger');
-                                                    ?>
-                                                    <p class="<?= $colorClase ?>">
-                                                        <?= htmlspecialchars($caso['limite_tiempo']) ?>
-                                                        (Faltan <?= $diasRestantes ?> días)
-                                                    </p>
+                                                <div class="mb-5 bg-light border border-rounded p-3 d-flex gap-3">
+                                                    <h5>Límite de tiempo:</h5>
+                                                    <?php if (!empty($caso['limite_tiempo']) && strtotime($caso['limite_tiempo']) !== false) : ?>
+                                                        <?php
+                                                        $limiteTiempo = new DateTime($caso['limite_tiempo']);
+                                                        $fechaActual = new DateTime();
+                                                        $interval = $fechaActual->diff($limiteTiempo);
+                                                        $diasRestantes = $interval->days;
+                                                        $colorClase = $fechaActual > $limiteTiempo
+                                                            ? 'text-danger' // Expirado
+                                                            : ($diasRestantes > 7
+                                                                ? 'text-success' // Más de 7 días restantes
+                                                                : ($diasRestantes > 3 ? 'text-warning' : 'text-danger')); // Entre 3 y 7 días o menos
+                                                        ?>
+                                                        <p class="<?= $colorClase ?> fw-bold">
+                                                            <?= htmlspecialchars($caso['limite_tiempo']) ?>
+                                                            <?= $fechaActual > $limiteTiempo ? '(Expirado)' : "(Faltan $diasRestantes días)" ?>
+                                                        </p>
+                                                    <?php else : ?>
+                                                        <p class="text-muted fw-bold">No está definido</p>
+                                                    <?php endif; ?>
                                                 </div>
+
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <strong>Proceso principal:</strong>

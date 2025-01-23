@@ -686,6 +686,60 @@ function createCase(clientID, sucursal, processID, id_caso) {
     });
 }
 
+function actualizarCaseID(id_caso, caseID) {
+    const data = {
+        id_caso: id_caso,
+        caseID: caseID
+    };
+
+    return $.ajax({
+        type: 'post',
+        url: baseUrl + 'casos/actualizarCaseID',
+        data: data,
+        dataType: 'json'
+    });
+}
+
+function addCaseParty(caseID, clientID, clientName) {
+    var partyData = {
+        clientID: clientID,
+        caseID: caseID,
+        clientName: '',
+        clientTypeID: 0,
+        isMainParty: true,
+        roleID: 8
+    };
+
+    return $.ajax({
+        url: `${baseUrl}api/addCaseParty/${caseID}`,
+        type: 'POST',
+        contentType: 'application/json-patch+json',
+        data: JSON.stringify(partyData),
+        dataType: 'json',
+        success: function (data) {
+            console.log('Parte creada con éxito:', data);
+        },
+        error: function (error) {
+            console.error('Error al crear la parte del caso:', error);
+        }
+    });
+}
+
+function updateCustomField(caseID, customFieldID, customFieldData) {
+    $.ajax({
+        url: `${baseUrl}/api/updateCustomField/${caseID}/${customFieldID}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(customFieldData),
+        success: function (response) {
+            console.log('Campo actualizado con éxito:', response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al actualizar el campo:', xhr.responseText);
+        }
+    });
+}
+
 function agregarAbogado(data) {
     return $.ajax({
         type: 'post',
