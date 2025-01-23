@@ -310,12 +310,13 @@
             <h3>Nuevo Caso</h3>
             <div class="row">
                 <div class="col-md-8">
-                    <form id="frmNuevoCaso-{{id_cliente}}" class="frmNuevoCaso" action="/" method="post" autocomplete="none">
+                    <form id="frmNuevoCaso-{{id_cliente}}" class="frmNuevoCaso" action="/" method="post" autocomplete="off">
                         <input type="hidden" name="id_cliente" value="{{id_cliente}}">
                         <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
                         <input type="hidden" name="clientID" value="{{clientID}}">
                         <input type="hidden" name="sucursal" value="{{sucursal}}">
 
+                        <!-- Antecedente -->
                         <div class="mb-3">
                             <label for="textarea-{{id_cliente}}" class="form-label">
                                 <span>Antecedente</span>
@@ -323,49 +324,66 @@
                             </label>
                             <textarea name="comentarios" class="form-control" id="textarea-{{id_cliente}}" cols="30" rows="10" required></textarea>
                         </div>
+
+                        <!-- Proceso principal -->
                         <div class="mb-3">
                             <label for="cbTiposCaso-{{id_cliente}}" class="form-label">
                                 <span>Proceso principal del caso</span>
                                 <b class="text-danger ms-1">*</b>
                             </label>
-                            <div class="d-flex flex-column-reverse">
-                                <select name="id_tipo_caso" id="cbTiposCaso-{{id_cliente}}" class="cbTiposCaso form-control select2" data-target="#costo-{{id_cliente}}" required>
-                                    {{#each ProcesosCasos}}
-                                        <option value="{{processID}}" data-costo="0">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
+                            <select name="id_tipo_caso" id="cbTiposCaso-{{id_cliente}}" class="form-control select2 cbTiposCaso" required>
+                                {{#each ProcesosCasos}}
+                                    <option value="{{processID}}" data-costo="0">{{name}}</option>
+                                {{/each}}
+                            </select>
                         </div>
+
+                        <!-- Procesos adicionales -->
                         <div class="mb-3">
                             <label for="cbTiposCasoAdicionales-{{id_cliente}}" class="form-label">Procesos adicionales</label>
-                            <div class="d-flex flex-column-reverse">
-                                <select name="procesos_adicionales" id="cbTiposCasoAdicionales-{{id_cliente}}" class="cbTiposCaso form-control select2" data-target="#costo-{{id_cliente}}" multiple>
-                                    {{#each ProcesosCasos}}
-                                        <option value="{{processID}}" data-costo="0">{{name}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
+                            <select name="procesos_adicionales" id="cbTiposCasoAdicionales-{{id_cliente}}" class="form-control select2 cbTiposCaso" data-target="#costo-{{id_cliente}}" multiple>
+                                {{#each ProcesosCasos}}
+                                    <option value="{{processID}}" data-costo="0">{{name}}</option>
+                                {{/each}}
+                            </select>
                         </div>
-                        <div class="row mb-5">
-                            <div class="col-md-6">
+
+                        <!-- Costo, Fecha de corte y Límite de tiempo -->
+                        <div class="row mb-4">
+                            <!-- Costo -->
+                            <div class="col-md-4">
                                 <label for="costo-{{id_cliente}}" class="form-label">Costo</label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" id="basic-addon1">$</span>
-                                    <input type="text" class="form-control" name="costo" id="costo-{{id_cliente}}" value="0" required>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" name="costo" id="costo-{{id_cliente}}" value="0" step="0.01" min="0" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+
+                            <!-- Fecha de corte -->
+                            <div class="col-md-4">
                                 <label for="fecha_corte-{{id_cliente}}" class="form-label">Fecha de corte</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">
                                         <i class="fa-duotone fa-calendar-lines-pen"></i>
                                     </span>
-                                    <input type="text" name="fecha_corte" id="fecha_corte-{{id_cliente}}" class="flatpickr form-control" readonly>
+                                    <input type="text" name="fecha_corte" id="fecha_corte-{{id_cliente}}" class="flatpickr form-control" readonly required>
+                                </div>
+                            </div>
+
+                            <!-- Límite de tiempo -->
+                            <div class="col-md-4">
+                                <label for="limite_tiempo-{{id_cliente}}" class="form-label">Límite de tiempo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon-{{id_cliente}}">
+                                        <i class="fa-duotone fa-calendar-lines-pen"></i>
+                                    </span>
+                                    <input type="text" name="limite_tiempo" id="limite_tiempo-{{id_cliente}}" class="flatpickr form-control" readonly required>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
+                        <!-- Botones de estatus -->
+                        <div class="d-flex justify-content-start gap-2">
                             <button class="btnNuevoCaso btn btn-success" data-tipo="4" data-target="#frmNuevoCaso-{{id_cliente}}">
                                 <i class="fa-solid fa-check-to-slot me-1"></i>
                                 <span>Elegible</span>
@@ -377,6 +395,8 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Consulta en línea -->
                 {{#if consultaOnline}}
                     <div class="col-md-4">
                         <div class="card consulta-online-card mb-3">
