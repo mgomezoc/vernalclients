@@ -1,5 +1,5 @@
 {
-    "printWidth": 200,
+    "printWidth": 500,
     "tabWidth": 4,
     "useTabs": false,
     "semi": true,
@@ -7,9 +7,6 @@
     "trailingComma": "none",
     "bracketSpacing": true,
     "jsxBracketSameLine": false,
-    "arrowParens": "always",
-    "endOfLine": "lf",
-    "htmlWhitespaceSensitivity": "css",
-    "proseWrap": "preserve",
-    "embeddedLanguageFormatting": "auto"
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
 }

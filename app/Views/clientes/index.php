@@ -382,15 +382,31 @@
                             </div>
                         </div>
 
-                        <!-- Botones de estatus -->
-                        <div class="d-flex justify-content-start gap-2">
-                            <button class="btnNuevoCaso btn btn-success" data-tipo="4" data-target="#frmNuevoCaso-{{id_cliente}}">
-                                <i class="fa-solid fa-check-to-slot me-1"></i>
-                                <span>Elegible</span>
-                            </button>
-                            <button class="btnNuevoCaso btn btn-danger" data-tipo="5" data-target="#frmNuevoCaso-{{id_cliente}}">
-                                <i class="fa-sharp fa-light fa-xmark-to-slot me-1"></i>
-                                <span>No Elegible</span>
+                        <!-- Estatus del Caso -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold d-block">Estatus del Caso</label>
+                            <div class="btn-group" role="group" aria-label="Estatus del Caso">
+                                <input type="radio" class="btn-check" name="estatus" id="estatusElegible" value="4" required aria-required="true">
+                                <label class="btn btn-outline-success" for="estatusElegible">
+                                    <i class="fa-solid fa-check"></i> Elegible
+                                </label>
+
+                                <input type="radio" class="btn-check" name="estatus" id="estatusNoElegible" value="5" required aria-required="true">
+                                <label class="btn btn-outline-danger" for="estatusNoElegible">
+                                    <i class="fa-solid fa-times"></i> No Elegible
+                                </label>
+
+                                <input type="radio" class="btn-check" name="estatus" id="estatusEnEspera" value="9" checked required aria-required="true">
+                                <label class="btn btn-outline-warning" for="estatusEnEspera">
+                                    <i class="fa-solid fa-clock"></i> En espera
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Botón de Enviar -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-check me-1"></i> Crear Caso
                             </button>
                         </div>
                     </form>

@@ -153,7 +153,7 @@ $(function () {
     $modalEstatus.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const cliente = $tablaClientes.bootstrapTable('getData').find((cliente) => cliente.id_cliente == id_cliente);
+        const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
 
         const renderData = Handlebars.compile(tplModalEstatus)(cliente);
         $('#containerFormCambioEstatus').html(renderData);
@@ -186,7 +186,7 @@ $(function () {
                     <div class="descripcion-section">
                         <h6><i class="fa-solid fa-arrows-alt-v me-2"></i>Transiciones Permitidas</h6>
                         <ul class="list-unstyled mb-0">
-                            ${info.transicionesPermitidas.map((estatus) => `<li><i class="fa-solid fa-arrow-right me-2"></i>${$('#cbEstatus option[value="' + estatus + '"]').text()}</li>`).join('')}
+                            ${info.transicionesPermitidas.map(estatus => `<li><i class="fa-solid fa-arrow-right me-2"></i>${$('#cbEstatus option[value="' + estatus + '"]').text()}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -368,7 +368,7 @@ $(function () {
     $modalEstatus.on('show.bs.modal', function (e) {
         const $btn = $(e.relatedTarget);
         const id_cliente = $btn.data('id');
-        const cliente = $tablaClientes.bootstrapTable('getData').find((cliente) => cliente.id_cliente == id_cliente);
+        const cliente = $tablaClientes.bootstrapTable('getData').find(cliente => cliente.id_cliente == id_cliente);
 
         const renderData = Handlebars.compile(tplModalEstatus)(cliente);
 
@@ -407,51 +407,42 @@ $(function () {
 
     $(document).on('submit', '.frmNuevoCaso', function (e) {
         e.preventDefault();
-    });
+        const $frm = $(this);
 
-    $(document)
-        .on('click', '.btnNuevoCaso', function (e) {
-            const $btn = $(this);
-            const $frm = $($btn.data('target'));
+        if (!$frm.valid()) {
+            return false;
+        }
 
-            if (!$frm.valid()) {
-                return false;
+        const formData = $frm.serializeObject();
+        formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
+
+        let procesos_adicionales = [];
+        $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
+            const $option = $(option);
+            procesos_adicionales.push({
+                id: $option.val(),
+                label: $option.text()
+            });
+
+            fieldValue.push($option.text());
+        });
+
+        formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
+
+        console.log(formData);
+
+        nuevoCaso(formData).then(function (r) {
+            console.log(r);
+            if (!r.success) {
+                swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
+            } else {
+                swal.fire('¡Listo!', 'Se ha actualizado correctamente la información.', 'success');
+                $tablaClientes.bootstrapTable('refresh');
+                const id_caso = r.crearCaso;
+                createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
             }
-
-            const formData = $frm.serializeObject();
-            const estatus = $btn.data('tipo');
-
-            formData.estatus = estatus;
-            formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
-
-            let procesos_adicionales = [];
-            $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
-                const $option = $(option);
-                procesos_adicionales.push({
-                    id: $option.val(),
-                    label: $option.text()
-                });
-
-                fieldValue.push($option.text());
-            });
-
-            formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
-
-            console.log(formData);
-
-            nuevoCaso(formData).then(function (r) {
-                console.log(r);
-                if (!r.success) {
-                    swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
-                } else {
-                    swal.fire('¡Listo!', 'Se ha actualizado correctamente la información.', 'success');
-                    $tablaClientes.bootstrapTable('refresh');
-                    const id_caso = r.crearCaso;
-                    createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
-                }
-            });
-        })
-        .validate();
+        });
+    });
 
     //ASIGNAR
     // Enviar formulario para asignar abogado

@@ -189,7 +189,7 @@
                                         <span>Imprimir</span>
                                     </a>
                                     <?php if ($perfil == "ADMIN") : ?>
-                                        <button class="btn btn-outline-danger btnEliminarCaso" data-id="<?= $caso['id_caso'] ?>">
+                                        <button class="btn btn-danger btnEliminarCaso" data-id="<?= $caso['id_caso'] ?>">
                                             <i class="fa-solid fa-trash me-1"></i>
                                             <span>Eliminar</span>
                                         </button>
