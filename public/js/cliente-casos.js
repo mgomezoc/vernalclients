@@ -39,13 +39,11 @@ $(function () {
                 min: 0
             },
             fecha_corte: {
-                required: true,
                 date: true
             },
             limite_tiempo: {
-                required: true,
                 date: true,
-                validarFechaLimite: true // Aplica el método personalizado
+                validarFechaLimite: true
             },
             estatus: {
                 required: true
@@ -135,7 +133,7 @@ $(function () {
                     }).then(() => {
                         setTimeout(() => {
                             cargarCasos();
-                        }, 1600);
+                        }, 800);
                     });
                     //crea caso en eimmigration
                     const id_caso = r.crearCaso;
@@ -181,7 +179,8 @@ async function cargarProcesosEInmigration() {
                 placeholder: 'Seleccione un proceso',
                 theme: 'bootstrap-5',
                 allowClear: true,
-                width: '100%'
+                width: '100%',
+                dropdownParent: $('#modalCrearCaso')
             }); // Inicia Select2
         } else {
             console.error('Formato de datos inesperado:', res);

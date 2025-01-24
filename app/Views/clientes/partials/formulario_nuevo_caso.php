@@ -49,7 +49,7 @@
                     <span class="input-group-text">
                         <i class="fa-regular fa-calendar-alt text-primary"></i>
                     </span>
-                    <input type="text" name="fecha_corte" id="fecha_corte" class="form-control flatpickr" required aria-required="true" aria-label="Fecha de Corte">
+                    <input type="text" name="fecha_corte" id="fecha_corte" class="form-control flatpickr" aria-label="Fecha de Corte">
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
                     <span class="input-group-text">
                         <i class="fa-regular fa-calendar-alt text-primary"></i>
                     </span>
-                    <input type="text" name="limite_tiempo" id="limite_tiempo" class="form-control flatpickr" required aria-required="true" aria-label="Fecha Límite">
+                    <input type="text" name="limite_tiempo" id="limite_tiempo" class="form-control flatpickr" aria-label="Fecha Límite">
                 </div>
             </div>
         </div>

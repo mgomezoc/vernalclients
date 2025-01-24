@@ -474,6 +474,12 @@ label.error {
   background: #0e1c2c;
   color: #e2e2e2;
 }
+label.is-invalid {
+  color: #dc3545 !important;
+  margin-top: 0.25rem !important;
+  display: block !important;
+  line-height: 1.2 !important;
+}
 /* ==========================================================================
    Helper classes
    ========================================================================== */

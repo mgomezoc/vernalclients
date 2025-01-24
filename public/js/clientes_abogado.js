@@ -21,13 +21,22 @@ let fieldValue = [];
 let ProcesosCasos = [];
 let dropzones = {}; // Guardar referencias de cada instancia de Dropzone
 
+// Añadir regla personalizada para validar campos TinyMCE
+$.validator.addMethod(
+    'tinyMCERequired',
+    function (value, element) {
+        const editorContent = tinymce.get(element.id).getContent({ format: 'text' }).trim();
+        return editorContent.length > 0; // Validar que no esté vacío
+    },
+    'Este campo es obligatorio.'
+);
+
 // Inicializar TinyMCE
 function initializeTinyMCE(selector) {
     tinymce.init({
         selector: selector,
         plugins: 'autolink link lists code',
-        toolbar:
-            'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link removeformat | code',
+        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link removeformat | code',
         menubar: false,
         setup: function (editor) {
             editor.on('change', function () {
@@ -125,6 +134,7 @@ $(function () {
                 });
 
             $('.flatpickr').flatpickr();
+            inicializaFrmNuevoCaso();
         },
         onCollapseRow: function (index, row) {
             // Destruir TinyMCE antes de colapsar la fila
@@ -169,47 +179,39 @@ $(function () {
         copyToClipboard(url);
     });
 
-    $(document)
-        .on('click', '.btnNuevoCaso', function (e) {
-            const $btn = $(this);
-            const $frm = $($btn.data('target'));
-
-            if ($frm.valid()) {
-                const formData = $frm.serializeObject();
-                const estatus = $btn.data('tipo');
-
-                formData.estatus = estatus;
-                formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
-
-                let procesos_adicionales = [];
-                $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
-                    const $option = $(option);
-                    procesos_adicionales.push({
-                        id: $option.val(),
-                        label: $option.text()
-                    });
-
-                    fieldValue.push($option.text());
-                });
-
-                formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
-
-                nuevoCaso(formData).then(function (r) {
-                    if (!r.success) {
-                        swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
-                    } else {
-                        swal.fire('¡Listo!', 'La información se ha actualizado correctamente.', 'success');
-                        $tablaClientes.bootstrapTable('refresh');
-                        const id_caso = r.crearCaso;
-                        createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
-                    }
-                });
-            }
-        })
-        .validate();
-
     $(document).on('submit', '.frmNuevoCaso', function (e) {
         e.preventDefault();
+        const $frm = $(this);
+
+        // Validar el formulario antes de enviarlo
+        if ($frm.valid()) {
+            const formData = $frm.serializeObject();
+            formData.proceso = $(`#cbTiposCaso-${formData.id_cliente} option:selected`).text();
+
+            let procesos_adicionales = [];
+            $(`#cbTiposCasoAdicionales-${formData.id_cliente} option:selected`).each(function (i, option) {
+                const $option = $(option);
+                procesos_adicionales.push({
+                    id: $option.val(),
+                    label: $option.text()
+                });
+
+                fieldValue.push($option.text());
+            });
+
+            formData.procesos_adicionales = JSON.stringify(procesos_adicionales);
+
+            nuevoCaso(formData).then(function (r) {
+                if (!r.success) {
+                    swal.fire('¡Oops! Algo salió mal.', r.message, 'error');
+                } else {
+                    swal.fire('¡Listo!', 'La información se ha actualizado correctamente.', 'success');
+                    $tablaClientes.bootstrapTable('refresh');
+                    const id_caso = r.crearCaso;
+                    createCase(formData.clientID, formData.sucursal, formData.id_tipo_caso, id_caso);
+                }
+            });
+        }
     });
 
     caseProcesses();
@@ -440,6 +442,76 @@ function updateCustomField(caseID, customFieldID, customFieldData) {
         },
         error: function (xhr, status, error) {
             console.error('Error al actualizar el campo:', xhr.responseText);
+        }
+    });
+}
+
+function inicializaFrmNuevoCaso() {
+    $('.frmNuevoCaso').validate({
+        ignore: [], // Importante para incluir campos de TinyMCE
+        rules: {
+            comentarios: {
+                tinyMCERequired: true
+            },
+            id_tipo_caso: {
+                required: true
+            },
+            costo: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            fecha_corte: {
+                date: true
+            },
+            limite_tiempo: {
+                date: true
+            },
+            estatus: {
+                required: true
+            }
+        },
+        messages: {
+            comentarios: {
+                tinyMCERequired: 'El campo de comentarios no puede estar vacío.'
+            },
+            id_tipo_caso: {
+                required: 'Seleccione un proceso principal.'
+            },
+            costo: {
+                required: 'Ingrese el costo del caso.',
+                number: 'El costo debe ser un número válido.',
+                min: 'El costo debe ser mayor o igual a 0.'
+            },
+            fecha_corte: {
+                required: 'Seleccione una fecha de corte válida.',
+                date: 'Ingrese una fecha válida.'
+            },
+            limite_tiempo: {
+                required: 'Seleccione una fecha límite válida.',
+                date: 'Ingrese una fecha válida.'
+            },
+            estatus: {
+                required: 'Seleccione un estatus para el caso.'
+            }
+        },
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass(errorClass).removeClass(validClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass(errorClass).addClass(validClass);
+        },
+        errorPlacement: function (error, element) {
+            if (element.hasClass('tinymce-editor')) {
+                // Mostrar el error debajo del editor TinyMCE
+                $(element).next().append(error);
+            } else if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
         }
     });
 }

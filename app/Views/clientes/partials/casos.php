@@ -31,7 +31,7 @@
                                             <div class="row">
                                                 <div class="mb-5 bg-light border border-rounded p-3 d-flex gap-3">
                                                     <h5>Límite de tiempo:</h5>
-                                                    <?php if (!empty($caso['limite_tiempo']) && strtotime($caso['limite_tiempo']) !== false) : ?>
+                                                    <?php if (!empty($caso['limite_tiempo']) && $caso['limite_tiempo'] !== '0000-00-00' && strtotime($caso['limite_tiempo']) !== false) : ?>
                                                         <?php
                                                         $limiteTiempo = new DateTime($caso['limite_tiempo']);
                                                         $fechaActual = new DateTime();
@@ -44,7 +44,7 @@
                                                                 : ($diasRestantes > 3 ? 'text-warning' : 'text-danger')); // Entre 3 y 7 días o menos
                                                         ?>
                                                         <p class="<?= $colorClase ?> fw-bold">
-                                                            <?= htmlspecialchars($caso['limite_tiempo']) ?>
+                                                            <?= $limiteTiempo->format('m-d-Y') ?> <!-- Mostrar en formato mes-día-año -->
                                                             <?= $fechaActual > $limiteTiempo ? '(Expirado)' : "(Faltan $diasRestantes días)" ?>
                                                         </p>
                                                     <?php else : ?>
@@ -103,7 +103,7 @@
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <strong>Creado:</strong>
-                                                        <p><?= htmlspecialchars($caso['fecha_creacion']) ?></p>
+                                                        <p><?= (new DateTime($caso['fecha_creacion']))->format('m-d-Y H:i') ?></p>
                                                     </div>
                                                     <div class="mb-3">
                                                         <strong>Costo:</strong>
@@ -113,12 +113,18 @@
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <strong>Última actualización:</strong>
-                                                        <p><?= htmlspecialchars($caso['fecha_actualizacion']) ?></p>
+                                                        <p><?= (new DateTime($caso['fecha_actualizacion']))->format('m-d-Y H:i') ?></p>
                                                     </div>
+
                                                     <div class="mb-3">
                                                         <strong>Fecha de corte:</strong>
-                                                        <p><?= htmlspecialchars($caso['fecha_corte']) ?></p>
+                                                        <?php if (!empty($caso['fecha_corte']) && $caso['fecha_corte'] !== '0000-00-00' && strtotime($caso['fecha_corte']) !== false) : ?>
+                                                            <p><?= (new DateTime($caso['fecha_corte']))->format('m-d-Y') ?></p>
+                                                        <?php else : ?>
+                                                            <p class="text-muted fw-bold">No está definido</p>
+                                                        <?php endif; ?>
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <div class="d-flex flex-wrap gap-2">
@@ -233,12 +239,32 @@
 
                     <div class="mb-3">
                         <label for="costo" class="form-label">Costo</label>
-                        <input type="number" name="costo" id="costo" class="form-control" step="0.01" min="0" required>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-dollar-sign text-success"></i>
+                            </span>
+                            <input type="number" name="costo" id="costo" class="form-control" step="0.01" min="0" required>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="fecha_corte" class="form-label">Fecha de corte</label>
-                        <input type="text" name="fecha_corte" id="fecha_corte" class="form-control flatpickr" required>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-duotone fa-calendar-lines-pen text-primary"></i>
+                            </span>
+                            <input type="text" name="fecha_corte" id="fecha_corte" class="form-control flatpickr">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="limite_tiempo" class="form-label">Fecha Límite</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-clock text-primary"></i>
+                            </span>
+                            <input type="text" name="limite_tiempo" id="limite_tiempo" class="flatpickr form-control" readonly>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -383,7 +383,7 @@ $(function () {
         $tablaExpediente.empty(); // Limpiar la tabla
 
         if (expedientes.length > 0) {
-            expedientes.forEach((expediente) => {
+            expedientes.forEach(expediente => {
                 const fila = `
                 <tr>
                     <td>${expediente.nombre_documento}</td>
@@ -463,12 +463,36 @@ $(function () {
 
         // Manejo de Flatpickr
         const fechaInput = $('#fecha_corte');
-        fechaInput.val(caso.fecha_corte); // Establecer el valor inicial en el input
+
+        // Verificar si la fecha es válida antes de asignarla al input
+        if (caso.fecha_corte === '0000-00-00' || !caso.fecha_corte) {
+            fechaInput.val(''); // Dejar el campo vacío si la fecha es inválida o no existe
+        } else {
+            fechaInput.val(caso.fecha_corte); // Asignar la fecha válida
+        }
+
         fechaInput.flatpickr({
             dateFormat: 'Y-m-d', // Formato del valor
             altInput: true, // Mostrar formato alternativo
             altFormat: 'm-d-Y', // Formato alternativo para mostrar al usuario
-            allowInput: true
+            allowInput: true // Permitir al usuario ingresar manualmente
+        });
+
+        // Manejo de Flatpickr para el campo "limite_tiempo"
+        const limiteTiempoInput = $('#limite_tiempo');
+
+        // Verificar si la fecha límite es válida antes de asignarla al input
+        if (caso.limite_tiempo === '0000-00-00' || !caso.limite_tiempo) {
+            limiteTiempoInput.val(''); // Dejar el campo vacío si la fecha es inválida o no existe
+        } else {
+            limiteTiempoInput.val(caso.limite_tiempo); // Asignar la fecha válida
+        }
+
+        limiteTiempoInput.flatpickr({
+            dateFormat: 'Y-m-d', // Formato del valor almacenado
+            altInput: true, // Mostrar formato alternativo al usuario
+            altFormat: 'm-d-Y', // Formato alternativo para mostrar al usuario
+            allowInput: true // Permitir ingreso manual
         });
 
         // Mostrar el modal
@@ -484,11 +508,9 @@ $(function () {
             },
             costo: {
                 required: true,
-                number: true,
-                min: 0.01 // Solo valores positivos, mínimo 0.01
+                number: true
             },
             fecha_corte: {
-                required: true,
                 date: true
             }
         },
@@ -519,7 +541,7 @@ $(function () {
                 showCancelButton: true,
                 confirmButtonText: 'Sí, guardar',
                 cancelButtonText: 'Cancelar'
-            }).then(async (result) => {
+            }).then(async result => {
                 if (result.isConfirmed) {
                     try {
                         const response = await $.post(`${baseUrl}casos/editar`, formData);
@@ -822,17 +844,7 @@ function cargarEstatusMigratorio(estatusSeleccionado = '', selectEstatusID = '')
     }
 
     // Array EstatusMigratorio predefinido
-    const EstatusMigratorio = [
-        { label: 'Ciudadano/a' },
-        { label: 'Residente Permanente' },
-        { label: 'Visa de Trabajo' },
-        { label: 'Visa de Estudiante' },
-        { label: 'Refugiado/a o Asilado/a' },
-        { label: 'Sin Documentos' },
-        { label: 'En Proceso de Naturalización' },
-        { label: 'Otro Estatus Migratorio' },
-        { label: 'Desconocido' }
-    ];
+    const EstatusMigratorio = [{ label: 'Ciudadano/a' }, { label: 'Residente Permanente' }, { label: 'Visa de Trabajo' }, { label: 'Visa de Estudiante' }, { label: 'Refugiado/a o Asilado/a' }, { label: 'Sin Documentos' }, { label: 'En Proceso de Naturalización' }, { label: 'Otro Estatus Migratorio' }, { label: 'Desconocido' }];
 
     // Construir el fragmento HTML para las opciones
     let options = '<option value="" disabled>Seleccione un estatus migratorio</option>'; // Opción por defecto

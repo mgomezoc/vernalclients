@@ -384,21 +384,6 @@ class ClientesController extends BaseController
             $documentos = $documentos ? [$documentos] : [];
         }
 
-        // Validaciones de fechas
-        if (!$fecha_corte || !$limite_tiempo) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Las fechas de corte y límite de tiempo son obligatorias.'
-            ]);
-        }
-
-        if (strtotime($limite_tiempo) >= strtotime($fecha_corte)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'El límite de tiempo debe ser anterior a la fecha de corte.'
-            ]);
-        }
-
         $casoModel = new CasoModel();
         $documentoCasoModel = new DocumentoCasoModel();
         $clienteModel = new ClienteModel();

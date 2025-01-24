@@ -366,7 +366,7 @@
                                     <span class="input-group-text" id="basic-addon1">
                                         <i class="fa-duotone fa-calendar-lines-pen"></i>
                                     </span>
-                                    <input type="text" name="fecha_corte" id="fecha_corte-{{id_cliente}}" class="flatpickr form-control" readonly required>
+                                    <input type="text" name="fecha_corte" id="fecha_corte-{{id_cliente}}" class="flatpickr form-control" readonly>
                                 </div>
                             </div>
 
@@ -377,7 +377,7 @@
                                     <span class="input-group-text" id="basic-addon-{{id_cliente}}">
                                         <i class="fa-duotone fa-calendar-lines-pen"></i>
                                     </span>
-                                    <input type="text" name="limite_tiempo" id="limite_tiempo-{{id_cliente}}" class="flatpickr form-control" readonly required>
+                                    <input type="text" name="limite_tiempo" id="limite_tiempo-{{id_cliente}}" class="flatpickr form-control" readonly>
                                 </div>
                             </div>
                         </div>
