@@ -209,7 +209,7 @@
             <legend><small class="text-muted">{{nombre}}</small></legend>
             <div class="mb-3">
                 <label for="cbEstatus" class="form-label">Estatus</label>
-                <select name="estatus" id="cbEstatus" class="form-control select2" aria-describedby="ayudaEstatus">
+                <select name="estatus" id="cbEstatus" class="form-control select2" aria-describedby="ayudaEstatus" required>
                     <option value="">Selecciona un estatus</option>
                     <?php foreach ($estatus as $estado) : ?>
                         <option value="<?= esc($estado['id_cliente_estatus']) ?>">
