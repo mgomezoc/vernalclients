@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Models\CasoModel;
 use App\Models\UsuarioModel;
+use App\Models\ClienteModel;
 use App\Services\EmailService;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
@@ -47,14 +48,18 @@ class RevisarFechasCasos extends BaseCommand
 
     private function enviarNotificacion($caso, EmailService $emailService)
     {
-        // Obtener el correo electrónico del usuario asignado al caso
         $usuarioModel = new UsuarioModel();
+        $clienteModel = new ClienteModel();
+
+        // Obtener el usuario asignado al caso
         $usuario = $usuarioModel->find($caso['id_usuario']);
         $to = $usuario ? $usuario['correo_electronico'] : null;
-        $id = $usuario['id'];
 
-        if (!$to) {
-            CLI::write("No se encontró un correo electrónico para el usuario ID: {$caso['id_usuario']}", 'red');
+        // Obtener información del cliente asociado al caso
+        $cliente = $clienteModel->find($caso['id_cliente']);
+
+        if (!$to || !$cliente) {
+            CLI::write("No se encontró información del usuario o cliente para el caso ID: {$caso['id_caso']}", 'red');
             return;
         }
 
@@ -98,10 +103,15 @@ class RevisarFechasCasos extends BaseCommand
                             <li>Fecha Límite: <span class='highlight'>{$caso['limite_tiempo']}</span></li>
                         </ul>
                         <p>
-                            Por favor, tome las acciones necesarias lo antes posible.
+                            Información del Cliente Asociado:
                         </p>
-                        <a href='https://vernalclients.com/clientes/{$usuario['id']}' class='cta-button'>
-                            Revisar Caso
+                        <ul>
+                            <li>Nombre: <span class='highlight'>{$cliente['nombre']}</span></li>
+                            <li>Teléfono: <span class='highlight'>{$cliente['telefono']}</span></li>
+                            <li>Consulta: <span class='highlight'>{$cliente['tipo_consulta']}</span></li>
+                        </ul>
+                        <a href='https://vernalclients.com/clientes/{$cliente['id_cliente']}' class='cta-button'>
+                            Ver Detalles del Cliente
                         </a>
                     </div>
                     <div class='footer'>

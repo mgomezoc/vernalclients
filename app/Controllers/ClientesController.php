@@ -356,7 +356,7 @@ class ClientesController extends BaseController
             "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>",
             "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'></script>",
             "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>",
-            "<script src='https://cdn.tiny.cloud/1/qk8yw46f1bd42uiso9i2v43nlv51myw0gq5f8th9cl905hcl/tinymce/7/tinymce.min.js'></script>",
+            "<script src='https://cdn.tiny.cloud/1/hsz8tqsqw87xk7kz7pthmcdfwz3i8u5975vmc09nheqvq4x3/tinymce/7/tinymce.min.js'></script>",
             "<script src='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js'></script>",
             "<script src='" . base_url("js/clientes_abogado.js") . "'></script>",
         ];
@@ -515,7 +515,7 @@ class ClientesController extends BaseController
         $data['scripts'] .= "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_es.min.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js'></script>";
         $data['scripts'] .= "<script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>";
-        $data['scripts'] .= "<script src='https://cdn.tiny.cloud/1/qk8yw46f1bd42uiso9i2v43nlv51myw0gq5f8th9cl905hcl/tinymce/7/tinymce.min.js'></script>";
+        $data['scripts'] .= "<script src='https://cdn.tiny.cloud/1/hsz8tqsqw87xk7kz7pthmcdfwz3i8u5975vmc09nheqvq4x3/tinymce/7/tinymce.min.js'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/cliente.js?v=1.0.1") . "'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/eimmigration.js") . "'></script>";
         $data['scripts'] .= "<script src='" . base_url("js/cliente-casos.js?v=1.0.0") . "'></script>";
