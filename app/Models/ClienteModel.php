@@ -148,13 +148,19 @@ class ClienteModel extends Model
     {
         $builder = $this->db->table($this->table);
 
-        // Ajuste de las uniones con las tablas involucradas
+        // Unir las tablas necesarias
         $builder->join('sucursales', 'sucursales.id = clientes.sucursal', 'left');
         $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus', 'left');
         $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente', 'left');
         $builder->join('usuarios', 'usuarios.id = cliente_abogado.id_usuario', 'left');
 
-        // Selección de los campos con el alias correcto
+        // Subconsulta para obtener la fecha límite más cercana de los casos activos
+        $subquery = $this->db->table('casos')
+            ->select('MIN(limite_tiempo)')
+            ->where('casos.id_cliente = clientes.id_cliente')
+            ->where('casos.estatus !=', 4); // Excluir casos con estatus "Cerrado"
+
+        // Seleccionar columnas necesarias, incluyendo la fecha límite más cercana
         $builder->select('clientes.*, 
                      sucursales.nombre as nombre_sucursal, 
                      clientes_estatus.nombre as nombre_estatus, 
@@ -162,9 +168,10 @@ class ClienteModel extends Model
                      clientes.fecha_ultima_actualizacion, 
                      clientes.tipo_consulta, 
                      clientes.meet_url,
-                     usuarios.nombre as nombre_usuario_asignado');
+                     usuarios.nombre as nombre_usuario_asignado,
+                     (' . $subquery->getCompiledSelect() . ') as fecha_limite');
 
-        // Aplicación de filtros
+        // Aplicar filtros si están definidos
         if (!empty($filtros['tipo'])) {
             $builder->where('clientes.tipo_consulta', $filtros['tipo']);
         }
@@ -174,7 +181,6 @@ class ClienteModel extends Model
         }
 
         if (!empty($filtros['estatus'])) {
-            // Si el filtro de estatus es un array, usar whereIn
             if (is_array($filtros['estatus'])) {
                 $builder->whereIn('clientes.estatus', $filtros['estatus']);
             } else {
@@ -192,9 +198,9 @@ class ClienteModel extends Model
             }
         }
 
-        // Filtro de búsqueda por nombre o teléfono
+        // Filtro de búsqueda general
         if (!empty($filtros['search'])) {
-            $builder->groupStart() // agrupar para OR like
+            $builder->groupStart()
                 ->like('clientes.nombre', $filtros['search'])
                 ->orLike('clientes.telefono', $filtros['search'])
                 ->orLike('clientes.tipo_consulta', $filtros['search'])
@@ -205,13 +211,11 @@ class ClienteModel extends Model
                 ->groupEnd();
         }
 
-        // Clonar el builder antes de aplicar los límites para obtener el total
+        // Clonar la consulta antes de aplicar los límites para obtener el total de registros
         $countQuery = clone $builder;
+        $total = $countQuery->countAllResults(false);
 
-        // Obtener el total de registros que cumplen con los filtros (sin límites)
-        $total = $countQuery->countAllResults(false); // countAllResults(false) evita resetear la consulta
-
-        // Ahora aplicar los límites para la paginación
+        // Aplicar límite y ordenación
         $builder->orderBy('clientes.fecha_ultima_actualizacion', 'desc');
         $builder->limit($limit, $offset);
 
@@ -219,10 +223,11 @@ class ClienteModel extends Model
         $result = $builder->get()->getResultArray();
 
         return [
-            'total' => $total,  // El total calculado antes de aplicar el límite
-            'rows' => $result   // Los resultados paginados
+            'total' => $total,
+            'rows' => $result
         ];
     }
+
 
 
     public function obtenerClientesAsignadosPaginados($idUsuario, $limit, $offset, $filtros)
