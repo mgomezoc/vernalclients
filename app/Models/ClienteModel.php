@@ -233,10 +233,26 @@ class ClienteModel extends Model
     public function obtenerClientesAsignadosPaginados($idUsuario, $limit, $offset, $filtros)
     {
         $builder = $this->db->table($this->table);
-        $builder->join('sucursales', 'sucursales.id = clientes.sucursal');
-        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus');
-        $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente');
-        $builder->select('clientes.*, sucursales.nombre as nombre_sucursal, clientes_estatus.nombre as nombre_estatus, clientes_estatus.descripcion as descripcion_estatus, clientes.fecha_ultima_actualizacion, clientes.tipo_consulta, clientes.meet_url');
+        $builder->join('sucursales', 'sucursales.id = clientes.sucursal', 'left');
+        $builder->join('clientes_estatus', 'clientes_estatus.id_cliente_estatus = clientes.estatus', 'left');
+        $builder->join('cliente_abogado', 'cliente_abogado.id_cliente = clientes.id_cliente', 'left');
+
+        // Subconsulta para obtener la fecha límite más cercana de los casos activos
+        $subquery = $this->db->table('casos')
+            ->select('MIN(limite_tiempo)')
+            ->where('casos.id_cliente = clientes.id_cliente')
+            ->where('casos.estatus !=', 4); // Excluir casos con estatus "Cerrado"
+
+        // Seleccionar columnas necesarias, incluyendo la fecha límite más cercana
+        $builder->select('clientes.*, 
+                     sucursales.nombre as nombre_sucursal, 
+                     clientes_estatus.nombre as nombre_estatus, 
+                     clientes_estatus.descripcion as descripcion_estatus, 
+                     clientes.fecha_ultima_actualizacion, 
+                     clientes.tipo_consulta, 
+                     clientes.meet_url,
+                     (' . $subquery->getCompiledSelect() . ') as fecha_limite');
+
         $builder->where('cliente_abogado.id_usuario', $idUsuario);
 
         // Aplicar filtros
@@ -249,7 +265,11 @@ class ClienteModel extends Model
         }
 
         if (!empty($filtros['estatus'])) {
-            $builder->where('clientes.estatus', $filtros['estatus']);
+            if (is_array($filtros['estatus'])) {
+                $builder->whereIn('clientes.estatus', $filtros['estatus']);
+            } else {
+                $builder->where('clientes.estatus', $filtros['estatus']);
+            }
         }
 
         if (!empty($filtros['periodo'])) {

@@ -70,6 +70,7 @@
                             <th data-field="tipo_consulta">Tipo</th>
                             <th data-field="telefono" data-sortable="true">Teléfono</th>
                             <th data-field="nombre_estatus" data-formatter="columnaEstatus" data-align="center">Estatus</th>
+                            <th data-field="fecha_limite" data-formatter="formatoFechaLimite" data-sortable="true" data-align="center">Fecha Límite</th>
                             <th data-field="fecha_ultima_actualizacion">Última Actualización</th>
                             <th data-field="fecha_creado" data-sortable="true">Creado</th>
                         </tr>

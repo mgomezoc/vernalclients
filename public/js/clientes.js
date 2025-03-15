@@ -25,6 +25,36 @@ let fieldValue = [];
 let $modalAsignarAbogado;
 
 $(function () {
+    let isFormModified = false;
+
+    // Detectar cambios en los formularios
+    $(document).on('input change', '#frmNuevoCliente, .frmNuevoCaso, .frmCambioEstatus', function () {
+        isFormModified = true;
+    });
+
+    // Evento antes de salir de la página
+    window.addEventListener('beforeunload', function (event) {
+        if (isFormModified) {
+            event.preventDefault(); // Previene la salida en algunos navegadores
+            event.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?'; // Mensaje en navegadores compatibles
+        }
+    });
+
+    // Resetear el flag cuando el usuario guarda la información
+    $(document).on('click', '#btnAgregarCliente, #btnGuardarCaso, #btnActualizarEstatus', function () {
+        isFormModified = false; // Se desactiva la advertencia después de guardar
+    });
+
+    // Manejo de salida al intentar cerrar el modal
+    $('.modal').on('hide.bs.modal', function (e) {
+        if (isFormModified) {
+            let confirmExit = confirm('Tienes cambios sin guardar. ¿Seguro que quieres cerrar el formulario?');
+            if (!confirmExit) {
+                e.preventDefault(); // Cancela el cierre del modal
+            }
+        }
+    });
+
     // Información sobre cada estatus
     const estatusInfo = {
         1: {
