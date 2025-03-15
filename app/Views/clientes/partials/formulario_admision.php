@@ -61,6 +61,28 @@
                         </div>
                     </div>
 
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">¿Posee un A-Number?</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="poseeANumberSi" name="posee_a_number" class="form-check-input" value="Si"
+                                        <?= set_radio('posee_a_number', 'Si', $formulario['posee_a_number'] == 'Si') ?> disabled>
+                                    <label class="form-check-label" for="poseeANumberSi">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="poseeANumberNo" name="posee_a_number" class="form-check-input" value="No"
+                                        <?= set_radio('posee_a_number', 'No', $formulario['posee_a_number'] == 'No') ?> disabled>
+                                    <label class="form-check-label" for="poseeANumberNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="a_number">A-Number (si aplica):</label>
+                            <input type="text" name="a_number" class="form-control" value="<?= $formulario['a_number'] ?>" disabled>
+                        </div>
+                    </div>
+
 
                     <div class="mb-4">
                         <label class="form-label">¿Cómo se enteró de nuestro servicio?</label>
