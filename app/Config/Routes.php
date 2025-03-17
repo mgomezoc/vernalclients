@@ -33,6 +33,14 @@ $routes->post('salir', 'AccountController::salir');
 
 $routes->get('migracion/migrar-formularios', 'MigracionController::migrarFormularios');
 
+$routes->group('password', function ($routes) {
+    $routes->get('solicitar', 'PasswordController::solicitar');
+    $routes->post('enviar-correo', 'PasswordController::enviarCorreo');
+    $routes->get('restablecer/(:segment)', 'PasswordController::restablecer/$1');
+    $routes->post('actualizar', 'PasswordController::actualizar');
+});
+
+
 // Intake
 $routes->get('intake/(:segment)', 'IntakeController::index/$1');
 $routes->post('intake/guardar', 'IntakeController::guardar');
