@@ -66,6 +66,47 @@ class IntakeController extends BaseController
         return view("intake", $data);
     }
 
+    public function indexEng($slug)
+    {
+        $clienteModel = new ClienteModel();
+        $intakeModel = new IntakeModel();
+
+        $cliente = $clienteModel->where('slug', $slug)->first();
+
+        if (!$cliente) {
+            return "Client not found.";
+        }
+
+        $formularioExistente = $intakeModel->where('id_cliente', $cliente['id_cliente'])->first();
+
+        if ($formularioExistente) {
+            return view('mensaje_formulario_existente_eng', [
+                'cliente' => $cliente,
+                'formularioExistente' => $formularioExistente
+            ]);
+        }
+
+        $sucursalModel = new SucursalModel();
+        $sucursal = $sucursalModel->find($cliente['sucursal']);
+
+        $fechaActual = new \DateTime('now', new \DateTimeZone('America/Chicago'));
+        $fechaSimple = $fechaActual->format('m-d-Y');
+
+        $formatter = new \IntlDateFormatter('en_US', \IntlDateFormatter::FULL, \IntlDateFormatter::NONE, 'America/Chicago', \IntlDateFormatter::GREGORIAN);
+        $fechaTitle = ucfirst($formatter->format($fechaActual));
+
+        $data = [
+            "title" => "Intake Form",
+            "cliente" => $cliente,
+            "sucursal" => $sucursal,
+            "fechaSimple" => $fechaSimple,
+            "fechaTitle" => $fechaTitle
+        ];
+
+        return view("intake_eng", $data);
+    }
+
+
 
     function guardar()
     {

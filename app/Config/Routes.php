@@ -46,6 +46,8 @@ $routes->get('intake/(:segment)', 'IntakeController::index/$1');
 $routes->post('intake/guardar', 'IntakeController::guardar');
 $routes->post('intake/actualizarPago/(:num)', 'IntakeController::actualizarPago/$1');
 $routes->post('intake/actualizar', 'IntakeController::actualizar');
+$routes->get('intake/eng/(:segment)', 'IntakeController::indexEng/$1');
+
 
 // Encuestas
 $routes->get('encuesta/(:segment)', 'EncuestaController::index/$1');

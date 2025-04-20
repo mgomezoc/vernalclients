@@ -21,6 +21,7 @@
             <!-- Información del formulario -->
             <form id="formularioAdmision" method="post" class="needs-validation" novalidate>
                 <input type="hidden" name="id_cliente" value="<?= $cliente['id_cliente'] ?>">
+
                 <!-- INFORMACIÓN GENERAL -->
                 <div id="intake-informacion-general" class="p-3 border mb-5">
                     <h5 class="fs-4 mb-4">INFORMACIÓN GENERAL</h5>
@@ -89,7 +90,28 @@
                         <div>
                             <?php
                             $fuentes = explode('|', $formulario['fuente_informacion']);
-                            $opciones = ['Amigos', 'Familia', 'Fue Cliente', 'Walk-In', 'Facebook', 'Tarjeta', 'Internet', 'Instagram', 'Youtube', 'Tiktok', 'Google', 'Otro'];
+                            $opciones = [
+                                'Amigos',
+                                'Familia',
+                                'Fue Cliente',
+                                'Walk-In',
+                                'Facebook',
+                                'Tarjeta',
+                                'Internet',
+                                'Instagram',
+                                'Youtube',
+                                'Tiktok',
+                                'Google',
+                                'Otro',
+                                'Friends',
+                                'Family',
+                                'Former Client',
+                                'Business Card',
+                                'YouTube',
+                                'TikTok',
+                                'Other'
+                            ];
+
                             foreach ($opciones as $opcion): ?>
                                 <div class="form-check form-check-inline">
                                     <input type="checkbox" class="form-check-input" name="fuente_informacion" id="ck-<?= $opcion ?>" value="<?= $opcion ?>" <?= in_array($opcion, $fuentes) ? 'checked' : '' ?> disabled>
@@ -111,13 +133,13 @@
 
                     <div class="row mb-4">
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="nationality">Ciudadanía:</label>
                             <select id="cbCiudadania" name="nationality" class="form-select" disabled>
                                 <option value="" selected disabled>Cargando...</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4 offset-4">
                             <label class="form-label" for="segunda_nacionalidad">¿Posee alguna segunda nacionalidad?</label>
                             <select id="cbSegundaNacionalidad" name="segunda_nacionalidad" class="form-select" disabled>
                                 <option value="" selected disabled>Cargando...</option>
@@ -127,14 +149,29 @@
 
                     <!-- Datos Básicos -->
                     <div class="row mb-4">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="beneficiario_nombre">Nombre completo:</label>
                             <input type="text" name="beneficiario_nombre" class="form-control" value="<?= $formulario['beneficiario_nombre'] ?>" disabled>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="beneficiario_fecha_nacimiento">Fecha de nacimiento:</label>
                             <input type="text" name="beneficiario_fecha_nacimiento" class="form-control flatpickr" value="<?= $formulario['beneficiario_fecha_nacimiento'] ?>" disabled>
                         </div>
+                        <?php if (!is_null($formulario['beneficiario_vive_ambos_padres'])): ?>
+                            <div class="col-md-4">
+                                <label class="form-label">¿Si es menor de 21, vive con ambos padres?</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="viveConPadresSi" name="beneficiario_vive_ambos_padres" class="form-check-input" value="Si" <?= set_radio('beneficiario_vive_ambos_padres', '1', $formulario['beneficiario_vive_ambos_padres'] == 'Si') ?> disabled>
+                                        <label class="form-check-label" for="viveConPadresSi">Sí</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="viveConPadresNo" name="beneficiario_vive_ambos_padres" class="form-check-input" value="No" <?= set_radio('beneficiario_vive_ambos_padres', '0', $formulario['beneficiario_vive_ambos_padres'] == 'No') ?> disabled>
+                                        <label class="form-check-label" for="viveConPadresNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="row mb-4">
@@ -178,6 +215,28 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">¿Para quién es este proceso?</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="procesoUsted" name="proceso" class="form-check-input" value="Usted" <?= set_radio('proceso', 'Usted', $formulario['proceso'] == 'Usted') ?> disabled>
+                                    <label class="form-check-label" for="procesoUsted">Usted</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="procesoOtro" name="proceso" class="form-check-input" value="Alguien más" <?= set_radio('proceso', 'Alguien más', $formulario['proceso'] == 'Alguien más') ?> disabled>
+                                    <label class="form-check-label" for="procesoOtro">Alguien más</label>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($formulario['proceso'] == 'Alguien más'): ?>
+                            <div class="col-md-6">
+                                <label class="form-label" for="proceso_relacion">Relación con el beneficiario:</label>
+                                <input type="text" name="proceso_relacion" class="form-control" value="<?= $formulario['proceso_relacion'] ?>" disabled>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Datos de Nacimiento -->

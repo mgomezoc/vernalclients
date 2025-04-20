@@ -1,9 +1,9 @@
 <!doctype html>
-<html class="no-js" lang="es">
+<html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Formulario de Admisión</title>
+    <title>Admission Form</title>
     <meta name="description" content="Intake New Clients">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -43,17 +43,18 @@
             </div>
             <div class="col-md-7">
                 <p class="text-white">
-                    Bienvenido <b><?= $cliente["nombre"] ?></b> a VFM Law Firm, esperamos poder ayudarlo con sus necesidades legales.
-                    Para poder asistirlo mejor, responda las siguientes preguntas de manera completa y
-                    precisa. Esta información es confidencial y no se compartirá con nadie que no
-                    pertenezca a VFM Law Firm.
+                    Welcome <b><?= $cliente["nombre"] ?></b> to VFM Law Firm, we hope to assist you with your legal needs.
+                    To better assist you, please answer the following questions completely and
+                    accurately. This information is confidential and will not be shared with anyone
+                    outside of VFM Law Firm.
                 </p>
             </div>
             <div class="text-end">
-                <a href="<?= base_url("intake/eng/" . $cliente['slug']) ?>" class="btn btn-outline-light btn-sm" style="margin-top: 10px;">
-                    <i class="fas fa-language"></i> English Version
+                <a href="<?= base_url("intake/" . $cliente['slug']) ?>" class="btn btn-outline-light btn-sm" style="margin-top: 10px;">
+                    <i class="fas fa-language"></i> Versión en Español
                 </a>
             </div>
+
         </div>
     </header>
 
@@ -61,9 +62,9 @@
         <div id="mensajeCorrecto" class="row hide my-5">
             <div class="col-12">
                 <div class="card card-body text-center">
-                    <h2 class="mb-3">Gracias por elegir a “The Law Office of Vernal Farnum Mejia”</h2>
+                    <h2 class="mb-3">Thank you for choosing "The Law Office of Vernal Farnum Mejia"</h2>
                     <p class="mb-5">
-                        Para realizar tus trámites migratorios. Deseamos ofrecerte un servicio humano, honesto y eficaz. Además, deseamos que tu visita a nuestras oficinas sea lo más agradable posible. Por eso, para evaluar mejor tu caso de inmigración queremos que tomes en cuenta las siguientes recomendaciones.
+                        For your immigration procedures. We wish to provide you with humane, honest, and effective service. Additionally, we want your visit to our office to be as pleasant as possible. Therefore, to better evaluate your immigration case, please consider the following recommendations.
                     </p>
 
                     <div class="row mb-5">
@@ -71,13 +72,13 @@
                             <dotlottie-player src="https://lottie.host/a41589ca-1f46-43bb-be29-3fea83c6f622/LbMgvaHcKO.json" background="transparent" speed="1" style="width: 300px; height: 300px;margin:0 auto" loop autoplay></dotlottie-player>
                         </div>
                         <div class="col-md-6">
-                            <h3>Debes traer contigo:</h3>
+                            <h3>You must bring with you:</h3>
                             <ol class="list-group list-group-flush list-group-numbered text-start">
-                                <li class="list-group-item">Una identificación de tu país de origen.</li>
-                                <li class="list-group-item">Documentos de la Corte de inmigración.</li>
-                                <li class="list-group-item">Reporte de detenciones en la frontera.</li>
-                                <li class="list-group-item">Recibos de procesos migratorios sometidos.</li>
-                                <li class="list-group-item">Reportes de la policía</li>
+                                <li class="list-group-item">ID from your country of origin.</li>
+                                <li class="list-group-item">Immigration Court documents.</li>
+                                <li class="list-group-item">Border detention reports.</li>
+                                <li class="list-group-item">Receipts of submitted immigration processes.</li>
+                                <li class="list-group-item">Police reports</li>
                             </ol>
                             <div class="text-center my-3">
                                 <script async src="https://js.stripe.com/v3/buy-button.js">
@@ -91,7 +92,7 @@
                         </div>
                     </div>
 
-                    <p>También le recordamos que si necesita ser acompañado, contemplamos un máximo de 2 personas ya que seguimos las recomendaciones del Departamento de Salud.</p>
+                    <p>We also remind you that if you need to be accompanied, we allow a maximum of 2 people as we follow Health Department recommendations.</p>
                     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
                 </div>
             </div>
@@ -103,19 +104,19 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div id="informacion-general" class="mb-5">
-                            <h3>INFORMACIÓN GENERAL:</h3>
+                            <h3>GENERAL INFORMATION:</h3>
                             <div class="container-fluid">
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <div class="row justify-content-center align-content-center">
-                                            <label class="col-sm-3 col-form-label">Fecha de consulta:</label>
+                                            <label class="col-sm-3 col-form-label">Consultation Date:</label>
                                             <div class="col-sm-9">
                                                 <input type="text" name="fecha_creado" value="<?= $fechaSimple ?>" class="form-control-plaintext" title='<?= $fechaTitle ?>' readonly>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="cbSucursales">Sucursal</label>
+                                        <label for="cbSucursales">Branch Office</label>
                                         <div class="d-flex flex-column-reverse">
                                             <select id="cbSucursales" name="sucursal" class="form-select select2" required></select>
                                         </div>
@@ -124,12 +125,12 @@
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <div class="row justify-content-center align-items-center">
-                                            <label class="col-sm-6 col-form-label">¿Es su primera consulta aquí?</label>
+                                            <label class="col-sm-6 col-form-label">Is this your first consultation here?</label>
                                             <div class="col-sm-6">
                                                 <div class="pretty p-default p-curve">
                                                     <input type="radio" name="es_primera_consulta" class="muestraMasInformacion" data-target="#container-primeraConsulta" value="Si" data-display="0" checked />
                                                     <div class="state p-success-o">
-                                                        <label>Si</label>
+                                                        <label>Yes</label>
                                                     </div>
                                                 </div>
                                                 <div class="pretty p-default p-curve">
@@ -143,7 +144,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div id="container-primeraConsulta" class="row justify-content-center align-items-center" hidden>
-                                            <label class="col-sm-6 col-form-label">¿Recuerda la última fecha de su consulta?</label>
+                                            <label class="col-sm-6 col-form-label">Do you remember your last consultation date?</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control flatpickr" name="fecha_ultima_consulta">
                                             </div>
@@ -151,25 +152,25 @@
                                     </div>
                                 </div>
                                 <div class="row mb-4">
-                                    <label class="col-sm-3 col-form-label">¿Cómo se enteró de nuestro servicio?</label>
+                                    <label class="col-sm-3 col-form-label">How did you hear about our service?</label>
                                     <div class="col-sm-9">
                                         <div class="pretty-container">
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Amigos" />
+                                                <input type="checkbox" name="fuente_informacion" value="Friends" />
                                                 <div class="state p-info">
-                                                    <label>Amigos</label>
+                                                    <label>Friends</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Familia" />
+                                                <input type="checkbox" name="fuente_informacion" value="Family" />
                                                 <div class="state p-info">
-                                                    <label>Familia</label>
+                                                    <label>Family</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Fue Cliente" />
+                                                <input type="checkbox" name="fuente_informacion" value="Former Client" />
                                                 <div class="state p-info">
-                                                    <label>Fue Cliente</label>
+                                                    <label>Former Client</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
@@ -185,9 +186,9 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Tarjeta" />
+                                                <input type="checkbox" name="fuente_informacion" value="Business Card" />
                                                 <div class="state p-info">
-                                                    <label>Tarjeta</label>
+                                                    <label>Business Card</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
@@ -203,15 +204,15 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Youtube" />
+                                                <input type="checkbox" name="fuente_informacion" value="YouTube" />
                                                 <div class="state p-info">
-                                                    <label>Youtube</label>
+                                                    <label>YouTube</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Tiktok" />
+                                                <input type="checkbox" name="fuente_informacion" value="TikTok" />
                                                 <div class="state p-info">
-                                                    <label>Tiktok</label>
+                                                    <label>TikTok</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
@@ -221,9 +222,9 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
-                                                <input type="checkbox" name="fuente_informacion" value="Otro" />
+                                                <input type="checkbox" name="fuente_informacion" value="Other" />
                                                 <div class="state p-info">
-                                                    <label>Otro</label>
+                                                    <label>Other</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -236,16 +237,16 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div id="informacion-beneficiario" class="mb-5">
-                            <h3>INFORMACIÓN DEL BENEFICIARIO (A):</h3>
+                            <h3>BENEFICIARY INFORMATION:</h3>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-sm-6 col-form-label">¿Posee A-Number?</label>
+                                        <label class="col-sm-6 col-form-label">Do you have an A-Number?</label>
                                         <div class="col-sm-6">
                                             <div class="pretty p-default p-curve">
                                                 <input type="radio" name="posee_a_number" class="muestraMasInformacion" data-target="#container-a_number" value="Si" data-display="1" />
                                                 <div class="state p-success-o">
-                                                    <label>Si</label>
+                                                    <label>Yes</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-curve">
@@ -268,7 +269,7 @@
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-3">
-                                    <label for="Ciudadanía">Ciudadanía</label>
+                                    <label for="Ciudadanía">Citizenship</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="d-flex flex-column-reverse">
@@ -279,12 +280,12 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-sm-6 col-form-label">¿Posee alguna segunda nacionalidad?</label>
+                                        <label class="col-sm-6 col-form-label">Do you have a second nationality?</label>
                                         <div class="col-sm-6">
                                             <div class="pretty p-default p-curve">
-                                                <input type="radio" name="radio-nacionalidad" class="muestraMasInformacion" data-target="#container-nacionalidad" value="Si" data-display="1" />
+                                                <input type="radio" name="radio-nacionalidad" class="muestraMasInformacion" data-target="#container-nacionalidad" value="Yes" data-display="1" />
                                                 <div class="state p-success-o">
-                                                    <label>Si</label>
+                                                    <label>Yes</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-curve">
@@ -298,7 +299,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div id="container-nacionalidad" class="row" hidden>
-                                        <label class="col-sm-6 col-form-label">Nacionalidad</label>
+                                        <label class="col-sm-6 col-form-label">Nationality</label>
                                         <div class="col-sm-6">
                                             <select id="cbNacionalidad" name="segunda_nacionalidad" class="form-select">
                                                 <option value="" selected disabled></option>
@@ -309,39 +310,39 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Nombre Completo</label>
+                                <label class="form-label">Full Name</label>
                                 <input type="hidden" name="beneficiario_nombre">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name1" placeholder="Primer Nombre" required>
+                                        <input type="text" class="form-control" name="name1" placeholder="First Name" required>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name2" placeholder="Segundo Nombre">
+                                        <input type="text" class="form-control" name="name2" placeholder="Middle Name">
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="name3" placeholder="Apellidos" required>
+                                        <input type="text" class="form-control" name="name3" placeholder="Last Name" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Género</label>
+                                <label class="form-label">Gender</label>
                                 <div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_genero" value="Masculino" required>
                                         <div class="state p-primary-o">
-                                            <label>Masculino</label>
+                                            <label>Male</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_genero" value="Femenino">
                                         <div class="state p-primary-o">
-                                            <label>Femenino</label>
+                                            <label>Female</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_genero" value="Prefiero no responder">
                                         <div class="state p-primary-o">
-                                            <label>Prefiero no responder</label>
+                                            <label>Prefer not to answer</label>
                                         </div>
                                     </div>
                                 </div>
@@ -349,7 +350,7 @@
                             <div class="row gap-3 mb-3">
                                 <div class="col-md-6">
                                     <div>
-                                        <label class="form-label">Fecha de Nacimiento</label>
+                                        <label class="form-label">Date of Birth</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fa-duotone fa-calendar"></i>
@@ -362,12 +363,12 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div id="container-menorEdad" hidden>
-                                        <label class="form-label">¿Si es menor de 21, vive con ambos padres?</label>
+                                        <label class="form-label">If under 21, do you live with both parents?</label>
                                         <div>
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="beneficiario_vive_ambos_padres" value="Si">
                                                 <div class="state p-primary-o">
-                                                    <label>Si</label>
+                                                    <label>Yes</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
@@ -382,45 +383,45 @@
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-4">
-                                    <label class="form-label">Ciudad de Nacimiento</label>
+                                    <label class="form-label">City of Birth</label>
                                     <input type="text" class="form-control" name="beneficiario_ciudad" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Estado de Nacimiento</label>
+                                    <label class="form-label">State of Birth</label>
                                     <input type="text" class="form-control" name="beneficiario_estado" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">País de Nacimiento</label>
+                                    <label class="form-label">Country of Birth</label>
                                     <div class="d-flex flex-column-reverse">
                                         <select name="beneficiario_pais" id="cbPaisNacimiento" class="comboPaises form-select select2" required></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Estado Civil</label>
+                                <label class="form-label">Marital Status</label>
                                 <div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_estado_civil" value="Married" checked>
                                         <div class="state p-primary-o">
-                                            <label>Casado</label>
+                                            <label>Married</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_estado_civil" value="Divorced">
                                         <div class="state p-primary-o">
-                                            <label>Divorciado</label>
+                                            <label>Divorced</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_estado_civil" value="Widowed">
                                         <div class="state p-primary-o">
-                                            <label>Viudo</label>
+                                            <label>Widowed</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="beneficiario_estado_civil" value="Single">
                                         <div class="state p-primary-o">
-                                            <label>Soltero</label>
+                                            <label>Single</label>
                                         </div>
                                     </div>
                                 </div>
@@ -428,18 +429,18 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">¿Para quién es este proceso?</label>
+                                        <label class="form-label">Who is this process for?</label>
                                         <div>
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="proceso" class="muestraMasInformacion" data-target="#container-proceso" value="Usted" data-display="0" checked>
                                                 <div class="state p-primary-o">
-                                                    <label>Usted</label>
+                                                    <label>Yourself</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="proceso" class="muestraMasInformacion" data-target="#container-proceso" value="Alguien más" data-display="1">
                                                 <div class="state p-primary-o">
-                                                    <label>Alguien más</label>
+                                                    <label>Someone else</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -447,7 +448,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div id="container-proceso" class="mb-3" hidden>
-                                        <label class="form-label">Si es para alguien más, cual es la relación</label>
+                                        <label class="form-label">If for someone else, what is the relationship?</label>
                                         <select name="proceso_relacion" class="form-select select2 cbParentescos"></select>
                                     </div>
                                 </div>
@@ -455,31 +456,31 @@
 
                             <div class="mb-3">
                                 <fieldset>
-                                    <legend>Dirección</legend>
+                                    <legend>Address</legend>
                                     <div class="mb-3">
-                                        <label class="form-label">Calle y Número</label>
+                                        <label class="form-label">Street and Number</label>
                                         <input type="text" class="form-control" name="direccion_calle_numero" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Ciudad</label>
+                                        <label class="form-label">City</label>
                                         <input type="text" class="form-control" name="direccion_ciudad" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Estado</label>
+                                        <label class="form-label">State</label>
                                         <input type="text" class="form-control" name="direccion_estado" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">País</label>
+                                        <label class="form-label">Country</label>
                                         <div class="d-flex flex-column-reverse">
                                             <select name="direccion_pais" id="" class="form-select" required>
-                                                <option value="EEUU" selected>EEUU</option>
+                                                <option value="USA" selected>USA</option>
                                                 <option value="Mexico">Mexico</option>
-                                                <option value="Otro">Otro</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Código Postal</label>
+                                        <label class="form-label">Zip Code</label>
                                         <input type="text" class="form-control" name="direccion_cp" required>
                                     </div>
                                 </fieldset>
@@ -487,7 +488,7 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <div>
-                                        <label class="form-label">Teléfono</label>
+                                        <label class="form-label">Phone</label>
                                         <input type="tel" class="form-control" name="direccion_telefono" required>
                                     </div>
                                 </div>
@@ -500,34 +501,34 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label">Mejor opción para contactarlo</label>
+                                <label class="form-label">Best way to contact you</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="contacto" value="Llamada" checked>
+                                        <input type="radio" name="contacto" value="Call" checked>
                                         <div class="state p-primary-o">
-                                            <label>Llamada</label>
+                                            <label>Call</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="contacto" value="Mensaje">
+                                        <input type="radio" name="contacto" value="Message">
                                         <div class="state p-primary-o">
-                                            <label>Mensaje</label>
+                                            <label>Message</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
-                                        <input type="radio" name="contacto" value="Correo">
+                                        <input type="radio" name="contacto" value="Email">
                                         <div class="state p-primary-o">
-                                            <label>Correo</label>
+                                            <label>Email</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label">Horario de contacto preferido</label>
+                                <label for="" class="form-label">Preferred contact time</label>
                                 <select id="horarioContacto" name="horario_contacto" class="form-select" required>
-                                    <option value="manana" selected>Mañana (9:00 AM - 12:00 PM)</option>
-                                    <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
+                                    <option value="morning" selected>Morning (9:00 AM - 12:00 PM)</option>
+                                    <option value="afternoon">Afternoon (1:00 PM - 5:00 PM)</option>
                                 </select>
                             </div>
 
@@ -537,28 +538,28 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div id="preguntas">
-                            <h3>PREGUNTAS DE INMIGRACIÓN PARA EL (LA) BENEFICIARIO(A):</h3>
+                            <h3>IMMIGRATION QUESTIONS FOR THE BENEFICIARY:</h3>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div>
-                                        <label class="form-label">¿Cómo entró a EEUU?</label>
+                                        <label class="form-label">How did you enter the USA?</label>
                                         <div class="mt-2">
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="como_entro_eeuu" class="muestraMasInformacion" data-target="#container-visa" value="Con Visa" data-display="1">
                                                 <div class="state p-primary-o">
-                                                    <label>Con Visa</label>
+                                                    <label>With Visa</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="como_entro_eeuu" class="muestraMasInformacion" data-target="#container-visa" value="Sin Visa" data-display="0" checked>
                                                 <div class="state p-primary-o">
-                                                    <label>Sin Visa</label>
+                                                    <label>Without Visa</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="como_entro_eeuu" class="muestraMasInformacion" data-target="#container-visa" value="Con parole" data-display="0">
                                                 <div class="state p-primary-o">
-                                                    <label>Con parole</label>
+                                                    <label>With Parole</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -566,20 +567,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div id="container-visa" hidden>
-                                        <label class="form-label">Si entró Con Visa, cual es el tipo de Visa</label>
+                                        <label class="form-label">If entered With Visa, what type?</label>
                                         <select name="tipo_visa" id="cbTipoVisa" class="form-select select2"></select>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Estatus migratorio actual</label>
+                                <label class="form-label">Current immigration status</label>
                                 <div class="d-flex flex-md-column-reverse">
                                     <select name="estatus_migratorio_actual" class="form-select select2 cbEstatusMigratorio" required></select>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Fecha de última entrada a los Estados Unidos</label>
+                                <label class="form-label">Date of last entry to the United States</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fa-duotone fa-calendar"></i>
@@ -589,13 +590,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">¿Alguna vez han sometido una solicitud migratoria en beneficio
-                                    suyo?</label>
+                                <label class="form-label">Has an immigration petition ever been filed on your behalf?</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="solicitud_migratoria" class="muestraMasInformacion" data-target="#container-peticionado" value="Si" data-display="1">
                                         <div class="state p-primary-o">
-                                            <label>Si</label>
+                                            <label>Yes</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
@@ -608,17 +608,17 @@
                             </div>
 
                             <div id="container-peticionado" class="mb-3" hidden>
-                                <label class="form-label">Si es así, explique quién, cuando, y los resultados</label>
+                                <label class="form-label">If yes, explain who, when, and results</label>
                                 <textarea class="form-control" name="solicitud_migratoria_explicacion"></textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">¿Está actualmente en un proceso de inmigración?</label>
+                                <label class="form-label">Are you currently in an immigration process?</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="proceso_migracion" class="muestraMasInformacion" data-target="#container-procesoMigracion" value="Si" data-display="1">
                                         <div class="state p-primary-o">
-                                            <label>Si</label>
+                                            <label>Yes</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
@@ -631,37 +631,35 @@
                             </div>
 
                             <div id="container-procesoMigracion" class="mb-3" hidden>
-                                <label class="form-label">Si es así, explique</label>
+                                <label class="form-label">If yes, explain</label>
                                 <textarea class="form-control" name="proceso_migracion_explicacion"></textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Por favor seleccione a sus parientes que sean ciudadanos americanos o
-                                    residentes
-                                    legales de Estados Unidos</label>
+                                <label class="form-label">Please select relatives who are US citizens or legal permanent residents</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="parientes" value="Hijo(a)" />
                                         <div class="state p-info">
-                                            <label>Hijo(a)</label>
+                                            <label>Child</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="parientes" value="Esposo(a)" />
                                         <div class="state p-info">
-                                            <label>Esposo(a)</label>
+                                            <label>Spouse</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="parientes" value="Hermano(a)" />
                                         <div class="state p-info">
-                                            <label>Hermano(a)</label>
+                                            <label>Sibling</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="parientes" value="Padre / Madre" />
                                         <div class="state p-info">
-                                            <label>Padre / Madre</label>
+                                            <label>Parent</label>
                                         </div>
                                     </div>
                                 </div>
@@ -669,12 +667,12 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div>
-                                        <label class="form-label">¿Tiene algún familiar en el servicio militar?</label>
+                                        <label class="form-label">Do you have any family in military service?</label>
                                         <div class="mt-2">
                                             <div class="pretty p-default p-round">
                                                 <input type="radio" name="familiar_servicio" class="muestraMasInformacion" data-target="#container-servicioMilitar" value="Si" data-display="1">
                                                 <div class="state p-primary-o">
-                                                    <label>Si</label>
+                                                    <label>Yes</label>
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-round">
@@ -688,21 +686,21 @@
                                 </div>
                                 <div id="container-servicioMilitar" class="col-md-6" hidden>
                                     <div>
-                                        <label class="form-label">Si es así, por favor díganos el parentesco con usted:</label>
+                                        <label class="form-label">If yes, what is their relationship to you?</label>
                                         <select name="familiar_servicio_parentesco" class="form-select select2 cbParentescos">
-                                            <option value="" selected disabled>Selecciona una opción</option>
+                                            <option value="" selected disabled>Select an option</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">¿Ha sido alguna vez victima de un crimen?</label>
+                                <label class="form-label">Have you ever been a victim of a crime?</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="victima_crimen" class="muestraMasInformacion" data-target="#container-victimaCrimen" value="Si" data-display="1">
                                         <div class="state p-primary-o">
-                                            <label>Si</label>
+                                            <label>Yes</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
@@ -714,77 +712,78 @@
                                 </div>
                             </div>
                             <div id="container-victimaCrimen" class="mb-3" hidden>
-                                <label class="form-label">Lugar, fecha, y tipo de delito</label>
+                                <label class="form-label">Location, date, and type of crime</label>
                                 <textarea class="form-control" name="victima_crimen_info"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">¿En el contexto de migración ha cometido algún crimen en Estados Unidos,
-                                    alguna
-                                    vez a usted le han tomado?</label>
+                                <label class="form-label">
+                                    In the context of immigration, have you ever committed any crime in the United States, or have you ever had the following?
+                                </label>
                                 <div class="pretty-container mt-2">
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Huellas">
                                         <div class="state p-info">
-                                            <label>Huellas </label>
+                                            <label>Fingerprints taken</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Pedido que se regrese de la frontera">
                                         <div class="state p-info">
-                                            <label>Pedido que se regrese de la frontera </label>
+                                            <label>Requested to return from border</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Visto un juez de migración">
                                         <div class="state p-info">
-                                            <label>Visto un juez de migración </label>
+                                            <label>Seen immigration judge</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Fotografías">
                                         <div class="state p-info">
-                                            <label>Fotografías </label>
+                                            <label>Photographs taken</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Visto a un oficial de migración">
                                         <div class="state p-info">
-                                            <label>Visto a un oficial de migración </label>
+                                            <label>Met with immigration officer</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Pedidos que firme algún documento">
                                         <div class="state p-info">
-                                            <label>Pedidos que firme algún documento </label>
+                                            <label>Asked to sign documents</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Concedido salida voluntaria">
                                         <div class="state p-info">
-                                            <label>Concedido salida voluntaria </label>
+                                            <label>Granted voluntary departure</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Deportado">
                                         <div class="state p-info">
-                                            <label>Deportado </label>
+                                            <label>Deported</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default">
                                         <input type="checkbox" name="cometido_crimen" value="Arresto o detención en la frontera">
                                         <div class="state p-info">
-                                            <label>Arresto o detención en la frontera</label>
+                                            <label>Border arrest or detention</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mb-3">
-                                <label class="form-label">¿Alguna vez ha sido arrestado por CUALQUIER crimen?</label>
+                                <label class="form-label">Have you ever been arrested for ANY crime?</label>
                                 <div class="mt-2">
                                     <div class="pretty p-default p-round">
                                         <input type="radio" name="arrestado" class="muestraMasInformacion" data-target="#container-arresto" value="Si" data-display="1">
                                         <div class="state p-primary-o">
-                                            <label>Si</label>
+                                            <label>Yes</label>
                                         </div>
                                     </div>
                                     <div class="pretty p-default p-round">
@@ -797,11 +796,11 @@
                             </div>
                             <div id="container-arresto" hidden>
                                 <div class="mb-3">
-                                    <label class="form-label">Fecha y Cargo</label>
+                                    <label class="form-label">Date and Charge</label>
                                     <input type="text" class="form-control" name="arrestado_fecha_cargo">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Si es más de un arresto, por favor explique</label>
+                                    <label class="form-label">If more than one arrest, please explain</label>
                                     <input type="text" class="form-control" name="arrestado_explicacion">
                                 </div>
                             </div>
@@ -811,49 +810,48 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div id="peticionario">
-                            <h3>Información de Peticionario:</h3>
+                            <h3>Petitioner Information:</h3>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="" class="form-label">Nombre Completo</label>
+                                        <label for="" class="form-label">Full Name</label>
                                         <input type="text" class="form-control" name="peticionario_nombre" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="" class="form-label">Teléfono</label>
+                                    <label for="" class="form-label">Phone</label>
                                     <input type="text" class="form-control" name="peticionario_telefono" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="" class="form-label">Relación</label>
+                                    <label for="" class="form-label">Relationship</label>
                                     <input type="text" class="form-control" name="peticionario_relacion" required>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label">Dirección</label>
+                                <label for="" class="form-label">Address</label>
                                 <input type="text" class="form-control" name="peticionario_direccion" required>
                             </div>
 
-                            <h3>Especifique el motivo de su visita:</h3>
+                            <h3>Specify the purpose of your visit:</h3>
                             <textarea cols="30" rows="5" class="form-control" name="motivo_visita" required></textarea>
                         </div>
-                        <!-- Agregar input para adjuntar documentos -->
+                        <!-- Add input for document attachment -->
                         <div class="mb-3 mt-4">
-                            <label for="documentosAdjuntos" class="form-label">Adjuntar Documentos</label>
+                            <label for="documentosAdjuntos" class="form-label">Attach Documents</label>
                             <input type="file" class="form-control" id="documentosAdjuntos" name="archivo" accept=".pdf,.jpg,.jpeg,.png">
-                            <small class="text-muted">Puede adjuntar un documento en formato PDF, JPG o PNG.</small>
+                            <small class="text-muted">You can attach a document in PDF, JPG or PNG format.</small>
                         </div>
                         <hr>
                         <div class="mt-3 text-center">
-                            <button type="submit" class="btn btn-lg btn-primary">Enviar</button>
+                            <button type="submit" class="btn btn-lg btn-primary">Submit</button>
                         </div>
                     </div>
-                </div>`
+                </div>
             </form>
         </div>
     </div>
-    </div>
-    </div>
+
     <script>
         const Cliente = <?= json_encode($cliente) ?>;
         const Sucursal = <?= json_encode($sucursal) ?>;
@@ -868,7 +866,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="<?= base_url('js/app.js?v=1.0.1') ?>"></script>
-    <script src="<?= base_url("js/intake.js?v=1.0.3") ?>"></script>
+    <script src="<?= base_url("js/intake_eng.js?v=1.0.3") ?>"></script>
 
 </body>
 
