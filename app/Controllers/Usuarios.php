@@ -2,16 +2,19 @@
 
 namespace App\Controllers;
 
+use App\Models\PerfilModel;
 use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 
 class Usuarios extends BaseController
 {
     protected $usuarioModel;
+    protected $perfilModel;
 
     public function __construct()
     {
         $this->usuarioModel = new UsuarioModel();
+        $this->perfilModel = new PerfilModel();
         helper('auditoria'); // Cargar el helper de auditoría
     }
 
@@ -19,7 +22,7 @@ class Usuarios extends BaseController
     {
         // Obtener todos los usuarios desde el modelo
         $usuarios = $this->usuarioModel->obtenerUsuariosOrdenados();
-
+        $perfiles = $this->perfilModel->findAll();
         // Registrar acción de visualización de lista de usuarios
         $usuario = session()->get('usuario');
         if ($usuario) {
@@ -29,7 +32,11 @@ class Usuarios extends BaseController
         $data = [
             "usuarios" => $usuarios,
             "title" => "Usuarios",
-            "renderBody" => $this->render('usuarios/index', ["usuarios" => $usuarios])
+            "perfiles" => $perfiles,
+            "renderBody" => $this->render('usuarios/index', [
+                "usuarios" => $usuarios,
+                "perfiles" => $perfiles
+            ])
         ];
 
         $data["styles"] = '<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">';

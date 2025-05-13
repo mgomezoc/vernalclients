@@ -44,6 +44,19 @@ class Profiles extends BaseConfig
                 'label' => 'Auditoría',
             ],
         ],
+        'ADMIN_PARALEGAL' => [
+            'clientes' => [
+                'icon' => 'fa-solid fa-user-friends',
+                'url' => 'clientes',
+                'label' => 'Clientes',
+            ],
+            'pagos' => [
+                'icon' => 'fa-solid fa-money-check-alt',
+                'url' => 'pagos_consultas',
+                'label' => 'Pagos',
+            ],
+        ],
+
         'ADMINCALL' => [
             'clientes' => [
                 'icon' => 'fa-solid fa-user-friends',

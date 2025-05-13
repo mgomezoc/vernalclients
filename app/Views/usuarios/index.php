@@ -58,14 +58,11 @@
         <label for="profile" class="form-label">Perfil</label>
         <select name="perfil" id="profile" class="cbPerfiles form-select" required>
           <option value="">Selecciona una opción</option>
-          <option value="1">CALL</option>
-          <option value="2">RECEPTION</option>
-          <option value="3">PARALEGAL</option>
-          <option value="4">ADMIN</option>
-          <option value="5">MARKETING</option>
-          <option value="6">ATTORNEY</option>
-          <option value="7">ADMINCALL</option>
+          <?php foreach ($perfiles as $perfil): ?>
+            <option value="<?= esc($perfil['id']) ?>"><?= esc($perfil['nombre']) ?></option>
+          <?php endforeach; ?>
         </select>
+
       </div>
       <div class="col-12 mt-5">
         <button type="submit" class="btn btn-primary">Actualizar información</button>
@@ -106,13 +103,9 @@
               <label for="profile" class="form-label">Perfil</label>
               <select name="perfil" id="comboPerfiles" class="select2 form-select" required>
                 <option value="">Selecciona una opción</option>
-                <option value="1">CALL</option>
-                <option value="2">RECEPTION</option>
-                <option value="3">PARALEGAL</option>
-                <option value="4">ADMIN</option>
-                <option value="5">MARKETING</option>
-                <option value="6">ATTORNEY</option>
-                <option value="7">ADMINCALL</option>
+                <?php foreach ($perfiles as $perfil): ?>
+                  <option value="<?= esc($perfil['id']) ?>"><?= esc($perfil['nombre']) ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
             <div class="col-12">
@@ -140,4 +133,5 @@
 
 <script>
   const Usuarios = <?= json_encode($usuarios) ?>;
+  const Perfiles = <?= json_encode($perfiles) ?>;
 </script>

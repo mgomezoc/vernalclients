@@ -203,7 +203,8 @@ function formatoPerfiles(value) {
         4: 'ADMIN',
         5: 'MARKETING',
         6: 'ATTORNEY',
-        7: 'ADMINCALL'
+        7: 'ADMINCALL',
+        8: 'ADMIN_PARALEGAL'
     };
     return perfiles[value] || 'DESCONOCIDO';
 }
@@ -239,5 +240,5 @@ function eliminarUsuario(id) {
 }
 
 function encontrarUsuarioPorId(usuarios, id) {
-    return usuarios.find((usuario) => usuario.id === id) || null;
+    return usuarios.find(usuario => usuario.id === id) || null;
 }

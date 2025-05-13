@@ -83,7 +83,7 @@ $routes->group('abogados', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,ATTORNEY']
 });
 
 // CLIENTES
-$routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,PARALEGAL,ATTORNEY,RECEPTION,CALL'], function ($routes) {
+$routes->group('clientes', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,PARALEGAL,ATTORNEY,RECEPTION,CALL,ADMIN_PARALEGAL'], function ($routes) {
     $routes->get('/', 'ClientesController::index', ['as' => 'clientes.index']);
     $routes->post('obtener-clientes', 'ClientesController::obtenerClientes');
     $routes->post('agregar-cliente', 'ClientesController::insertarCliente');
@@ -175,7 +175,7 @@ $routes->group('auditoria', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL'], functi
 });
 
 // PAGOS CONSULTAS
-$routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,RECEPTION'], function ($routes) {
+$routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,RECEPTION,ADMIN_PARALEGAL'], function ($routes) {
     $routes->get('/', 'PagosConsultasController::index', ['as' => 'pagos_consultas.index']);
     $routes->post('obtener', 'PagosConsultasController::obtenerPagosConsultas', ['as' => 'pagos_consultas.obtener']);
     $routes->post('marcar_pagado', 'PagosConsultasController::marcar_pagado');
