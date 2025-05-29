@@ -183,6 +183,30 @@ $routes->group('pagos_consultas', ['filter' => 'SessionAdmin:ADMIN,ADMINCALL,REC
 
 $routes->get('/buscar', 'BusquedaController::buscar');
 
+$routes->get('dashboard', 'DashboardController::index', ['filter' => 'SessionAdmin']);
+$routes->group('dashboard/api', ['filter' => 'SessionAdmin'], function ($routes) {
+    $routes->get('clientes-nuevos', 'DashboardController::apiClientesNuevos');
+    $routes->get('formularios-por-sucursal', 'DashboardController::apiFormulariosPorSucursal');
+    $routes->get('casos-por-tipo', 'DashboardController::apiCasosPorTipo');
+    $routes->get('casos-mas-comentarios', 'DashboardController::apiCasosConMasComentarios');
+    $routes->get('casos-mas-documentos', 'DashboardController::apiCasosConMasDocumentos');
+    $routes->get('clientes-sin-caso', 'DashboardController::apiClientesSinCaso');
+    $routes->get('ingresos-forma-pago', 'DashboardController::apiIngresosPorFormaPago');
+    $routes->get('casos-no-pagados', 'DashboardController::apiCasosNoPagados');
+    $routes->get('clientes-asilo', 'DashboardController::apiClientesAsiloPendiente');
+    $routes->get('clientes-arrestos', 'DashboardController::apiClientesConArrestos');
+    $routes->get('clientes-visa-entrada', 'DashboardController::apiClientesPorVisaYEntrada');
+    $routes->get('tiempo-promedio-consulta-caso', 'DashboardController::apiTiempoPromedioConsultaCaso');
+    $routes->get('clientes-proceso-previo', 'DashboardController::apiClientesConProcesoPrevio');
+    $routes->get('clientes-por-fuente', 'DashboardController::apiClientesPorFuente');
+    $routes->get('promedio-satisfaccion', 'DashboardController::apiPromedioSatisfaccion');
+    $routes->get('respuestas-negativas', 'DashboardController::apiRespuestasNegativas');
+    $routes->get('casos-corte-proxima', 'DashboardController::apiCasosCorteProxima');
+    $routes->get('casos-limite-vencido', 'DashboardController::apiCasosLimiteVencido');
+    $routes->get('casos-por-abogado', 'DashboardController::apiCasosPorAbogado');
+});
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
