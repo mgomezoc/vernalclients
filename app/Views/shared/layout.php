@@ -16,6 +16,7 @@ $menus = $profileConfig->menus[$perfil] ?? [];
 
     <link rel="stylesheet" href="<?= base_url("css/normalize.css") ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.24.1/bootstrap-table.min.css" integrity="sha512-CPL36V8ZD92nblUPfrYxCPKrlykPHIsP6dp3C/9xXchzL84rSnDdyFeXnFEoTveGFxl5Ucamm4qHR8LynUTKdg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?= base_url("css/style.css?v=1.0.1") ?>">
     <?php if (isset($styles) && is_array($styles)): ?>
         <?php foreach ($styles as $style): ?>
@@ -36,7 +37,8 @@ $menus = $profileConfig->menus[$perfil] ?? [];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/d179c845aa.js" crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/901438e2f4.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script>
         const baseUrl = "<?= base_url() ?>";
@@ -140,7 +142,7 @@ $menus = $profileConfig->menus[$perfil] ?? [];
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.24.1/bootstrap-table.min.js" integrity="sha512-SluUb5Wij76laheDMpw6UZXUuvefcSa3wbeMZoAzEwc8Fe9aVqUwAhG1n2FPDnZh8bExgmx5H6N3k2xzrd1nuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="<?= base_url("js/app.js?v=1.0.2") ?>"></script>
     <?php if (isset($scripts) && is_array($scripts)): ?>
         <?php foreach ($scripts as $script): ?>

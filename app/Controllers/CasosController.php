@@ -70,6 +70,7 @@ class CasosController extends Controller
 
             // Si el nuevo estatus es igual a 4, actualizar el estatus del cliente a 6 (Activo)
             if ($nuevoEstatus == 4) {
+                $casoModel->update($idCaso, ['fecha_cierre' => date('Y-m-d')]);
                 // Obtener el ID del cliente relacionado con el caso
                 $caso = $casoModel->find($idCaso);
                 if ($caso) {

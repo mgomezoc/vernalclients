@@ -146,4 +146,27 @@ class DashboardController extends BaseController
     {
         return $this->response->setJSON($this->dashboardModel->getCasosPorAbogado());
     }
+
+    // -- Nuevos endpoints administrativos --
+
+    public function apiIngresosMensuales()
+    {
+        return $this->response->setJSON($this->dashboardModel->getIngresosMensualesComparativos());
+    }
+
+    public function apiPromedioTiempoCasoAbierto()
+    {
+        return $this->response->setJSON($this->dashboardModel->getPromedioTiempoCasoAbierto());
+    }
+
+    public function apiConversionFuentes()
+    {
+        return $this->response->setJSON($this->dashboardModel->getFuentesClientesConConversion());
+    }
+
+    public function casosSinActualizar()
+    {
+        $dashboardModel = new \App\Models\DashboardModel();
+        return $this->response->setJSON($dashboardModel->getCasosSinActualizar());
+    }
 }

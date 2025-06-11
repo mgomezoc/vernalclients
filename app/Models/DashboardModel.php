@@ -14,10 +14,11 @@ class DashboardModel extends Model
         $this->db = \Config\Database::connect();
     }
 
-    /** 📊 KPI - Total clientes nuevos por periodo */
+    /** 📊 KPI - Total clientes nuevos por periodo (Prospecto o Intake) */
     public function getClientesNuevosPorPeriodo($inicio = null, $fin = null)
     {
         $builder = $this->db->table('clientes');
+        $builder->whereIn('estatus', [1, 2]);
         if ($inicio) $builder->where('fecha_creado >=', $inicio);
         if ($fin) $builder->where('fecha_creado <=', $fin);
         return ['total' => $builder->countAllResults()];
@@ -26,7 +27,7 @@ class DashboardModel extends Model
     /** 📊 KPI - Total casos activos */
     public function getTotalCasosActivos()
     {
-        return ['activos' => $this->db->table('casos')->where('estatus', 'activo')->countAllResults()];
+        return ['activos' => $this->db->table('casos')->where('estatus', 3)->countAllResults()];
     }
 
     /** 📊 KPI - Total casos con corte próximo */
@@ -53,10 +54,11 @@ class DashboardModel extends Model
     /** 📊 Casos activos vs cerrados por tipo */
     public function getCasosActivosVsCerradosPorTipo()
     {
-        return $this->db->table('casos')
-            ->select("casos_tipos.nombre AS tipo, estatus, COUNT(*) AS total")
-            ->join('casos_tipos', 'casos.id_tipo_caso = casos_tipos.id_tipo_caso')
-            ->groupBy('casos.id_tipo_caso, estatus')
+        return $this->db->table('casos c')
+            ->select("t.nombre AS tipo, e.nombre AS estatus, COUNT(*) AS total")
+            ->join('casos_tipos t', 'c.id_tipo_caso = t.id_tipo_caso')
+            ->join('casos_estatus e', 'c.estatus = e.id_caso_estatus')
+            ->groupBy('c.id_tipo_caso, c.estatus')
             ->get()
             ->getResultArray();
     }
@@ -101,13 +103,14 @@ class DashboardModel extends Model
     {
         $builder = $this->db->table('pagos_consultas')
             ->select("forma_pago, SUM(monto) AS total")
+            ->where('estatus_pago', 'completado')
             ->groupBy('forma_pago');
         if ($inicio) $builder->where('fecha_pago >=', $inicio);
         if ($fin) $builder->where('fecha_pago <=', $fin);
         return $builder->get()->getResultArray();
     }
 
-    /** 💰 Casos no pagados o parcialmente pagados */
+    /** 💰 Casos no pagados */
     public function getCasosNoPagados()
     {
         return $this->db->table('casos')
@@ -117,7 +120,7 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** 👤 Clientes con solicitudes de asilo pendientes */
+    /** 👤 Clientes con solicitudes de asilo */
     public function getClientesAsiloPendiente()
     {
         return $this->db->table('intake')
@@ -127,7 +130,7 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** 👤 Clientes con antecedentes criminales */
+    /** 👤 Clientes con arrestos */
     public function getClientesConArrestos()
     {
         return $this->db->table('intake')
@@ -137,7 +140,7 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** 👤 Clientes por tipo de visa y modo de entrada */
+    /** 👤 Clientes por visa y entrada */
     public function getClientesPorVisaYEntrada()
     {
         return $this->db->table('intake')
@@ -147,18 +150,17 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** ⏱️ Tiempo promedio entre consulta inicial y apertura de caso */
+    /** ⏱️ Tiempo promedio entre consulta y caso */
     public function getTiempoPromedioConsultaCaso()
     {
         return $this->db->query("
-            SELECT 
-                AVG(DATEDIFF(c.fecha_creacion, f.fecha_consulta)) AS valor
+            SELECT AVG(DATEDIFF(c.fecha_creacion, f.fecha_consulta)) AS valor
             FROM casos c
             JOIN formulario_admision f ON c.id_cliente = f.id_cliente
         ")->getRowArray();
     }
 
-    /** 👤 Clientes con procesos migratorios previos */
+    /** 👤 Clientes con proceso migratorio previo */
     public function getClientesConProcesoPrevio()
     {
         return $this->db->table('intake')
@@ -168,18 +170,40 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** 👤 Clientes por fuente de información */
+    /** 👤 Clientes por fuente */
     public function getClientesPorFuente()
     {
-        return $this->db->table('intake')
-            ->select("fuente_informacion AS fuente, COUNT(*) AS total")
-            ->groupBy('fuente_informacion')
-            ->orderBy('total', 'DESC')
+        $rawData = $this->db->table('intake')
+            ->select("fuente_informacion")
+            ->where("fuente_informacion IS NOT NULL")
             ->get()
             ->getResultArray();
+
+        $fuentes = [];
+
+        foreach ($rawData as $row) {
+            $fuenteStr = $row['fuente_informacion'];
+            $items = array_map('trim', explode('|', $fuenteStr));
+
+            foreach ($items as $item) {
+                if ($item !== '') {
+                    $fuentes[$item] = isset($fuentes[$item]) ? $fuentes[$item] + 1 : 1;
+                }
+            }
+        }
+
+        arsort($fuentes);
+
+        $result = [];
+        foreach ($fuentes as $fuente => $total) {
+            $result[] = ['fuente' => $fuente, 'total' => $total];
+        }
+
+        return $result;
     }
 
-    /** 📌 Promedio de satisfacción del cliente */
+
+    /** 📌 Promedio de satisfacción */
     public function getPromedioSatisfaccion()
     {
         return $this->db->table('encuesta_respuestas')
@@ -188,7 +212,7 @@ class DashboardModel extends Model
             ->getRowArray();
     }
 
-    /** 📌 Frecuencia de respuestas negativas */
+    /** 📌 Respuestas negativas */
     public function getRespuestasNegativas()
     {
         return $this->db->table('encuesta_respuestas')
@@ -198,11 +222,11 @@ class DashboardModel extends Model
             ->getRowArray();
     }
 
-    /** 🔍 Casos con fecha de corte próxima */
+    /** 🔍 Casos con corte próximo */
     public function getCasosConFechaCorteProxima()
     {
         return $this->db->table('casos')
-            ->select("id_caso AS caso, proceso, fecha_corte")
+            ->select("id_caso AS caso, proceso, DATE_FORMAT(fecha_corte, '%m/%d/%Y') AS fecha_corte")
             ->where('fecha_corte >=', date('Y-m-d'))
             ->where('fecha_corte <=', date('Y-m-d', strtotime('+30 days')))
             ->orderBy('fecha_corte')
@@ -210,18 +234,18 @@ class DashboardModel extends Model
             ->getResultArray();
     }
 
-    /** 🔍 Casos con límite de tiempo vencido */
+    /** 🔍 Casos con límite vencido */
     public function getCasosConLimiteVencido()
     {
         return $this->db->table('casos')
-            ->select("id_caso AS caso, proceso, limite_tiempo")
+            ->select("id_caso AS caso, proceso, DATE_FORMAT(limite_tiempo, '%m/%d/%Y') AS limite_tiempo")
             ->where('limite_tiempo <=', date('Y-m-d', strtotime('+7 days')))
             ->orderBy('limite_tiempo')
             ->get()
             ->getResultArray();
     }
 
-    /** 🔍 Casos por abogado asignado */
+    /** 🔍 Casos por abogado */
     public function getCasosPorAbogado()
     {
         return $this->db->table('cliente_abogado ca')
@@ -230,5 +254,55 @@ class DashboardModel extends Model
             ->groupBy('ca.id_usuario')
             ->get()
             ->getResultArray();
+    }
+
+    /** 📊 Ingresos mensuales */
+    public function getIngresosMensualesComparativos()
+    {
+        return $this->db->query("
+            SELECT 
+                DATE_FORMAT(fecha_pago, '%m/%Y') AS mes, 
+                SUM(monto) AS total
+            FROM pagos_consultas
+            WHERE estatus_pago = 'completado'
+            GROUP BY mes
+            ORDER BY mes DESC
+            LIMIT 12
+        ")->getResultArray();
+    }
+
+    /** 📊 Promedio duración caso */
+    public function getPromedioTiempoCasoAbierto()
+    {
+        return $this->db->query("
+            SELECT AVG(DATEDIFF(fecha_cierre, fecha_creacion)) AS valor
+            FROM casos
+            WHERE fecha_cierre IS NOT NULL
+        ")->getRowArray();
+    }
+
+    /** 📊 Conversión por fuente */
+    public function getFuentesClientesConConversion()
+    {
+        return $this->db->query("
+            SELECT 
+                fuente_informacion,
+                COUNT(*) AS total,
+                SUM(CASE WHEN id_cliente IN (SELECT DISTINCT id_cliente FROM casos) THEN 1 ELSE 0 END) AS convertidos
+            FROM intake
+            GROUP BY fuente_informacion
+            ORDER BY total DESC
+        ")->getResultArray();
+    }
+
+    /** ⚠️ Casos sin actualizar > 30 días */
+    public function getCasosSinActualizar()
+    {
+        return [
+            'total' => $this->db->table('casos')
+                ->where('estatus', 3)
+                ->where('fecha_actualizacion <', date('Y-m-d', strtotime('-30 days')))
+                ->countAllResults()
+        ];
     }
 }

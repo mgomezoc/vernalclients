@@ -1,0 +1,8 @@
+ALTER TABLE casos ADD COLUMN fecha_cierre DATE DEFAULT NULL;
+
+
+UPDATE casos
+SET fecha_cierre = fecha_actualizacion
+WHERE estatus = 4
+    AND fecha_cierre IS NULL
+    AND fecha_actualizacion IS NOT NULL;

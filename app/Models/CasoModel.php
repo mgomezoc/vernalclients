@@ -24,7 +24,8 @@ class CasoModel extends Model
         'fecha_corte',
         'limite_tiempo',
         'pagado',
-        'forma_pago'
+        'forma_pago',
+        'fecha_cierre'
     ];
 
     // Crear un nuevo caso
@@ -84,5 +85,14 @@ class CasoModel extends Model
             ->orderBy('fecha_actualizacion', 'DESC')
             ->limit(10)
             ->findAll();
+    }
+
+    public function cerrarCaso($idCaso)
+    {
+        return $this->update($idCaso, [
+            'estatus' => 4, // Por ejemplo, estatus 4 = Cerrado
+            'fecha_cierre' => date('Y-m-d'),
+            'fecha_actualizacion' => date('Y-m-d H:i:s')
+        ]);
     }
 }
