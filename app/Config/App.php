@@ -5,6 +5,9 @@ namespace Config;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Handlers\FileHandler;
 
+/**
+ * @property string $assetVersion
+ */
 class App extends BaseConfig
 {
     // URL base del sistema (ajustada correctamente para entorno local)

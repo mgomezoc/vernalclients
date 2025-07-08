@@ -30,7 +30,7 @@ class DashboardController extends BaseController
             "
         ];
 
-        return $this->render('shared/layout', $data);
+        return view('dashboard/index', []);
     }
 
     private function isValidDate(?string $date, string $format = 'Y-m-d'): bool
