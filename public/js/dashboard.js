@@ -140,7 +140,22 @@ $(document).ready(function () {
 
     // Filtros
     $('#btnAplicarFiltros').click(function () {
-        location.reload(); // O recargar dinámicamente cada gráfico si se prefiere
+        // Limpiar contenido actual
+        $('.table-container').html('');
+        $('canvas').each(function () {
+            const ctx = this.getContext('2d');
+            if (ctx.chart) ctx.chart.destroy();
+        });
+
+        // Volver a cargar componentes principales
+        cargarKpis();
+        cargarGrafica('casos-por-tipo', 'graficaCasosTipo', 'tipo', 'total');
+        cargarGrafica('formularios-por-sucursal', 'graficaFormulariosSucursal', 'sucursal', 'total');
+        cargarTabla('casos-mas-comentarios', 'tablaCasosMasComentarios', ['caso', 'total']);
+        cargarTabla('casos-mas-documentos', 'tablaCasosMasDocumentos', ['caso', 'total']);
+        cargarGrafica('ingresos-mensuales', 'graficaIngresosMensuales', 'mes', 'total', 'line');
+        cargarGrafica('conversion-fuentes', 'graficaConversionFuentes', 'fuente', 'conversion', 'bar');
+        cargarTexto('promedio-tiempo-caso-abierto', 'textoPromedioTiempoCaso');
     });
 
     // Flatpickr para fechas

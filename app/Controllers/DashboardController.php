@@ -7,166 +7,187 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class DashboardController extends BaseController
 {
-    protected $dashboardModel;
+    protected DashboardModel $dashboardModel;
 
     public function __construct()
     {
         $this->dashboardModel = new DashboardModel();
     }
 
-    /** Vista principal del dashboard */
-    public function index()
+    public function index(): string
     {
-        $data["title"] = "Dashboard";
-        $data['renderBody'] = $this->render("dashboard/index", []);
-
-        $data["styles"] = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
-        $data["scripts"] = "
-            <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
-            <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
-            <script src='https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels'></script>
-            <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js'></script>
-            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-            <script src='" . base_url("js/dashboard.js") . "'></script>
-        ";
+        $data = [
+            'title' => 'Dashboard',
+            'renderBody' => $this->render('dashboard/index', []),
+            'styles' => '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">',
+            'scripts' => "
+                <script src='https://cdn.jsdelivr.net/npm/flatpickr'></script>
+                <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+                <script src='https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels'></script>
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js'></script>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script src='" . base_url('js/dashboard.js') . "'></script>
+            "
+        ];
 
         return $this->render('shared/layout', $data);
     }
 
-    /** Valida y retorna fechas desde el request */
-    private function getFechaParams()
+    private function isValidDate(?string $date, string $format = 'Y-m-d'): bool
+    {
+        if (!$date) return false;
+        $d = \DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
+    }
+
+    private function getFechaParams(): array
     {
         $inicio = $this->request->getGet('inicio');
         $fin = $this->request->getGet('fin');
 
-        helper('date');
-
-        if ($inicio && !validateDate($inicio, 'Y-m-d')) $inicio = null;
-        if ($fin && !validateDate($fin, 'Y-m-d')) $fin = null;
+        if (!$this->isValidDate($inicio)) $inicio = null;
+        if (!$this->isValidDate($fin)) $fin = null;
 
         return [$inicio, $fin];
     }
 
-    // -- API endpoints para AJAX --
+    // === API ===
 
-    public function apiClientesNuevos()
+    public function apiClientesNuevos(): ResponseInterface
     {
         [$inicio, $fin] = $this->getFechaParams();
         return $this->response->setJSON($this->dashboardModel->getClientesNuevosPorPeriodo($inicio, $fin));
     }
 
-    public function apiFormulariosPorSucursal()
+    public function apiFormulariosPorSucursal(): ResponseInterface
     {
         [$inicio, $fin] = $this->getFechaParams();
         return $this->response->setJSON($this->dashboardModel->getFormulariosPorSucursalMes($inicio, $fin));
     }
 
-    public function apiCasosPorTipo()
+    public function apiCasosPorTipo(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosActivosVsCerradosPorTipo());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosActivosVsCerradosPorTipo($inicio, $fin));
     }
 
-    public function apiCasosConMasComentarios()
+    public function apiCasosConMasComentarios(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosConMasComentarios());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosConMasComentarios($inicio, $fin));
     }
 
-    public function apiCasosConMasDocumentos()
+    public function apiCasosConMasDocumentos(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosConMasDocumentos());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosConMasDocumentos($inicio, $fin));
     }
 
-    public function apiClientesSinCaso()
+    public function apiClientesSinCaso(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesConDocumentosSinCaso());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesConDocumentosSinCaso($inicio, $fin));
     }
 
-    public function apiIngresosPorFormaPago()
+    public function apiIngresosPorFormaPago(): ResponseInterface
     {
         [$inicio, $fin] = $this->getFechaParams();
         return $this->response->setJSON($this->dashboardModel->getIngresosPorFormaPago($inicio, $fin));
     }
 
-    public function apiCasosNoPagados()
+    public function apiCasosNoPagados(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosNoPagados());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosNoPagados($inicio, $fin));
     }
 
-    public function apiClientesAsiloPendiente()
+    public function apiClientesAsiloPendiente(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesAsiloPendiente());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesAsiloPendiente($inicio, $fin));
     }
 
-    public function apiClientesConArrestos()
+    public function apiClientesConArrestos(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesConArrestos());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesConArrestos($inicio, $fin));
     }
 
-    public function apiClientesPorVisaYEntrada()
+    public function apiClientesPorVisaYEntrada(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesPorVisaYEntrada());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesPorVisaYEntrada($inicio, $fin));
     }
 
-    public function apiTiempoPromedioConsultaCaso()
+    public function apiTiempoPromedioConsultaCaso(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getTiempoPromedioConsultaCaso());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getTiempoPromedioConsultaCaso($inicio, $fin));
     }
 
-    public function apiClientesConProcesoPrevio()
+    public function apiClientesConProcesoPrevio(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesConProcesoPrevio());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesConProcesoPrevio($inicio, $fin));
     }
 
-    public function apiClientesPorFuente()
+    public function apiClientesPorFuente(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getClientesPorFuente());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getClientesPorFuente($inicio, $fin));
     }
 
-    public function apiPromedioSatisfaccion()
+    public function apiPromedioSatisfaccion(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getPromedioSatisfaccion());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getPromedioSatisfaccion($inicio, $fin));
     }
 
-    public function apiRespuestasNegativas()
+    public function apiRespuestasNegativas(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getRespuestasNegativas());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getRespuestasNegativas($inicio, $fin));
     }
 
-    public function apiCasosCorteProxima()
+    public function apiCasosCorteProxima(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosConFechaCorteProxima());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosConFechaCorteProxima($inicio, $fin));
     }
 
-    public function apiCasosLimiteVencido()
+    public function apiCasosLimiteVencido(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosConLimiteVencido());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosConLimiteVencido($inicio, $fin));
     }
 
-    public function apiCasosPorAbogado()
+    public function apiCasosPorAbogado(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getCasosPorAbogado());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosPorAbogado($inicio, $fin));
     }
 
-    // -- Nuevos endpoints administrativos --
-
-    public function apiIngresosMensuales()
+    public function apiIngresosMensuales(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getIngresosMensualesComparativos());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getIngresosMensualesComparativos($inicio, $fin));
     }
 
-    public function apiPromedioTiempoCasoAbierto()
+    public function apiConversionFuentes(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getPromedioTiempoCasoAbierto());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getFuentesClientesConConversion($inicio, $fin));
     }
 
-    public function apiConversionFuentes()
+    public function apiPromedioTiempoCasoAbierto(): ResponseInterface
     {
-        return $this->response->setJSON($this->dashboardModel->getFuentesClientesConConversion());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getPromedioTiempoCasoAbierto($inicio, $fin));
     }
 
-    public function casosSinActualizar()
+    public function apiCasosSinActualizar(): ResponseInterface
     {
-        $dashboardModel = new \App\Models\DashboardModel();
-        return $this->response->setJSON($dashboardModel->getCasosSinActualizar());
+        [$inicio, $fin] = $this->getFechaParams();
+        return $this->response->setJSON($this->dashboardModel->getCasosSinActualizar($inicio, $fin));
     }
 }

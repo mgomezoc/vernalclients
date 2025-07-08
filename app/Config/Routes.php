@@ -189,7 +189,7 @@ $routes->group('dashboard/api', ['filter' => 'SessionAdmin'], function ($routes)
     $routes->get('clientes-nuevos', 'DashboardController::apiClientesNuevos');
     $routes->get('casos-por-tipo', 'DashboardController::apiCasosPorTipo');
     $routes->get('casos-corte-proxima', 'DashboardController::apiCasosCorteProxima');
-    $routes->get('casos-sin-actualizar', 'DashboardController::casosSinActualizar'); // ✅ NUEVO
+    $routes->get('casos-sin-actualizar', 'DashboardController::apiCasosSinActualizar');
     $routes->get('ingresos-forma-pago', 'DashboardController::apiIngresosPorFormaPago');
 
     // Gráficas y tablas generales
