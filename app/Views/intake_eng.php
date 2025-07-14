@@ -222,6 +222,12 @@
                                                 </div>
                                             </div>
                                             <div class="pretty p-default p-thick">
+                                                <input type="checkbox" name="fuente_informacion" value="Radio (La ley)" />
+                                                <div class="state p-info">
+                                                    <label>Radio (La ley)</label>
+                                                </div>
+                                            </div>
+                                            <div class="pretty p-default p-thick">
                                                 <input type="checkbox" name="fuente_informacion" value="Other" />
                                                 <div class="state p-info">
                                                     <label>Other</label>
