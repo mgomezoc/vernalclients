@@ -21,37 +21,14 @@ let fieldValue = [];
 let ProcesosCasos = [];
 let dropzones = {}; // Guardar referencias de cada instancia de Dropzone
 
-// Añadir regla personalizada para validar campos TinyMCE
-$.validator.addMethod(
-    'tinyMCERequired',
-    function (value, element) {
-        const editorContent = tinymce.get(element.id).getContent({ format: 'text' }).trim();
-        return editorContent.length > 0; // Validar que no esté vacío
-    },
-    'Este campo es obligatorio.'
-);
+// --- BLOQUE ELIMINADO ---
+// Ya no se necesita el validador personalizado 'tinyMCERequired'
+// $.validator.addMethod('tinyMCERequired', ...);
 
-// Inicializar TinyMCE
-function initializeTinyMCE(selector) {
-    tinymce.init({
-        selector: selector,
-        plugins: 'autolink link lists code',
-        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link removeformat | code',
-        menubar: false,
-        setup: function (editor) {
-            editor.on('change', function () {
-                tinymce.triggerSave();
-            });
-        }
-    });
-}
-
-// Destruir TinyMCE
-function destroyTinyMCE(selector) {
-    if (tinymce.get(selector)) {
-        tinymce.get(selector).remove();
-    }
-}
+// --- BLOQUE ELIMINADO ---
+// Ya no se necesitan las funciones de inicialización y destrucción
+// function initializeTinyMCE(selector) { ... }
+// function destroyTinyMCE(selector) { ... }
 
 $(function () {
     setActiveMenu('clientes');
@@ -101,10 +78,11 @@ $(function () {
             detailClose: 'fa-circle-minus'
         },
         onExpandRow: function (index, row, $detail) {
-            const textareaId = `textarea-${row.id_cliente}`;
+            // --- LÍNEA ELIMINADA ---
+            // const textareaId = `textarea-${row.id_cliente}`;
 
-            // Asegurarse de que el textarea no esté inicializado antes de crear uno nuevo
-            destroyTinyMCE(textareaId);
+            // --- LÍNEA ELIMINADA ---
+            // destroyTinyMCE(textareaId);
 
             $detail.html('...cargando');
             row.ProcesosCasos = ProcesosCasos;
@@ -113,8 +91,9 @@ $(function () {
             const renderData = Handlebars.compile(tplNuevoCaso)(row);
             $detail.html(renderData);
 
-            // Inicializar TinyMCE para el nuevo textarea
-            initializeTinyMCE(`#${textareaId}`);
+            // --- LÍNEA ELIMINADA ---
+            // Ya no se inicializa TinyMCE
+            // initializeTinyMCE(`#${textareaId}`);
 
             // Inicializar Dropzone para la carga de archivos
             initializeDropzone(`archivosCaso-${row.id_cliente}`, row.id_cliente);
@@ -137,9 +116,10 @@ $(function () {
             inicializaFrmNuevoCaso();
         },
         onCollapseRow: function (index, row) {
-            // Destruir TinyMCE antes de colapsar la fila
-            const textareaId = `textarea-${row.id_cliente}`;
-            destroyTinyMCE(textareaId);
+            // --- BLOQUE ELIMINADO ---
+            // Ya no es necesario destruir TinyMCE
+            // const textareaId = `textarea-${row.id_cliente}`;
+            // destroyTinyMCE(textareaId);
         }
     });
 
@@ -448,10 +428,11 @@ function updateCustomField(caseID, customFieldID, customFieldData) {
 
 function inicializaFrmNuevoCaso() {
     $('.frmNuevoCaso').validate({
-        ignore: [], // Importante para incluir campos de TinyMCE
+        // --- LÍNEA ELIMINADA ---
+        // ignore: [], // Ya no es necesario
         rules: {
             comentarios: {
-                tinyMCERequired: true
+                required: true // <-- CAMBIADO
             },
             id_tipo_caso: {
                 required: true
@@ -473,7 +454,7 @@ function inicializaFrmNuevoCaso() {
         },
         messages: {
             comentarios: {
-                tinyMCERequired: 'El campo de comentarios no puede estar vacío.'
+                required: 'El campo de comentarios no puede estar vacío.' // <-- CAMBIADO
             },
             id_tipo_caso: {
                 required: 'Seleccione un proceso principal.'
@@ -504,10 +485,9 @@ function inicializaFrmNuevoCaso() {
             $(element).removeClass(errorClass).addClass(validClass);
         },
         errorPlacement: function (error, element) {
-            if (element.hasClass('tinymce-editor')) {
-                // Mostrar el error debajo del editor TinyMCE
-                $(element).next().append(error);
-            } else if (element.parent('.input-group').length) {
+            // --- BLOQUE 'if' ELIMINADO ---
+            // Se quita el caso especial para 'tinymce-editor'
+            if (element.parent('.input-group').length) {
                 error.insertAfter(element.parent());
             } else {
                 error.insertAfter(element);

@@ -43,3 +43,6 @@ public/uploads/*
 .*.swp
 .DS_Store
 Thumbs.db
+vernalclients
+db/
+*.zip

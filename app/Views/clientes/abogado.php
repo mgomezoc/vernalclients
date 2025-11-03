@@ -93,7 +93,7 @@
                             <span>Antecedente</span>
                             <b class="text-danger ms-1">*</b>
                         </label>
-                        <textarea name="comentarios" class="form-control tinymce-editor" id="textarea-{{id_cliente}}" cols="30" rows="10" required></textarea>
+                        <textarea name="comentarios" class="form-control" id="textarea-{{id_cliente}}" cols="30" rows="10" required></textarea>
                     </div>
 
                     <!-- Proceso principal -->
