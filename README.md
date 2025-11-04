@@ -1,7 +1,61 @@
-LawLink - Sistema de Gestión de Casos LegalesLawLink es una aplicación web interna (CRM) diseñada para la gestión integral de clientes, casos y personal en un bufete de abogados. La plataforma está construida sobre el framework CodeIgniter 4.Características PrincipalesBasado en la estructura de la aplicación, el sistema incluye las siguientes características:Gestión de Clientes: Módulo central para registrar, consultar y administrar la información de prospectos y clientes.Gestión de Casos: Creación y seguimiento de casos legales, incluyendo asignación de costos, fechas límite, comentarios y gestión de documentos.Gestión de Usuarios: Administración de las cuentas de personal que acceden al sistema.Gestión de Abogados: Módulo para administrar los perfiles de los abogados.Gestión de Sucursales: Soporte para múltiples oficinas o sucursales.Roles y Permisos: Sistema de filtros por sesión que define el acceso según el rol del usuario (ADMIN, ADMINCALL, PARALEGAL, ATTORNEY, RECEPTION, CALL, etc.).Formularios de Admisión (Intake): Formularios web públicos para que los nuevos clientes ingresen su información.Dashboard de Reportes: Un panel de control con múltiples KPIs y métricas visuales (Clientes nuevos, casos por tipo, ingresos, etc.).Auditoría de Acciones: Registro de las acciones clave realizadas por los usuarios en el sistema.Integración API: Conexión con una API externa para la sincronización de clientes y casos.Pila TecnológicaBackend: PHP 8.xFramework: CodeIgniter 4Frontend: JavaScript, Chart.js, Flatpickr, SweetAlert2, Dropzone.js, TinyMCE (previamente).Base de Datos: (No especificado, pero típicamente MySQL, PostgreSQL con CodeIgniter).Guía de Instalación (Estándar CodeIgniter 4)Clonar el repositorio:git clone [URL-DEL-REPOSITORIO]
+LawLink - Sistema de Gestión de Casos Legales
+
+LawLink es una aplicación web interna (CRM) diseñada para la gestión integral de clientes, casos y personal en un bufete de abogados. La plataforma está construida sobre el framework CodeIgniter 4.
+
+Características Principales
+
+Basado en la estructura de la aplicación, el sistema incluye las siguientes características:
+
+Gestión de Clientes: Módulo central para registrar, consultar y administrar la información de prospectos y clientes.
+
+Gestión de Casos: Creación y seguimiento de casos legales, incluyendo asignación de costos, fechas límite, comentarios y gestión de documentos.
+
+Gestión de Usuarios: Administración de las cuentas de personal que acceden al sistema.
+
+Gestión de Abogados: Módulo para administrar los perfiles de los abogados.
+
+Gestión de Sucursales: Soporte para múltiples oficinas o sucursales.
+
+Roles y Permisos: Sistema de filtros por sesión que define el acceso según el rol del usuario (ADMIN, ADMINCALL, PARALEGAL, ATTORNEY, RECEPTION, CALL, etc.).
+
+Formularios de Admisión (Intake): Formularios web públicos para que los nuevos clientes ingresen su información.
+
+Dashboard de Reportes: Un panel de control con múltiples KPIs y métricas visuales (Clientes nuevos, casos por tipo, ingresos, etc.).
+
+Auditoría de Acciones: Registro de las acciones clave realizadas por los usuarios en el sistema.
+
+Integración API: Conexión con una API externa para la sincronización de clientes y casos.
+
+Pila Tecnológica
+
+Backend: PHP 8.x
+
+Framework: CodeIgniter 4
+
+Frontend: JavaScript, Chart.js, Flatpickr, SweetAlert2, Dropzone.js, TinyMCE (previamente).
+
+Base de Datos: (No especificado, pero típicamente MySQL, PostgreSQL con CodeIgniter).
+
+Guía de Instalación (Estándar CodeIgniter 4)
+
+Clonar el repositorio:
+
+git clone [URL-DEL-REPOSITORIO]
 cd LawLink
-Instalar dependencias de PHP:composer install
-Configurar el Entorno:Copia env.example a .env.Configura las variables de entorno en .env, especialmente la sección de database y app.baseURL.# .env
+
+
+Instalar dependencias de PHP:
+
+composer install
+
+
+Configurar el Entorno:
+
+Copia env.example a .env.
+
+Configura las variables de entorno en .env, especialmente la sección de database y app.baseURL.
+
+# .env
 CI_ENVIRONMENT = development
 
 app.baseURL = 'http://localhost/abogadovernal/LawLink/public/'
@@ -11,6 +65,56 @@ database.default.database = nombre_de_tu_db
 database.default.username = root
 database.default.password =
 database.default.DBDriver = MySQLi
-Ejecutar Migraciones (Si existen):php spark migrate
-Ejecutar la aplicación:php spark serve
-La aplicación estará disponible en http://localhost:8080 (o la URL que hayas configurado en app.baseURL si usas un servidor local como Laragon/XAMPP).Estructura de Módulos (Rutas)La aplicación está organizada en los siguientes módulos principales:/login, /password: Autenticación y recuperación de contraseña./dashboard: Dashboard principal con KPIs y reportes (controlado por DashboardController)./clientes: Módulo principal de clientes./: Vista de administrador/paralegal./recepcion: Vista para recepción./abogado: Vista para abogados (prospectos)./asignados: Vista para abogados (clientes asignados)./callcenter: Vista para el call center./(id): Detalle de un cliente específico./casos: Endpoints (vía POST) para actualizar, editar y comentar casos (controlado por CasosController)./usuarios: Administración de usuarios del sistema./abogados: Administración de perfiles de abogados./sucursales: Administración de sucursales./intake/(slug): Formulario de admisión público./encuesta/(slug): Formulario de encuesta de satisfacción./reportes: Módulo de reportes detallados./auditoria: Visor de logs de acciones de usuarios./api: Endpoints para la integración con la API externa.
+
+
+Ejecutar Migraciones (Si existen):
+
+php spark migrate
+
+
+Ejecutar la aplicación:
+
+php spark serve
+
+
+La aplicación estará disponible en http://localhost:8080 (o la URL que hayas configurado en app.baseURL si usas un servidor local como Laragon/XAMPP).
+
+Estructura de Módulos (Rutas)
+
+La aplicación está organizada en los siguientes módulos principales:
+
+/login, /password: Autenticación y recuperación de contraseña.
+
+/dashboard: Dashboard principal con KPIs y reportes (controlado por DashboardController).
+
+/clientes: Módulo principal de clientes.
+
+/: Vista de administrador/paralegal.
+
+/recepcion: Vista para recepción.
+
+/abogado: Vista para abogados (prospectos).
+
+/asignados: Vista para abogados (clientes asignados).
+
+/callcenter: Vista para el call center.
+
+/(id): Detalle de un cliente específico.
+
+/casos: Endpoints (vía POST) para actualizar, editar y comentar casos (controlado por CasosController).
+
+/usuarios: Administración de usuarios del sistema.
+
+/abogados: Administración de perfiles de abogados.
+
+/sucursales: Administración de sucursales.
+
+/intake/(slug): Formulario de admisión público.
+
+/encuesta/(slug): Formulario de encuesta de satisfacción.
+
+/reportes: Módulo de reportes detallados.
+
+/auditoria: Visor de logs de acciones de usuarios.
+
+/api: Endpoints para la integración con la API externa.
