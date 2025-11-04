@@ -1,62 +1,120 @@
-# CodeIgniter 4 Application Starter
+LawLink - Sistema de Gestión de Casos Legales
 
-## What is CodeIgniter?
+LawLink es una aplicación web interna (CRM) diseñada para la gestión integral de clientes, casos y personal en un bufete de abogados. La plataforma está construida sobre el framework CodeIgniter 4.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+Características Principales
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Basado en la estructura de la aplicación, el sistema incluye las siguientes características:
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+Gestión de Clientes: Módulo central para registrar, consultar y administrar la información de prospectos y clientes.
 
-The user guide corresponding to the latest version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+Gestión de Casos: Creación y seguimiento de casos legales, incluyendo asignación de costos, fechas límite, comentarios y gestión de documentos.
 
-## Installation & updates
+Gestión de Usuarios: Administración de las cuentas de personal que acceden al sistema.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+Gestión de Abogados: Módulo para administrar los perfiles de los abogados.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+Gestión de Sucursales: Soporte para múltiples oficinas o sucursales.
 
-## Setup
+Roles y Permisos: Sistema de filtros por sesión que define el acceso según el rol del usuario (ADMIN, ADMINCALL, PARALEGAL, ATTORNEY, RECEPTION, CALL, etc.).
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+Formularios de Admisión (Intake): Formularios web públicos para que los nuevos clientes ingresen su información.
 
-## Important Change with index.php
+Dashboard de Reportes: Un panel de control con múltiples KPIs y métricas visuales (Clientes nuevos, casos por tipo, ingresos, etc.).
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+Auditoría de Acciones: Registro de las acciones clave realizadas por los usuarios en el sistema.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Integración API: Conexión con una API externa para la sincronización de clientes y casos.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+Pila Tecnológica
 
-## Repository Management
+Backend: PHP 8.x
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Framework: CodeIgniter 4
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+Frontend: JavaScript, Chart.js, Flatpickr, SweetAlert2, Dropzone.js, TinyMCE (previamente).
 
-## Server Requirements
+Base de Datos: (No especificado, pero típicamente MySQL, PostgreSQL con CodeIgniter).
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+Guía de Instalación (Estándar CodeIgniter 4)
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Clonar el repositorio:
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+git clone [URL-DEL-REPOSITORIO]
+cd LawLink
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+
+Instalar dependencias de PHP:
+
+composer install
+
+
+Configurar el Entorno:
+
+Copia env.example a .env.
+
+Configura las variables de entorno en .env, especialmente la sección de database y app.baseURL.
+
+# .env
+CI_ENVIRONMENT = development
+
+app.baseURL = 'http://localhost/abogadovernal/LawLink/public/'
+
+database.default.hostname = localhost
+database.default.database = nombre_de_tu_db
+database.default.username = root
+database.default.password =
+database.default.DBDriver = MySQLi
+
+
+Ejecutar Migraciones (Si existen):
+
+php spark migrate
+
+
+Ejecutar la aplicación:
+
+php spark serve
+
+
+La aplicación estará disponible en http://localhost:8080 (o la URL que hayas configurado en app.baseURL si usas un servidor local como Laragon/XAMPP).
+
+Estructura de Módulos (Rutas)
+
+La aplicación está organizada en los siguientes módulos principales:
+
+/login, /password: Autenticación y recuperación de contraseña.
+
+/dashboard: Dashboard principal con KPIs y reportes (controlado por DashboardController).
+
+/clientes: Módulo principal de clientes.
+
+/: Vista de administrador/paralegal.
+
+/recepcion: Vista para recepción.
+
+/abogado: Vista para abogados (prospectos).
+
+/asignados: Vista para abogados (clientes asignados).
+
+/callcenter: Vista para el call center.
+
+/(id): Detalle de un cliente específico.
+
+/casos: Endpoints (vía POST) para actualizar, editar y comentar casos (controlado por CasosController).
+
+/usuarios: Administración de usuarios del sistema.
+
+/abogados: Administración de perfiles de abogados.
+
+/sucursales: Administración de sucursales.
+
+/intake/(slug): Formulario de admisión público.
+
+/encuesta/(slug): Formulario de encuesta de satisfacción.
+
+/reportes: Módulo de reportes detallados.
+
+/auditoria: Visor de logs de acciones de usuarios.
+
+/api: Endpoints para la integración con la API externa.
