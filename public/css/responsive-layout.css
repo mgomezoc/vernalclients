@@ -1,0 +1,527 @@
+/* ==========================================================================
+   RESPONSIVE LAYOUT - INTAKE 2025 - SCOPEADO
+   Sistema de layout moderno con sidebar colapsable
+   SCOPEADO con [data-layout="responsive"] para evitar conflictos
+   ========================================================================== */
+
+/* Variables CSS modernas */
+[data-layout="responsive"] {
+    --sidebar-width: 280px;
+    --sidebar-collapsed: 70px;
+    --header-height: 70px;
+    --transition-speed: 0.3s;
+    --color-primary: #0e1c2c;
+    --color-accent: #62b732;
+    --color-bg: #efefef;
+    --color-text: #2d2926;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Layout principal responsive */
+[data-layout="responsive"] .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+    transition: grid-template-columns var(--transition-speed) ease;
+}
+
+/* Sidebar */
+[data-layout="responsive"] .layout-col.menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--color-primary);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+/* Scrollbar estilizado para sidebar - VISIBLE Y MODERNO */
+[data-layout="responsive"] .layout-col.menu {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(98, 183, 50, 0.6) rgba(255, 255, 255, 0.05);
+}
+
+[data-layout="responsive"] .layout-col.menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+[data-layout="responsive"] .layout-col.menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 8px 0;
+}
+
+[data-layout="responsive"] .layout-col.menu::-webkit-scrollbar-thumb {
+    background: rgba(98, 183, 50, 0.6);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+[data-layout="responsive"] .layout-col.menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(98, 183, 50, 0.9);
+}
+
+[data-layout="responsive"] .layout-col.menu::-webkit-scrollbar-thumb:active {
+    background: #62b732;
+}
+
+/* Contenido principal */
+[data-layout="responsive"] .layout-col.main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--color-bg);
+    transition: margin-left var(--transition-speed) ease;
+}
+
+/* Botón hamburguesa (oculto en desktop) */
+[data-layout="responsive"] .menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background: var(--color-primary);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-speed) ease;
+}
+
+[data-layout="responsive"] .menu-toggle:hover {
+    background: var(--color-accent);
+    transform: scale(1.05);
+}
+
+[data-layout="responsive"] .menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 5px auto;
+    transition: all var(--transition-speed) ease;
+    border-radius: 2px;
+}
+
+/* Animación hamburguesa a X */
+[data-layout="responsive"] .menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+[data-layout="responsive"] .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+[data-layout="responsive"] .menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Overlay para móviles */
+[data-layout="responsive"] .menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+}
+
+[data-layout="responsive"] .menu-overlay.active {
+    opacity: 1;
+}
+
+/* Mejoras en el menú */
+[data-layout="responsive"] .menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+}
+
+[data-layout="responsive"] .menu-top {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-layout="responsive"] .menu-logo {
+    display: block;
+    margin-bottom: 1rem;
+    transition: transform var(--transition-speed) ease;
+}
+
+[data-layout="responsive"] .menu-logo:hover {
+    transform: scale(1.02);
+}
+
+[data-layout="responsive"] .menu-logo-img {
+    width: 100%;
+    height: auto;
+}
+
+[data-layout="responsive"] .menu-top-info {
+    color: #fff;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 8px;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    word-break: break-word;
+}
+
+[data-layout="responsive"] .menu-options {
+    flex: 1;
+    padding: 1rem 0.5rem;
+    overflow-y: auto;
+}
+
+[data-layout="responsive"] .menu-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+[data-layout="responsive"] .menu-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 0;
+    background: var(--color-accent);
+    border-radius: 0 4px 4px 0;
+    transition: height 0.2s ease;
+}
+
+[data-layout="responsive"] .menu-link:hover,
+[data-layout="responsive"] .menu-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+[data-layout="responsive"] .menu-link:hover::before,
+[data-layout="responsive"] .menu-link.active::before {
+    height: 70%;
+}
+
+[data-layout="responsive"] .menu-link:hover .icon-container i,
+[data-layout="responsive"] .menu-link.active .icon-container i {
+    color: var(--color-accent);
+    transform: scale(1.1);
+}
+
+[data-layout="responsive"] .icon-container {
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-layout="responsive"] .icon-container i {
+    transition: all 0.2s ease;
+}
+
+[data-layout="responsive"] .menu-footer {
+    padding: 1rem 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-layout="responsive"] .menu-footer .menu-link {
+    margin-bottom: 0.5rem;
+}
+
+[data-layout="responsive"] .menu-footer form {
+    margin: 0;
+}
+
+[data-layout="responsive"] .menu-footer button {
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+/* Buscador siempre visible - Compatible con style.css */
+[data-layout="responsive"] #buscador,
+[data-layout="responsive"] .buscador {
+    height: var(--header-height);
+    background: var(--color-primary);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    text-align: center;
+}
+
+[data-layout="responsive"] .buscador-container {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+[data-layout="responsive"] .buscador-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+[data-layout="responsive"] #search,
+[data-layout="responsive"] .buscador-input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+[data-layout="responsive"] #search:focus,
+[data-layout="responsive"] .buscador-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(98, 183, 50, 0.1);
+    background: #fff;
+}
+
+[data-layout="responsive"] .buscador-group i {
+    position: absolute;
+    right: 1rem;
+    color: var(--color-primary);
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
+[data-layout="responsive"] #results,
+[data-layout="responsive"] .buscador-resultados {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    z-index: 9999;
+    width: 100%;
+    transform: none;
+    padding: 15px;
+    border: 1px solid #0e1c2c;
+}
+
+[data-layout="responsive"] #results.show,
+[data-layout="responsive"] .buscador-resultados.show {
+    display: block;
+}
+
+/* Sección de contenido */
+[data-layout="responsive"] .section {
+    padding: 2rem 1.5rem;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES RESPONSIVE
+   ========================================================================== */
+
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
+    [data-layout="responsive"] {
+        --sidebar-width: 240px;
+    }
+    
+    [data-layout="responsive"] .section {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* Tablets pequeñas y móviles grandes (≤ 768px) */
+@media (max-width: 768px) {
+    [data-layout="responsive"] .layout {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Sidebar fuera de pantalla por defecto */
+    [data-layout="responsive"] .layout-col.menu {
+        transform: translateX(-100%);
+        width: 280px;
+    }
+    
+    /* Sidebar visible cuando está activo */
+    [data-layout="responsive"] .layout-col.menu.active {
+        transform: translateX(0);
+    }
+    
+    [data-layout="responsive"] .layout-col.main {
+        margin-left: 0;
+    }
+    
+    /* Mostrar botón hamburguesa */
+    [data-layout="responsive"] .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Mostrar overlay cuando el menú está activo */
+    [data-layout="responsive"] .menu-overlay {
+        display: block;
+    }
+    
+    /* Ajustar buscador para móvil */
+    [data-layout="responsive"] .buscador {
+        padding-left: 70px;
+    }
+    
+    [data-layout="responsive"] .buscador-input {
+        font-size: 0.9rem;
+        padding: 0.65rem 2.5rem 0.65rem 1rem;
+    }
+    
+    [data-layout="responsive"] .section {
+        padding: 1rem;
+    }
+}
+
+/* Móviles (≤ 480px) */
+@media (max-width: 480px) {
+    [data-layout="responsive"] {
+        --header-height: 60px;
+    }
+    
+    [data-layout="responsive"] .menu-toggle {
+        width: 40px;
+        height: 40px;
+        top: 10px;
+        left: 10px;
+    }
+    
+    [data-layout="responsive"] .menu-toggle span {
+        width: 22px;
+        height: 2.5px;
+        margin: 4px auto;
+    }
+    
+    [data-layout="responsive"] .menu-top {
+        padding: 1rem 0.75rem;
+    }
+    
+    [data-layout="responsive"] .menu-top-info {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    
+    [data-layout="responsive"] .menu-link {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.9rem;
+    }
+    
+    [data-layout="responsive"] .buscador {
+        height: 60px;
+        padding: 0.75rem;
+        padding-left: 60px;
+    }
+    
+    [data-layout="responsive"] .buscador-container {
+        max-width: 100%;
+    }
+    
+    [data-layout="responsive"] .buscador-input {
+        font-size: 0.875rem;
+        padding: 0.6rem 2.5rem 0.6rem 0.875rem;
+    }
+    
+    [data-layout="responsive"] .buscador-group i {
+        font-size: 1rem;
+        right: 0.875rem;
+    }
+    
+    [data-layout="responsive"] .section {
+        padding: 0.875rem;
+    }
+    
+    [data-layout="responsive"] .section-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* Móviles muy pequeños (≤ 360px) */
+@media (max-width: 360px) {
+    [data-layout="responsive"] .menu-link {
+        font-size: 0.85rem;
+        gap: 0.75rem;
+    }
+    
+    [data-layout="responsive"] .menu-link span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* Landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    [data-layout="responsive"] .menu-top {
+        padding: 0.75rem;
+    }
+    
+    [data-layout="responsive"] .menu-link {
+        padding: 0.5rem 0.875rem;
+    }
+    
+    [data-layout="responsive"] .menu-logo {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ==========================================================================
+   MEJORAS DE ACCESIBILIDAD
+   ========================================================================== */
+
+/* Focus visible mejorado */
+[data-layout="responsive"] .menu-link:focus-visible,
+[data-layout="responsive"] .menu-toggle:focus-visible,
+[data-layout="responsive"] .buscador-input:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    [data-layout="responsive"] *,
+    [data-layout="responsive"] *::before,
+    [data-layout="responsive"] *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
